@@ -3,83 +3,48 @@
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
     <meta name="description" content="" />
     <meta name="keywords" content="" />
-    <title class="lift:Menu.title">App: </title>
-    <style class="lift:CSS.blueprint"></style>
-    <style class="lift:CSS.fancyType"></style>
+    <title><span class="lift:Menu.title">Title goes here</span></title>
     <script id="jquery" src="/classpath/jquery.js" type="text/javascript"></script>
-    <script id="json" src="/classpath/json.js" type="text/javascript"></script>
-    <style type="text/css">
-/* <![CDATA[ */
-.edit_error_class {
-  display: block;
-  color: red;
-}
-
-.sidebar ul {
-	margin:0;
-	padding:0;
-	border-bottom:1px solid #ccc;
-}
-	 
-
-.sidebar ul li {
-	margin:0;
-	padding:0;
-	list-style:none;
-	border:1px solid #ccc;
-	border-bottom:none;
-}
-
-.sidebar ul li a {
-	display:block;
-	padding:3px;
-	text-indent:30px;
-	text-decoration:none;
-}
-
-.sidebar ul li span {
-	display:block;
-	padding:3px;
-	text-indent:30px;
-	text-decoration:none;
-}
-
-.sidebar ul li a:hover {
-	background-color: #eee;
-}
-
-
-  /* ]]> */
-  </style>
+i   <link rel="stylesheet" type="text/css" href="/main.css" />
   </head>
   <body>
-    <div class="container">
-      <div class="column span-12 last" style="text-align: right">
-        <h1 class="alt">app<img alt="" id="ajax-loader" style="display:none; margin-bottom: 0px; margin-left: 5px" src="/images/ajax-loader.gif"></h1>
-      </div>
+    <div class="lift:Msgs?showAll=true"></div>
 
-      <hr>
+    <!--div class="Box Breadcrumbs">
+        <a href="#">This is so a breadcrumb!</a>
+    </div-->
 
-      <div class="column span-6 colborder sidebar">
-        <hr class="space" >
+    <!--lift:bind name="content" / -->
+    <div id="content">This is where the content will go!</div>
 
-	<span class="lift:Menu.builder"></span>
+    <div class="lift:Menu.builder?ul:id=menubar"></div>
 
-        <div class="lift:Msgs?showAll=true"></div>
-        <hr class="space" />
-      </div>
-
-      <div class="column span-17 last">
-        <div id="content">The main content will get bound here</div>
-      </div>
-
-      <hr />
-      <div class="column span-23 last" style="text-align: center">
-        <h4 class="alt">
-          <a href="http://www.liftweb.net"><i>Lift</i></a> 
-	  is Copyright 2007-2011 WorldWide Conferencing, LLC.
-	  Distributed under an Apache 2.0 License.</h4>
-      </div>
-    </div>
+    <hr />
+    <h4>
+      <a href="http://www.liftweb.net"><i>Lift</i></a> 
+      is Copyright 2007-2011 WorldWide Conferencing, LLC.
+      Distributed under an Apache 2.0 License.
+    </h4>
+	
+	<!-- Filmstrip -->
+	<div id="filmstrip">
+		<a href="#"><img src="/Vera1.jpg" alt="" /></a>
+		<a href="#"><img src="/Vera2.jpg" alt="" /></a>
+		<a href="#"><img src="/Vera3.jpg" alt="" /></a>
+		<a href="#"><img src="/belleposter.jpg" alt="" /></a>
+		<a href="#"><img src="/d1.jpg" alt="" /></a>
+		<a href="#"><img src="/foliesbergere.jpg" alt="" /></a>
+		<a href="#"><img src="/foliesprogram.jpg" alt="" /></a>
+		<a href="#"><img src="/verahollywoodstar.jpg" alt="" /></a>
+		<a href="#"><img src="/veraleroy.jpg" alt="" /></a>
+		<a href="#"><img src="/veralumuslarry.jpg" alt="" /></a>
+		<a href="#"><img src="/Hedy-Lamarr.jpg" alt="" /></a>
+		<a href="#"><img src="/lvp192a.jpg" alt="" /></a>
+		<a href="#"><img src="/Peg_Entwistle.jpg" alt="" /></a>
+		<a href="#"><img src="/LeniR.jpg" alt="" /></a>
+		<a href="#"><img src="/ag24.jpg" alt="" /></a>
+		<a href="#"><img src="/Louise Brooks.jpg" alt="" /></a>
+		<a href="#"><img src="/marlene dietrich morocco 6.jpg" alt="" /></a>
+	</div>
   </body>
 </html>

@@ -9,8 +9,11 @@ import http._
 import sitemap._
 import Loc._
 import mapper._
+import java.sql.{Connection, DriverManager}
 
-import code.model._
+// import our models
+import edu.cmu.etc.verastark.model._
+import edu.cmu.etc.verastark.snippet._
 
 
 /**
@@ -19,30 +22,36 @@ import code.model._
  */
 class Boot {
   def boot {
-    if (!DB.jndiJdbcConnAvailable_?) {
-      val vendor = 
-	new StandardDBVendor(Props.get("db.driver") openOr "org.h2.Driver",
-			     Props.get("db.url") openOr 
-			     "jdbc:h2:lift_proto.db;AUTO_SERVER=TRUE",
-			     Props.get("db.user"), Props.get("db.password"))
+    // if (!DB.jndiJdbcConnAvailable_?) {
+    //  val vendor = 
+    //	new StandardDBVendor(Props.get("db.driver") openOr "org.h2.Driver",
+    //			     Props.get("db.url") openOr 
+    //			     "jdbc:h2:lift_proto.db;AUTO_SERVER=TRUE",
+    //			     Props.get("db.user"), Props.get("db.password"))
+    //
+    //  LiftRules.unloadHooks.append(vendor.closeAllConnections_! _)
 
-      LiftRules.unloadHooks.append(vendor.closeAllConnections_! _)
-
-      DB.defineConnectionManager(DefaultConnectionIdentifier, vendor)
-    }
+    DB.defineConnectionManager(DefaultConnectionIdentifier, DBVendor)
+    // }
 
     // Use Lift's Mapper ORM to populate the database
     // you don't need to use Mapper to use Lift... use
     // any ORM you want
-    Schemifier.schemify(true, Schemifier.infoF _, User)
+    // Schemifier.schemify(true, Schemifier.infoF _, User, Autobiography)
+    Schemifier.schemify(true, Schemifier.infoF _, User, Autobiography)
 
     // where to search snippet
-    LiftRules.addToPackages("code")
+    // LiftRules.addToPackages("code")
     LiftRules.addToPackages("edu.cmu.etc.verastark")
 
     // Build SiteMap
     def sitemap = SiteMap(
       Menu.i("Home") / "index" >> User.AddUserMenusAfter, // the simple way to declare a menu
+      Menu.i("Artifact") / "artifact", // For testing purposes...
+      // Menu.i("Autobiography") / "journal", // For testing purposes...
+      // AutobiographyPageMenu.menu,
+      AutobiographyPageMenu.menu >> Hidden,
+      Menu(Loc("AutobiographyStaticLink", Link("journal" :: "index" ::  Nil, true, "/journal/index"), "Autobiography")),
 
       // more complex because this menu allows anything in the
       // /static path to be visible
@@ -79,4 +88,17 @@ class Boot {
     // Make a transaction span the whole HTTP request
     S.addAround(DB.buildLoanWrapper)
   }
+}
+
+object DBVendor extends ConnectionManager {
+ def newConnection(name: ConnectionIdentifier): Box[Connection] = {
+   try {
+     Class.forName("com.mysql.jdbc.Driver")
+     val dm = DriverManager.getConnection("jdbc:mysql://localhost/verastark?user=verastark&password=beyondthestage")
+     Full(dm)
+   } catch {
+     case e : Exception => e.printStackTrace; Empty
+   }
+ }
+ def releaseConnection(conn: Connection) {conn.close}
 }

@@ -1,4 +1,4 @@
-package com.pocketchangeapp.model
+package edu.cmu.etc.verastark.model
 
 import net.liftweb.common.Full
 
@@ -27,13 +27,18 @@ object User extends User with MetaMegaProtoUser[User] {
 class User extends MegaProtoUser[User] {
   def getSingleton = User // what's the "meta" server
   
-  def accounts : List[Account] = Account.findAll(By(Account.owner, this.id))
+  // def accounts : List[Account] = Account.findAll(By(Account.owner, this.id))
 
-  def administered : List[Account] = AccountAdmin.findAll(By(AccountAdmin.administrator, this.id)).map(_.account.obj.open_!)
+  // def administered : List[Account] = AccountAdmin.findAll(By(AccountAdmin.administrator, this.id)).map(_.account.obj.open_!)
 
-  def editable = accounts ++ administered
+  // def editable = accounts ++ administered
     
-  def viewed : List[Account] = AccountViewer.findAll(By(AccountViewer.viewer, this.id)).map(_.account.obj.open_!)
+  // def viewed : List[Account] = AccountViewer.findAll(By(AccountViewer.viewer, this.id)).map(_.account.obj.open_!)
 
-  def allAccounts : List[Account] = accounts ::: administered ::: viewed
+  // def allAccounts : List[Account] = accounts ::: administered ::: viewed
 }
+
+/**
+ * Temporary stuff...
+ */
+// class Account {}
