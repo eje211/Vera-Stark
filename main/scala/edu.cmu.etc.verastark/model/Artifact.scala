@@ -28,6 +28,7 @@ class Artifact extends LongKeyedMapper[Artifact] with OneToMany[Long, Artifact] 
   object item      extends MappedLongForeignKey(this, Item)
   object pubLished extends MappedBoolean       (this)
   object deleted   extends MappedBoolean       (this)
+  object changed   extends MappedDateTime      (this)
   object comments  extends MappedOneToMany     (Comment, Comment.art_id, OrderBy(Comment.date, Ascending))
 }
 

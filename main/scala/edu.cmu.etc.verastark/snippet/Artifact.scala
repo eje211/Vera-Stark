@@ -6,6 +6,7 @@ import net.liftweb.http._
 import net.liftweb.util._
 import net.liftweb.common._
 import java.util.Date
+import java.text.SimpleDateFormat
 import code.lib._
 import sitemap._
 import Helpers._
@@ -62,20 +63,27 @@ object ArtifactHelper {
 */
 
 class ArtifactEditForm(ap:ArtifactPage) {
-  // object title extends RequestVar("")
-  // object content extends RequestVar("")
-  def edit(xhtml:NodeSeq):NodeSeq = {
-    def processArtifact() = ap.a.save
-  
-    bind("artprop", xhtml,
-      "title"   -> ap.a.title.toForm,
-      // "title"    -> SHtml.text(ap.a.title.is, ap.a.title(_), "class" -> "text title"),
-      // "artist"   -> SHtml.text(ap.a.artist.is, ap.a.artist(_), "class" -> "text artist") //,
-       "artist"  -> ap.a.artist.toForm,
-      "content" -> ap.a.content.toForm,
-      "date"    -> ap.a.date.toForm,
-      "submit"  -> SHtml.submit("Submit", processArtifact)
-    )
+  def render = {
+    var title   = ""
+    var artist  = ""
+    var content = ""
+    var date    = ""
+    val dateFormat = new SimpleDateFormat("MM/dd/yyyy, hh:mm a")
+    def processArtifact = {
+      ap.a.title(title).artist(artist).content(content).date(date)
+      ap.a.changed(now) //dateFormat.parse(now.toString))
+      ap.a.save
+    }
+
+    ".title"          #> SHtml.onSubmit(title = _)   &
+    ".title [value]"  #> ap.a.title.is               &
+    ".artist"         #> SHtml.onSubmit(artist = _)  &	
+    ".artist [value]" #> ap.a.artist.is              &
+    ".content"        #> SHtml.onSubmit(content = _) &
+    ".content *"      #> ap.a.content.is             &
+    ".date"           #> SHtml.onSubmit(date = _)    &
+    ".date [value]"   #> ap.a.date.is                &
+    "type=submit"     #> SHtml.submit("Submit", processArtifact _)
   }
 }
 

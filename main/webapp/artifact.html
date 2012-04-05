@@ -123,8 +123,22 @@
     <div id="sidebar_edit" class="sidebar"><div class="card">
     
         <!-- Artifact Description -->
-        <form class="lift:ArtifactEditForm.edit?form=post">
+        <form class="lift:ArtifactEditForm?form=post">
           <h2 class="underlined">Edit Artifact</h2>
+          <h5>Artist</h5><input type="text" class="artist" value="Unknown Artist" />
+          <h5>Title</h5><input type="text" class="title" value="Poster for The Belle of New Orleans" />
+          <h5>Date</h5><input type="text" class="date" value="ca. 1933" />
+          <h5>Description</h5><textarea class="description">A poster for The Belle of New Orleans (1933). 
+Featuring Gloria Mitchell. 
+ 
+This film marked Vera's first appearance on the silver screen. She played the role of Tilly the maid, opposite Gloria Mitchell. Her famous line in the final scene of the movie set the tone for her future career: "Hold on, and together we'll face a new day!"</textarea>
+          <div class="buttons">
+            <input type="submit" value="Save" />
+            <input type="button" value="Cancel" />
+            <input type="button" value="Delete" />
+          </div>
+        </form>
+          <!--h2 class="underlined">Edit Artifact</h2>
           <h5>Artist</h5><p><artprop:artist /></p>
           <h5>Title</h5><p><artprop:title /></p>
           <h5>Date</h5><p><artprop:date /></p>
@@ -135,7 +149,7 @@
             <input type="button" value="Cancel" />
             <input type="button" value="Delete" />
           </div>
-        </form>
+        </form-->
         
       </div><span class="footer_flourish"></span></div>
     </div> <!-- sidebar div -->
