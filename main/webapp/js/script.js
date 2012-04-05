@@ -35,13 +35,20 @@ var fixPositions = function() {
     }
     
     // Resize and center featured artifact
-    
     if ( imagemat = $("div.matwrap") ) {
       if ( $("div.matwrap section.static_page").length == 0 ) {
         $("div.matwrap img").css("max-height", (display_area_height - parseInt($("div.matwrap img").css("margin-top"))*2) * 0.9 );
         $("div.matwrap img").css("max-width", (display_area_width - parseInt($("div.matwrap img").css("margin-left"))*2) * 0.9 );
       }
       imagemat.css("top", clamp((display_area_height / 2) - (imagemat.height() / 2), 5, 100000));
+    }
+    
+    // Force sidebars to be at least half the browser window height
+    if ( $("div#sidebar_talk").length > 0 ) {
+      $("div#sidebar_talk").css("min-height", display_area_height / 2 );
+    }
+    if ( $("div#sidebar_edit").length > 0 ) {
+      $("div#sidebar_edit").css("min-height", display_area_height / 2 );
     }
     
     // Reposition navigation tabs
@@ -80,13 +87,14 @@ if ( $("#flag_talk").length ) {
   $("#flag_talk").click(function() {
       if ( $("div#sidebar_talk").css("display") == "none" ) {
         $("div#sidebar_talk").css("display", "block");
-        $("div#content_talk").removeClass("without_sidebar");
-        $("div#content_talk").addClass("with_sidebar");
+        $("div#sidebar_edit").css("display", "none");
+        $("div#content").removeClass("without_sidebar");
+        $("div#content").addClass("with_sidebar");
       }
       else {
         $("div#sidebar_talk").css("display", "none");
-        $("div#content_talk").addClass("without_sidebar");
-        $("div#content_talk").removeClass("with_sidebar");
+        $("div#content").addClass("without_sidebar");
+        $("div#content").removeClass("with_sidebar");
       }
       fixPositions();
     });
@@ -100,6 +108,7 @@ if ( $("#flag_edit").length ) {
   $("#flag_edit").click(function() {
       if ( $("div#sidebar_edit").css("display") == "none" ) {
         $("div#sidebar_edit").css("display", "block");
+        $("div#sidebar_talk").css("display", "none");
         $("div#content").removeClass("without_sidebar");
         $("div#content").addClass("with_sidebar");
       }
@@ -112,16 +121,20 @@ if ( $("#flag_edit").length ) {
     });
   // Add global keyboard shortcut
   $(document).keydown(function(event) { // "E" for "Edit"
-      if ( $("div#sidebar_edit").css("display") == "none" )
       if (event.which == 69) { $("#flag_edit").click(); }
     });
 }
 
   
 /* Comment form behavior */
-$("div#sidebar aside form textarea").keydown(function(event) {
-    event.stopPropagation();
+// By default, stop event propagation on all text fields
+$.map($("input"), function(e, i) {
+    if ( $(e).prop("type") == "text" ) { $(e).keydown(function(event) { event.stopPropagation(); }); }
   });
+$.map($("textarea"), function(e, i) {
+    $(e).keydown(function(event) { event.stopPropagation(); });
+  });
+
   
   
 // Initialization
