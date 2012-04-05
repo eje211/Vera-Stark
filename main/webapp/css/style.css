@@ -218,6 +218,10 @@ td { vertical-align: top; }
    Author: Beyond the Stage
    ========================================================================== */
 
+div.center {
+  text-align: center;
+}
+   
 body {
   background-color: #333;
   background-image: url('/img/website_blacktexture_vera_tile.png');
@@ -394,7 +398,7 @@ div#content {
       margin: 30px;
     }
   div#content section {
-    text-align: center;
+    text-align: left;
     background-color: #ddd;
     
     max-width: 500px;
@@ -413,6 +417,38 @@ div#content {
     div#content section.static_page {
       width: 600px;
       max-width: 600px;
+      padding: 2em;
+    }
+    div#content section hgroup {
+      padding-bottom: 60px;
+      margin-bottom: 30px;
+      background-image: url('/img/flourish_150_33.png');
+      background-repeat: no-repeat;
+      background-position: center bottom;
+    }
+    div#content section h1 {
+      text-align: left;
+      font-family: "Edwardian Script ITC", serif;
+      font-size: 48pt;
+      font-weight: normal;
+      color: #000;
+      text-shadow: #333 0 0.05em 0.3em;
+      margin-top: 0;
+      margin-bottom: 0;
+    }
+    div#content section hgroup h2 {
+      text-align: left;
+      font-family: "Tw Cen MT", sans-serif;
+      font-size: 22pt;
+      font-weight: bold;
+      color: #6e321b;
+      text-shadow: #888 0 0.05em 0.3em;
+      margin: -22px 0px 0px 4em;
+      margin-bottom: 0;
+    }
+    div#content section ul {
+      list-style: none;
+      text-align: left;
     }
     div#content section p {
       text-align: left;
@@ -425,6 +461,15 @@ div#content {
       div#content section a:visited { color: black; }
       div#content section a:active { color: black; }
       div#content section a:hover { color: black; text-decoration: underline; }
+    div#content section .flourish {
+      display: block;
+      background-image: url('/img/flourish_150_33.png');
+      background-repeat: no-repeat;
+      background-position: center bottom;
+      height: 33px;
+      margin-top: 30px;
+      margin-bottom: 30px;
+    }
   div#content p img.dropcap {
     float: left;
     height: 1.8em;
@@ -470,9 +515,10 @@ div.sidebar {
     position: absolute;
     display: block;
     bottom: 15px;
+    left: 0px;
     min-height: 33px;
     width: 100%;
-    background-image: url('/img/flourish.png');
+    background-image: url('/img/flourish_150_33.png');
     background-position: center bottom;
     background-repeat: no-repeat;
     background-size: 150px 33px;
@@ -632,7 +678,7 @@ h2#vera_redisovering {
   font-family: "Myriad Pro", "Tw Cen MT", sans-serif;
   font-size: 22px;
   font-weight: normal;
-  color: #9e321b;
+  color: #6e321b;
   margin: 0;
 }
 h1#vera_verastark {
