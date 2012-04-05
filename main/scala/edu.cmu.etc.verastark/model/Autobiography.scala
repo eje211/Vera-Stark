@@ -7,7 +7,7 @@ class Autobiography extends LongKeyedMapper[Autobiography] with IdPK {
   def getSingleton = Autobiography
 
   object title extends MappedString(this, 140)
-  object content extends MappedText(this)
+  object content extends MappedTextarea(this, 10000)
   object published extends MappedBoolean(this)
 }
 

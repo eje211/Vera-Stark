@@ -12,7 +12,10 @@ import Helpers._
 
 import edu.cmu.etc.verastark.model._
 
-case class AutobiographyPage(pageName: String)
+class AutobiographyParam
+case class  AutobiographyPage(pageName: String) extends AutobiographyParam
+case object AutobiographyIndex extends AutobiographyParam
+case object AutobiographyEdit extends AutobiographyParam
 
 object AutobiographyPagesList {
   def render(in:NodeSeq):NodeSeq =
@@ -20,13 +23,20 @@ object AutobiographyPagesList {
 }
 
 object AutobiographyPageMenu {
-  def parse(name: String) = {if (name == "") Full(AutobiographyPage("list")) else Full(AutobiographyPage(name))}
-  def encode(ap: AutobiographyPage) = ap.pageName
+  def parse(name: String) = name match {
+    case "" | "index" => Full(AutobiographyIndex)
+    case "new"        => Full(AutobiographyEdit)
+    case _            => Full(AutobiographyPage(name))
+  }
+  def encode(ap: AutobiographyParam) = ap match {
+    case AutobiographyPage(name) => name
+    case _                       => "index"
+  }
 
-  val menu = Menu.param[AutobiographyPage]("Autobiography", "Autobiography", parse _, encode _) / "journal"
+  val menu = Menu.param[AutobiographyParam]("Autobiography", "Autobiography", parse _, encode _) / "journal"
   lazy val loc = menu.toLoc
 
-  def render = "*" #> loc.currentValue.map(_.pageName)
+  def render = "*" #> "Autobiography" // loc.currentValue.map(_.pageName)
 }
 
 object AutobiographyHelper {
@@ -53,13 +63,13 @@ class AutobiographyForm(ap:AutobiographyPage) {
   }
 }
 
-class AutobiographyContainer(ap: AutobiographyPage) {
-  def render = ap.pageName match {
-    case "index" => "#AutobiographyPagesList ^^" #> "*"
-    case _       => (if (S.param("edit") isDefined)
-                      "#AutobiographyEditForm ^^" #> "*"
-                      else "#AutobiographyPage ^^" #> "*"
-                    )
+class AutobiographyContainer(ap: AutobiographyParam) {
+  def render = ap match {
+    case AutobiographyIndex      => "#AutobiographyPagesList ^^" #> "*"
+    case AutobiographyEdit       => "#AutobiographyEditForm ^^"  #> "*"
+    case AutobiographyPage(name) =>
+      if   (S.param("edit") isDefined) "#AutobiographyEditForm ^^"      #> "*"
+      else "#AutobiographyPage ^^"  #> "*"
   }
 }
 
@@ -70,4 +80,14 @@ class AutobiographyPageSnippet(ap:AutobiographyPage) {
     "h2 *" #> current_page.title &
     "p *"  #> current_page.content
   }
+}
+
+object AutobiographyScreen extends LiftScreen {
+  object page extends ScreenVar(Autobiography.create)
+
+  addFields(() => page.is)
+
+  val shouldSave = field("Save", false)
+
+  def finish() {}
 }

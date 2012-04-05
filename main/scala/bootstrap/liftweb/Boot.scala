@@ -22,14 +22,6 @@ import edu.cmu.etc.verastark.snippet._
  */
 class Boot {
   def boot {
-    // if (!DB.jndiJdbcConnAvailable_?) {
-    //  val vendor = 
-    //	new StandardDBVendor(Props.get("db.driver") openOr "org.h2.Driver",
-    //			     Props.get("db.url") openOr 
-    //			     "jdbc:h2:lift_proto.db;AUTO_SERVER=TRUE",
-    //			     Props.get("db.user"), Props.get("db.password"))
-    //
-    //  LiftRules.unloadHooks.append(vendor.closeAllConnections_! _)
 
     DB.defineConnectionManager(DefaultConnectionIdentifier, DBVendor)
     // }
@@ -38,7 +30,7 @@ class Boot {
     // you don't need to use Mapper to use Lift... use
     // any ORM you want
     // Schemifier.schemify(true, Schemifier.infoF _, User, Autobiography)
-    Schemifier.schemify(true, Schemifier.infoF _, User, Autobiography)
+    Schemifier.schemify(true, Schemifier.infoF _, User, Autobiography, Item, Artifact, Comment)
 
     // where to search snippet
     // LiftRules.addToPackages("code")
@@ -46,10 +38,11 @@ class Boot {
 
     // Build SiteMap
     def sitemap = SiteMap(
-      Menu.i("Home") / "index" >> User.AddUserMenusAfter, // the simple way to declare a menu
-      Menu.i("Artifact") / "artifact", // For testing purposes...
-      // Menu.i("Autobiography") / "journal", // For testing purposes...
-      // AutobiographyPageMenu.menu,
+      Menu.i("Home") / "index", // >>  User.AddUserMenusAfter, // the simple way to declare a menu
+
+      ArtifactPageMenu.menu >> Hidden,
+      Menu(Loc("ArtifactStaticLink", Link("artifact" :: "index" ::  Nil, true, "/artifact/index"), "Artifact")),
+
       AutobiographyPageMenu.menu >> Hidden,
       Menu(Loc("AutobiographyStaticLink", Link("journal" :: "index" ::  Nil, true, "/journal/index"), "Autobiography")),
 
