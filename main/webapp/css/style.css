@@ -425,6 +425,17 @@ div#content {
       div#content section a:visited { color: black; }
       div#content section a:active { color: black; }
       div#content section a:hover { color: black; text-decoration: underline; }
+  div#content p img.dropcap {
+    float: left;
+    height: 1.8em;
+    margin: 3px 5px 0px 0px;
+  }
+  div#content p img.nail {
+    display: inline-block;
+    height: 0.8em;
+    vertical-align: text-bottom;
+    margin: 0px 0px 4px 0px;
+  }
     ::-webkit-scrollbar { width: 8px; height: 8px; }
     ::-webkit-scrollbar-button:start:decrement, ::-webkit-scrollbar-button:end:increment {
       height: 0px;
