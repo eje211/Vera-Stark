@@ -44,12 +44,9 @@ var fixPositions = function() {
     }
     
     // Force sidebars to be at least half the browser window height
-    if ( $("div#sidebar_talk").length > 0 ) {
-      $("div#sidebar_talk").css("min-height", display_area_height / 2 );
-    }
-    if ( $("div#sidebar_edit").length > 0 ) {
-      $("div#sidebar_edit").css("min-height", display_area_height / 2 );
-    }
+    $.map($("div.sidebar"), function(e, i) {
+      $(e).css("min-height", display_area_height - parseInt($(e).css("padding-bottom")) - 2 );
+    });
     
     // Reposition navigation tabs
     if ( left_tabs = $("div.flags_left") ) {
