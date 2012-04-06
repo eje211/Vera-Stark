@@ -38,20 +38,20 @@ class Boot {
 
     // Build SiteMap
     def sitemap = SiteMap(
-      Menu.i("Home") / "index", // >>  User.AddUserMenusAfter, // the simple way to declare a menu
+      Menu.i("Home") / "index" >> Hidden >> LocGroup("left"), // >>  User.AddUserMenusAfter, // the simple way to declare a menu
 
       ArtifactPageMenu.menu >> Hidden,
-      Menu(Loc("ArtifactStaticLink", Link("artifact" :: "index" ::  Nil, true, "/artifact/index"), "Artifact")),
+      Menu(Loc("ArtifactStaticLink", Link("artifact" :: "index" :: Nil, true, "/artifact/index"), "Artifact", LocGroup("left"), Hidden)),
 
       AutobiographyPageMenu.menu >> Hidden,
-      Menu(Loc("AutobiographyStaticLink", Link("journal" :: "index" ::  Nil, true, "/journal/index"), "Autobiography")),
+      Menu(Loc("AutobiographyStaticLink", Link("journal" :: "index" ::  Nil, true, "/journal/index"), "Autobiography", LocGroup("left"), Hidden)),
 
       // more complex because this menu allows anything in the
       // /static path to be visible
-      Menu(Loc("Static", Link(List("static"), true, "/static/index"), 
-	       "Static Content")),
-
-      Menu.i("Login stuff") / "user_login" >> Hidden >> LocGroup("login") 
+      // Menu(Loc("Static", Link(List("static"), true, "/static/index"), "Static Content", LocGroup("left"), Hidden)),
+      Menu.i("About") / "about" >> Hidden >> LocGroup("left"),
+      
+      Menu.i("Backstage") / "backstage"
       )
 
     def sitemapMutators = User.sitemapMutator
@@ -80,6 +80,10 @@ class Boot {
     // Use HTML5 for rendering
     LiftRules.htmlProperties.default.set((r: Req) =>
       new Html5Properties(r.userAgent))    
+
+    // OpenID rules
+    LiftRules.dispatch.append(DefaultOpenIDVendor.dispatchPF)
+    LiftRules.snippets.append(DefaultOpenIDVendor.snippetPF)
 
     // Make a transaction span the whole HTTP request
     S.addAround(DB.buildLoanWrapper)

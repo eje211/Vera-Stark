@@ -1,4 +1,6 @@
-<!doctype html>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:lift="http://liftweb.net/">
+<!DOCTYPE html>
 <!-- paulirish.com/2008/conditional-stylesheets-vs-css-hacks-answer-neither/ -->
 <!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
 <!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8" lang="en"> <![endif]-->
@@ -20,6 +22,7 @@
 
   <!-- Stylesheets -->
   <link rel="stylesheet" href="/css/style.css">
+  <link type="text/css" rel="stylesheet" href="/css/openid.css" />
 
 
   <!-- All JavaScript at the bottom, except this Modernizr build.
@@ -27,40 +30,36 @@
        Create your own custom Modernizr build: www.modernizr.com/download/ -->
   <script src="/js/libs/modernizr-2.5.3.min.js"></script>
 </head>
-<body class="lift:content_id=main">
+<body>
   <!--[if lt IE 7]><p class=chromeframe>Your browser is <em>ancient!</em> <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience this site.</p><![endif]-->
   <header class="clearfix">
-    <nav>
+    <nav class="lift:Navigation">
       <ul id="menu_left">
         <li id="homeicon"><a href="/index.html"><img src="/img/website_icon_vera.png" alt="Home" /></a></li>
-        <li><a href="/vera.html">Vera</a></li>
-        <li><a href="/autobiography.html">Autobiography</a></li>
-        <li><a href="/video.html">Documentaries</a></li>
-        <li><a href="/timeline.html">Timeline</a></li>
-        <li><a href="/browse.html">Browse</a></li>
-        <li><a href="/about.html">About</a></li>
-        <li><a href="/contribute.html">Contribute</a></li>
+        <lift:Menu.group group="left">
+          <li><menu:bind></li>
+        </lift:Menu.group>
+        <li class="clearable"><a href="/vera.html">Vera</a></li>
+        <li class="clearable"><a href="/autobiography.html">Autobiography</a></li>
+        <li class="clearable"><a href="/video.html">Documentaries</a></li>
+        <li class="clearable"><a href="/timeline.html">Timeline</a></li>
+        <li class="clearable"><a href="/browse.html">Browse</a></li>
+        <li class="clearable"><a href="/about.html">About</a></li>
+        <li class="clearable"><a href="/contribute.html">Contribute</a></li>
       </ul>
-      <ul id="menu_right">
-        <li><a href="/backstage.html">Backstage</a></li>
-        <li><a href="#">Sign In</a></li>
+      <div class="lift:Menu.builder?linkToSelf=true&ul:id=menu_right"></div>
+      <ul id="menu_right" class="clearable">
+        <li class="clearable"><a href="/backstage.html">Backstage</a></li>
+        <li class="clearable"><a href="#">Sign In</a></li>
       </ul>
     </nav>
   </header>
-  <div id="main" role="main" class="clearfix lift:surround?with=default&at=content">
-    <div class="full_screen_image"><img src="/img/Vera2.jpg" class="full_screen_image" /></div>
-    
-    <div id="content" class="without_sidebar">
-      <div class="floatcenter">
-      </div>
-      <div class="flags_left">
-      </div>
-      <div class="flags_right">
-        <a href="/artifact.html" id="flag_next">Next</a>
-      </div>
-    </div>
+  <div class="lift:Msgs?showAll=true"></div>
   
-  </div><!-- end div "main" -->
+    <!-- Main artifact -->
+    <span id="content">
+      Content of the page...
+    </span>
 
 
 
@@ -69,6 +68,15 @@
   <!-- Grab Google CDN's jQuery, with a protocol relative URL; fall back to local if offline -->
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
   <script>window.jQuery || document.write('<script src="js/libs/jquery-1.7.1.min.js"><\/script>')</script>
+  <script id="json" src="/classpath/json.js" type="text/javascript"></script>
+  <script type="text/javascript" src="/js/libs/openid-jquery.js"></script>
+	<script type="text/javascript" src="/js/libs/openid-en.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function() {
+			openid.init('openid_identifier');
+			//openid.setDemoMode(true); //Stops form submission for client javascript-only test purposes
+		});
+	</script>
 
   <!-- scripts concatenated and minified via build script -->
   <script src="/js/plugins.js"></script>
@@ -83,5 +91,7 @@
     g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
     s.parentNode.insertBefore(g,s)}(document,'script'));
   </script>
+  <script src="/js/libs/openid-jquery.js"></script>
+  <script src="/js/libs/openid-en.js"></script>
 </body>
 </html>

@@ -1,44 +1,49 @@
 package edu.cmu.etc.verastark.model
 
-import net.liftweb.common.Full
+import _root_.net.liftweb.mapper._
+import _root_.net.liftweb.util._
+import _root_.net.liftweb.common._
+import net.liftweb.openid.{OpenIDProtoUser, MetaOpenIDProtoUser}
 
-import net.liftweb.mapper.{By,MegaProtoUser,MetaMegaProtoUser}
 
 /**
  * The singleton that has methods for accessing the database
  */
-object User extends User with MetaMegaProtoUser[User] {
+object User extends User with MetaOpenIDProtoUser[User] with LongKeyedMetaMapper[User] with Logger {
+  def openIDVendor = DefaultOpenIDVendor
   override def dbTableName = "users" // define the DB table name
-  
-  // Just for testing purposes. In production we remove this
-  override def skipEmailValidation = true
+  override def screenWrap = Full(<lift:surround with="login_template" at="content"><lift:bind /></lift:surround>)
+  // override def screenWrap = Full(<lift:surround with="default" at="content"><lift:bind /></lift:surround>)
 
-  // Spruce up the forms a bit
-  override def screenWrap = 
-    Full(<lift:surround with="default" at="content"><div id="formBox"><lift:bind /></div></lift:surround>)
-
+  override def loginXhtml =  <lift:embed what="login" />
   // define the order fields will appear in forms and output
-  //override def fieldOrder = id :: firstName :: lastName :: email :: password :: Nil
+  override def fieldOrder = List(id, firstName, lastName, email,
+  locale, timezone, password, textArea)
+
+  // comment this line out to require email validations
+  override def skipEmailValidation = true
 }
 
 /**
  * An O-R mapped "User" class that includes first name, last name, password and we add a "Personal Essay" to it
  */
-class User extends MegaProtoUser[User] {
+class User extends LongKeyedMapper[User] with OpenIDProtoUser[User] {
   def getSingleton = User // what's the "meta" server
-  
-  // def accounts : List[Account] = Account.findAll(By(Account.owner, this.id))
 
-  // def administered : List[Account] = AccountAdmin.findAll(By(AccountAdmin.administrator, this.id)).map(_.account.obj.open_!)
+  // define an additional field for a personal essay
+  object textArea extends MappedTextarea(this, 2048) {
+    override def textareaRows  = 10
+    override def textareaCols = 50
+    override def displayName = "Personal Essay"
+  }
 
-  // def editable = accounts ++ administered
-    
-  // def viewed : List[Account] = AccountViewer.findAll(By(AccountViewer.viewer, this.id)).map(_.account.obj.open_!)
+  //Default OpenIDProtoUser implementation uses nickname so swapping this out for standard FirstName Surname (Email) format.
+  override def niceName: String = (firstName.is, lastName.is, email.is) match {
+    case (f, l, e) if f.length > 1 && l.length > 1 => f+" "+l+" ("+e+")"
+    case (f, _, e) if f.length > 1 => f+" ("+e+")"
+    case (_, l, e) if l.length > 1 => l+" ("+e+")"
+    case (_, _, e) => e
+  }
 
-  // def allAccounts : List[Account] = accounts ::: administered ::: viewed
 }
 
-/**
- * Temporary stuff...
- */
-// class Account {}

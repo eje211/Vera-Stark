@@ -10,6 +10,7 @@ import java.text.SimpleDateFormat
 import code.lib._
 import sitemap._
 import Helpers._
+import textile._
 
 import edu.cmu.etc.verastark.model._
 
@@ -45,7 +46,7 @@ object ArtifactPageMenu {
     case ArtifactList    => "index"
   }
 
-  val menu = Menu.param[ArtifactParam]("Artifact", "Artifact", parse _, encode _) / "artifact"
+  val menu = Menu.param[ArtifactParam]("Artifact", "Artifact", parse _, encode _) / "artifact" 
   lazy val loc = menu.toLoc
 
   def render = "*" #> loc.currentValue.map(encode(_))
@@ -116,11 +117,11 @@ class ArtifactContainerSnippet(ap: ArtifactParam) {
 
 class ArtifactSnippet(ap: ArtifactPage) {
   def render =
-    "#artifact_image [src]"  #> ap.a.url.is          &
-    ".artist *"              #> ap.a.artist.is       &
-    ".title *"               #> ap.a.title.is        &
-    ".date"                  #> ap.a.date.is         &
-    ".description *"         #> ap.a.content.is      &
+    "#artifact_image [src]"  #> ap.a.url.is                           &
+    ".artist *"              #> ap.a.artist.is                        &
+    ".title *"               #> ap.a.title.is                         &
+    ".date"                  #> ap.a.date.is                          &
+    ".description *"         #> TextileParser.toHtml(ap.a.content.is) &
     ".authorName *"          #> ArtifactTools.art_owner(ap.a.owner.is.toInt).map(u => u.firstName + " " + u.lastName)
 }
 
