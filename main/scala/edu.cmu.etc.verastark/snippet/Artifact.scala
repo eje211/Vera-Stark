@@ -31,8 +31,8 @@ object ArtifactPageMenu {
   def parse(value: String) =
     try {
       // Repackage the box if it's full. Otherwise, send the placeholder object.
-      // ArtifactTools.getArtifactById(value.toInt).map( a => ArtifactPage(a)) or Full(ArtifactNotFound)
-      ArtifactTools.getArtifactById(1).map( a => ArtifactPage(a)) or Full(ArtifactNotFound)
+      ArtifactTools.getArtifactById(value.toInt).map( a => ArtifactPage(a)) or Full(ArtifactNotFound)
+      // ArtifactTools.getArtifactById(1).map( a => ArtifactPage(a)) or Full(ArtifactNotFound)
     } catch {
       case nfe: NumberFormatException =>
         if (value == "new") Full(ArtifactNew)
@@ -70,17 +70,15 @@ class ArtifactEditForm(ap:ArtifactPage) {
     var date    = ""
     val dateFormat = new SimpleDateFormat("MM/dd/yyyy, hh:mm a")
     def processArtifact = {
-      ap.a.title(title).artist(artist).content(content).date(date)
-      ap.a.changed(now) //dateFormat.parse(now.toString))
-      ap.a.save
+      ap.a.title(title).artist(artist).content(content).date(date).changed(now).save
     }
 
     ".title"          #> SHtml.onSubmit(title = _)   &
     ".title [value]"  #> ap.a.title.is               &
     ".artist"         #> SHtml.onSubmit(artist = _)  &	
     ".artist [value]" #> ap.a.artist.is              &
-    ".content"        #> SHtml.onSubmit(content = _) &
-    ".content *"      #> ap.a.content.is             &
+    ".description"    #> SHtml.onSubmit(content = _) &
+    ".description *"  #> ap.a.content.is             &
     ".date"           #> SHtml.onSubmit(date = _)    &
     ".date [value]"   #> ap.a.date.is                &
     "type=submit"     #> SHtml.submit("Submit", processArtifact _)
@@ -99,16 +97,31 @@ class ArtifactContainer(ai: Artifactid) {
 }
 */
 
-class ArtifactSnippet(ap: ArtifactPage) {
-  def render = {
-    "#artifact_image [src]" #> ap.a.url.is     &
-    ".artist *"             #> ap.a.artist.is  &
-    ".title *"              #> ap.a.title.is   &
-    ".date"                 #> ap.a.date.is    &
-    ".description *"        #> ap.a.content.is &
-    ".authorName *"         #> ArtifactTools.art_owner(ap.a.owner.is.toInt).map(u => u.firstName + " " + u.lastName)
-    // "p *"  #> current_page.content
+class ArtifactContainerSnippet(ap: ArtifactParam) {
+  def render = ap match {
+    case ArtifactList    => renderList
+    case ArtifactPage(p) => renderPage
   }
+
+  def renderList =
+    "#artifact_list ^^"      #> "*"           &
+    "#artifact_list [class]" #> "static_page" &
+    "#artifact_list [id]"    #> "content"
+
+  def renderPage =
+    "#artifact_item ^^"      #> "*"               &
+    "#artifact_item [id]"    #> "content"         &
+    "#artifact_item [class]" #> "without_sidebar"
+}
+
+class ArtifactSnippet(ap: ArtifactPage) {
+  def render =
+    "#artifact_image [src]"  #> ap.a.url.is          &
+    ".artist *"              #> ap.a.artist.is       &
+    ".title *"               #> ap.a.title.is        &
+    ".date"                  #> ap.a.date.is         &
+    ".description *"         #> ap.a.content.is      &
+    ".authorName *"          #> ArtifactTools.art_owner(ap.a.owner.is.toInt).map(u => u.firstName + " " + u.lastName)
 }
 
 /*
