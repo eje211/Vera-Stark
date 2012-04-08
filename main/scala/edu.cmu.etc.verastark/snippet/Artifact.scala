@@ -101,6 +101,7 @@ class ArtifactContainer(ai: Artifactid) {
 class ArtifactContainerSnippet(ap: ArtifactParam) {
   def render = ap match {
     case ArtifactList    => renderList
+    case ArtifactNew     => renderNew
     case ArtifactPage(p) => renderPage
   }
 
@@ -113,6 +114,11 @@ class ArtifactContainerSnippet(ap: ArtifactParam) {
     "#artifact_item ^^"      #> "*"               &
     "#artifact_item [id]"    #> "content"         &
     "#artifact_item [class]" #> "without_sidebar"
+
+  def renderNew =
+    "#artifact_new ^^"       #> "*"               &
+    "#artifact_new [id]"     #> "content"
+
 }
 
 class ArtifactSnippet(ap: ArtifactPage) {
@@ -123,6 +129,10 @@ class ArtifactSnippet(ap: ArtifactPage) {
     ".date"                  #> ap.a.date.is                          &
     ".description *"         #> TextileParser.toHtml(ap.a.content.is) &
     ".authorName *"          #> ArtifactTools.art_owner(ap.a.owner.is.toInt).map(u => u.firstName + " " + u.lastName)
+}
+
+class NewArtifact {
+  def render = "*" #> ClearClearable
 }
 
 /*

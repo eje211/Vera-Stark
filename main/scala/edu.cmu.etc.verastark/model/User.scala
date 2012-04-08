@@ -3,6 +3,8 @@ package edu.cmu.etc.verastark.model
 import _root_.net.liftweb.mapper._
 import _root_.net.liftweb.util._
 import _root_.net.liftweb.common._
+import _root_.net.liftweb.sitemap.{Menu, Loc}
+import _root_.net.liftweb.http.S
 import net.liftweb.openid.{OpenIDProtoUser, MetaOpenIDProtoUser}
 
 
@@ -22,6 +24,9 @@ object User extends User with MetaOpenIDProtoUser[User] with LongKeyedMetaMapper
 
   // comment this line out to require email validations
   override def skipEmailValidation = true
+  
+  override def loginMenuLoc: Box[Menu] =  
+    Full(Menu(Loc("Login", loginPath, "Sign In", loginMenuLocParams)))  
 }
 
 /**

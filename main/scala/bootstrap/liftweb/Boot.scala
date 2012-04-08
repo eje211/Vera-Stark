@@ -14,6 +14,7 @@ import java.sql.{Connection, DriverManager}
 // import our models
 import edu.cmu.etc.verastark.model._
 import edu.cmu.etc.verastark.snippet._
+import edu.cmu.etc.verastark.lib._
 
 
 /**
@@ -80,6 +81,21 @@ class Boot {
     // Use HTML5 for rendering
     LiftRules.htmlProperties.default.set((r: Req) =>
       new Html5Properties(r.userAgent))    
+    
+    LiftRules.maxMimeFileSize = 40000000L
+    LiftRules.maxMimeSize = 40000000L
+    LiftRules.dispatch.append(UploadManager)
+
+    // // Use jQuery 1.4
+    // LiftRules.jsArtifacts = net.liftweb.http.js.jquery.JQuery14Artifacts
+
+    //Show the spinny image when an Ajax call starts
+    LiftRules.ajaxStart =
+      Full(() => LiftRules.jsArtifacts.show("ajax-loader").cmd)
+    
+    // Make the spinny image go away when it ends
+    LiftRules.ajaxEnd =
+      Full(() => LiftRules.jsArtifacts.hide("ajax-loader").cmd)
 
     // OpenID rules
     LiftRules.dispatch.append(DefaultOpenIDVendor.dispatchPF)

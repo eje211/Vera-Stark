@@ -49,8 +49,34 @@
   </header>
   <div id="main" role="main" class="lift:surround?with=default&at=content clearfix">
   
-    <!-- Main artifact -->
+    <!-- New artifact -->
     <div id="content"  class="lift:ArtifactContainerSnippet without_sidebar">
+      <div id="artifact_new">
+        <span class="lift:tail">
+          <script src="/js/libs/jquery.ui.widget.min.js"></script>
+          <script src="/js/libs/jquery.iframe-transport.js"></script>
+          <script src="/js/libs/jquery.fileupload.js"></script>
+          <script src="/js/ajax-file-upload.js"></script>
+        </span>
+        <div class="floatcenter">
+          <div class="matwrap text">
+            
+            <section class="static_page">
+              <p>Form goes here.
+              </p>
+              <div id="image" style="width:640px; height:180px; background:gray"><span>Drop image here</span></div>
+              <form id="new_artifact" class="lift:NewArtifact?form=post&multipart=true">
+                <p>Use this form to upload a digital copy of an artifact relevant
+                  to the life and legacy of Vera Stark.
+                </p>
+                <p><input type="file" id="artifact_file" /></p>
+                <p><input type="submit" value="Send file" id="submit_artifact" /></p>
+              </form>
+              <span class="flourish"></span>
+            </section>
+          </div>
+        </div>
+      </div>
       <div id="artifact_list">
         <div class="floatcenter">
           <div class="matwrap text">
