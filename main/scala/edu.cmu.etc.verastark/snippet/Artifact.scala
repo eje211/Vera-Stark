@@ -11,6 +11,7 @@ import code.lib._
 import sitemap._
 import Helpers._
 import textile._
+import mapper.By
 
 import edu.cmu.etc.verastark.model._
 
@@ -32,7 +33,8 @@ object ArtifactPageMenu {
   def parse(value: String) =
     try {
       // Repackage the box if it's full. Otherwise, send the placeholder object.
-      ArtifactTools.getArtifactById(value.toInt).map( a => ArtifactPage(a)) or Full(ArtifactNotFound)
+      //ArtifactTools.getArtifactById(value.toInt).map( a => ArtifactPage(a)) or Full(ArtifactNotFound)
+      Artifact.find(By(Artifact.id, value.toInt)).map( a => ArtifactPage(a)) or Full(ArtifactNotFound)
       // ArtifactTools.getArtifactById(1).map( a => ArtifactPage(a)) or Full(ArtifactNotFound)
     } catch {
       case nfe: NumberFormatException =>
@@ -122,17 +124,34 @@ class ArtifactContainerSnippet(ap: ArtifactParam) {
 }
 
 class ArtifactSnippet(ap: ArtifactPage) {
-  def render =
+  def render = {
     "#artifact_image [src]"  #> ap.a.url.is                           &
     ".artist *"              #> ap.a.artist.is                        &
     ".title *"               #> ap.a.title.is                         &
     ".date"                  #> ap.a.date.is                          &
     ".description *"         #> TextileParser.toHtml(ap.a.content.is) &
-    ".authorName *"          #> ArtifactTools.art_owner(ap.a.owner.is.toInt).map(u => u.firstName + " " + u.lastName)
+    ".authorName *"          #> (ap.a.owner.map(u => u.firstName + " " + u.lastName) openOr "Unknown")
+  }
 }
 
 class NewArtifact {
   def render = "*" #> ClearClearable
+}
+
+class ArtifactList {
+  def render =
+    "ul *" #> Artifact.findAllByPreparedStatement({superconn =>
+      superconn.connection.prepareStatement(
+        "SELECT * FROM artifact a " /* +
+        "JOIN users current ON current.id = " + (User.currentUserId.map(_.toString) openOr "1") + " " +
+        "JOIN users aowner ON a.ownerid = aowner.id " +
+        "WHERE a.published = TRUE OR " +
+        "aowner.id = current.id OR " +
+        "current.superuser = TRUE OR " +
+        "current.editor = TRUE GROUP BY a.id" */
+    )}).flatMap(
+      a => <li><a href={"/artifact/" + a.id}>{a.title}</a></li>
+    ) & ClearClearable
 }
 
 /*
@@ -146,3 +165,17 @@ object ArtifactScreen extends LiftScreen {
   def finish() {}
 }
 */
+
+class CommentField(ap: ArtifactPage) {
+  def render = {
+    var content   = ""
+    var art_id    = 0
+    var published = true
+    def processComment = 
+      if (content.length > 0)
+      Comment.create.content(content).owner(User.currentUserId.map(_.toInt) openOr 1).date(now).art_id(ap.a.id).published(true).save
+
+    "textarea"    #> SHtml.onSubmit(content = _) &
+    "type=submit" #> SHtml.submit("Write Comment", processComment _)
+  }
+}

@@ -24,21 +24,13 @@ class Artifact extends LongKeyedMapper[Artifact] with OneToMany[Long, Artifact] 
     override def toForm = S.fmapFunc({s: String => this.setFromAny(s)}){funcName =>  
     Full(<input name={funcName} id={fieldId} value={is} class="artist text" />)}  
   }
-  object owner     extends MappedLongForeignKey(this, User)
+  object ownerid   extends MappedLongForeignKey(this, User)
   object item      extends MappedLongForeignKey(this, Item)
   object pubLished extends MappedBoolean       (this)
   object deleted   extends MappedBoolean       (this)
   object changed   extends MappedDateTime      (this)
   object comments  extends MappedOneToMany     (Comment, Comment.art_id, OrderBy(Comment.date, Ascending))
+  def    owner = User.find(By(User.id, this.ownerid))
 }
 
-object Artifact extends Artifact with LongKeyedMetaMapper[Artifact] 
-
-object ArtifactTools extends Artifact with LongKeyedMetaMapper[Artifact] {
-  def getArtifactById(id: Int): Box[Artifact] =
-    Artifact.findAll(By(Artifact.id, id)) match {
-      case head :: tail => Full(head)
-      case _            => Empty
-    }
-  def art_owner(id: Int): Box[User] = User.findAll(By(User.id, id)) match {case head :: tail => Full(head) case _ => Empty }
-}
+object Artifact extends Artifact with LongKeyedMetaMapper[Artifact]

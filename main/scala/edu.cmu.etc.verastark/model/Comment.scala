@@ -12,7 +12,7 @@ class Comment extends LongKeyedMapper[Comment] with IdPK {
   // object item      extends MappedLongForeignKey(this, Item)
   object art_id    extends MappedLongForeignKey(this, Artifact)
   // object com_type  extends MappedString        (this, 10)
-  object pubLished extends MappedBoolean       (this)
+  object published extends MappedBoolean       (this)
 }
 
 object Comment extends Comment with LongKeyedMetaMapper[Comment]
