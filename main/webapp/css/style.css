@@ -688,6 +688,24 @@ h1#vera_verastark {
   color: black;
   margin: 0;
 }
+.dotted_box {
+  margin: 2em;
+  padding: 2em;
+  text-align: center;
+  border: dashed 3px #555;
+  color: #555;
+}
+div.static_page input.file {
+  width: 80%;
+  border: solid 1px #ccc;
+}
+div.static_page input.text {
+  width: 80%;
+}
+
+/* Default Text Classes */
+.default_text {}
+.default_text_active { color: #aaa; font-style: italic; text-align: center; }
     
     
     

@@ -5,15 +5,6 @@
 /* Utility */
 function clamp(val, min, max) { return Math.max(min, Math.min(max, val)); }
 
-/* Auto-append classes onto input fields */
-$.map($("input"), function(e, i) {
-    if ( $(e).prop("type") == "text" ) { $(e).addClass("text"); }
-    else if ( $(e).prop("type") == "button" ) { $(e).addClass("button"); }
-    else if ( $(e).prop("type") == "submit" ) { $(e).addClass("button"); }
-  });
-$.map($("textarea"), function(e, i) {
-    $(e).addClass("textarea");
-  });
 
 /* Positioning fixes on window resize events */
 var windowResizeTimer;
@@ -132,10 +123,47 @@ $.map($("textarea"), function(e, i) {
     $(e).keydown(function(event) { event.stopPropagation(); });
   });
 
+/* Default text in text fields */
+var defaultTextFocus = function(event) {
+    if ( $(this).val() == $(this).prop("title") ) {
+      $(this).removeClass("default_text_active");
+      $(this).val("");
+    }
+    else {
+      $(this).select();
+    }
+  }
+var defaultTextBlur = function(event) {
+    if ( $(this).val() == "" ) {
+      $(this).addClass("default_text_active");
+      $(this).val($(this).prop("title"));
+    }
+  }
+var defaultTextMouseUp = function(event) {
+  event.preventDefault();
+}
   
-  
-// Initialization
+/* Page Initialization */
 window.onload = function() {
+
+  // Auto-append classes onto certain fields
+  $.map($("input"), function(e, i) {
+      if ( $(e).prop("type") == "text" ) { $(e).addClass("text"); }
+      else if ( $(e).prop("type") == "file" ) { $(e).addClass("file"); }
+      else if ( $(e).prop("type") == "button" ) { $(e).addClass("button"); }
+      else if ( $(e).prop("type") == "submit" ) { $(e).addClass("button"); }
+    });
+  $.map($("textarea"), function(e, i) {
+      $(e).addClass("textarea");
+    });
+    
+  // Establish text-replace behavior on default_text fields
+  $(".default_text").focus( defaultTextFocus );
+  $(".default_text").blur( defaultTextBlur );
+  $(".default_text").mouseup( defaultTextMouseUp );
+  $(".default_text").blur();
+
+  // Fix up element positions based on window size
   fixPositions();
   $("div.matwrap").css("visibility", "visible");
 }
