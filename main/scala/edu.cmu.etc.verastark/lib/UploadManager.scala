@@ -17,7 +17,7 @@ import java.io.{InputStream, StringReader}
 
 object UploadManager extends RestHelper {
   serve {
-    case "artifact" :: Nil Post req => {
+    case "artifactupload" :: Nil Post req => {
          def saveImage(fph: FileParamHolder) = {
          val imageName = StringHelpers.randomString(16)
                /*

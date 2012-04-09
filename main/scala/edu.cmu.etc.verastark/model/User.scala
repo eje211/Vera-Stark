@@ -20,7 +20,7 @@ object User extends User with MetaOpenIDProtoUser[User] with LongKeyedMetaMapper
   override def loginXhtml =  <lift:embed what="login" />
   // define the order fields will appear in forms and output
   override def fieldOrder = List(id, firstName, lastName, email,
-  locale, timezone, password, textArea)
+  locale, timezone, password)
 
   // comment this line out to require email validations
   override def skipEmailValidation = true
@@ -35,20 +35,17 @@ object User extends User with MetaOpenIDProtoUser[User] with LongKeyedMetaMapper
 class User extends LongKeyedMapper[User] with OpenIDProtoUser[User] {
   def getSingleton = User // what's the "meta" server
 
-  // define an additional field for a personal essay
-  object textArea extends MappedTextarea(this, 2048) {
-    override def textareaRows  = 10
-    override def textareaCols = 50
-    override def displayName = "Personal Essay"
-  }
+  object editor extends MappedBoolean(this)
 
   //Default OpenIDProtoUser implementation uses nickname so swapping this out for standard FirstName Surname (Email) format.
+  /*
   override def niceName: String = (firstName.is, lastName.is, email.is) match {
     case (f, l, e) if f.length > 1 && l.length > 1 => f+" "+l+" ("+e+")"
     case (f, _, e) if f.length > 1 => f+" ("+e+")"
     case (_, l, e) if l.length > 1 => l+" ("+e+")"
     case (_, _, e) => e
   }
+  */
 
 }
 

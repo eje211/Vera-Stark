@@ -142,13 +142,13 @@ class ArtifactList {
   def render =
     "ul *" #> Artifact.findAllByPreparedStatement({superconn =>
       superconn.connection.prepareStatement(
-        "SELECT * FROM artifact a " /* +
+        "SELECT * FROM artifact a " +
         "JOIN users current ON current.id = " + (User.currentUserId.map(_.toString) openOr "1") + " " +
-        "JOIN users aowner ON a.ownerid = aowner.id " +
+        "JOIN users aowner ON a.ownerid = current.id " +
         "WHERE a.published = TRUE OR " +
         "aowner.id = current.id OR " +
         "current.superuser = TRUE OR " +
-        "current.editor = TRUE GROUP BY a.id" */
+        "current.editor = TRUE GROUP BY a.id"
     )}).flatMap(
       a => <li><a href={"/artifact/" + a.id}>{a.title}</a></li>
     ) & ClearClearable
@@ -165,17 +165,3 @@ object ArtifactScreen extends LiftScreen {
   def finish() {}
 }
 */
-
-class CommentField(ap: ArtifactPage) {
-  def render = {
-    var content   = ""
-    var art_id    = 0
-    var published = true
-    def processComment = 
-      if (content.length > 0)
-      Comment.create.content(content).owner(User.currentUserId.map(_.toInt) openOr 1).date(now).art_id(ap.a.id).published(true).save
-
-    "textarea"    #> SHtml.onSubmit(content = _) &
-    "type=submit" #> SHtml.submit("Write Comment", processComment _)
-  }
-}
