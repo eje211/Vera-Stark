@@ -691,7 +691,17 @@ h1#vera_verastark {
     
     
     
-
+/* OpenID Login Form */
+form#openid_form {
+  position: fixed;
+  left: 2em;
+  right: 2em;
+  top: 30px;
+  background-color: white;
+  border: groove 4px white;
+  padding: 2em;
+  text-align: center;
+}
 
 
 
