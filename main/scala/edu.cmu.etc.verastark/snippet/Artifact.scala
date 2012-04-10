@@ -13,6 +13,8 @@ import Helpers._
 import textile._
 import mapper.By
 
+import java.io._
+
 import edu.cmu.etc.verastark.model._
 
 class ArtifactParam
@@ -71,9 +73,9 @@ class ArtifactEditForm(ap:ArtifactPage) {
     var artist  = ""
     var content = ""
     var date    = ""
-    val dateFormat = new SimpleDateFormat("MM/dd/yyyy, hh:mm a")
     def processArtifact = {
       ap.a.title(title).artist(artist).content(content).date(date).changed(now).save
+      S.redirectTo("/artifact/" + ap.a.id.toString)
     }
 
     ".title"          #> SHtml.onSubmit(title = _)   &
@@ -118,24 +120,56 @@ class ArtifactContainerSnippet(ap: ArtifactParam) {
     "#artifact_item [class]" #> "without_sidebar"
 
   def renderNew =
-    "#artifact_new ^^"       #> "*"               &
+    "#artifact_new ^^"       #> "*" &
     "#artifact_new [id]"     #> "content"
 
 }
 
 class ArtifactSnippet(ap: ArtifactPage) {
-  def render = {
-    "#artifact_image [src]"  #> ap.a.url.is                           &
+  def render =
     ".artist *"              #> ap.a.artist.is                        &
     ".title *"               #> ap.a.title.is                         &
     ".date"                  #> ap.a.date.is                          &
     ".description *"         #> TextileParser.toHtml(ap.a.content.is) &
-    ".authorName *"          #> (ap.a.owner.map(u => u.firstName + " " + u.lastName) openOr "Unknown")
-  }
+    ".authorName *"          #> (ap.a.owner.map(u => u.firstName + " " + u.lastName) openOr "Unknown") &
+    ".artifact-comments"     #> Comment.findAll(By(Comment.art_id, ap.a.id)).flatMap(c =>
+      <article class="comment">
+        <a href="/profile/bradbuchanan"><img src="/img/avatar_herb.png" /></a>
+        <a href="/profile/bradbuchanan">{c.owner.map(s => s.firstName + " " + s.lastName) openOr "Annonymous"}</a>
+        {c.content.is}
+        <p class="comment_age">Today</p>
+      </article> ) & 
+    "#comment-field [class+]" #> (if (User.currentUserId isEmpty) "clearable" else "") andThen
+    "#comment-field"          #> ClearClearable
+}
+
+class ArtifactImage(ap: ArtifactPage) {
+  def render =
+    "img [src]" #> ap.a.url.is
 }
 
 class NewArtifact {
-  def render = "*" #> ClearClearable
+  def render = {
+    var fileHandler: Box[FileParamHolder] = Empty
+    def saveImage = fileHandler match {
+      case Full(file: FileParamHolder) => {
+        var art = Artifact.create// Not efficient but we need the ID now.
+        art.save
+        art.url("/upload/" + art.id.toString + ".png").title("New Artifact").save
+        var f = new File(System.getProperty("user.dir") + "/src/main/webapp/upload/" + art.id.toString + ".png")
+        if (!f.exists) f.createNewFile
+        var output = new FileOutputStream(f)
+        try {output.write(file.file)}
+        catch {case e => println(e)}
+        finally {output.close; output = null}
+        S.redirectTo("/artifact/" + art.id.toString)
+      }
+      case _ => ()
+    }
+
+    "type=file"   #> SHtml.fileUpload(fph => fileHandler = Full(fph)) &
+    "type=submit" #> SHtml.submit("Send artifact", saveImage _)
+  }
 }
 
 class ArtifactList {
@@ -172,8 +206,10 @@ class CommentField(ap: ArtifactPage) {
     var art_id    = 0
     var published = true
     def processComment = 
-      if (content.length > 0)
-      Comment.create.content(content).owner(User.currentUserId.map(_.toInt) openOr 1).date(now).art_id(ap.a.id).published(true).save
+      if (content.length > 0) {
+        Comment.create.content(content).ownerid(User.currentUserId.map(_.toInt) openOr 1).date(now).art_id(ap.a.id).published(true).save
+        S.redirectTo("/artifact/" + ap.a.id.toString)
+      }
 
     "textarea"    #> SHtml.onSubmit(content = _) &
     "type=submit" #> SHtml.submit("Write Comment", processComment _)

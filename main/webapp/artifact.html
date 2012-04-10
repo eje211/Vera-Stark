@@ -51,32 +51,65 @@
   
     <!-- New artifact -->
     <div id="content"  class="lift:ArtifactContainerSnippet without_sidebar">
-      <div id="artifact_new">
-        <span class="lift:tail">
+      <div id="artifact_new" class="static_page">
+        <!--span class="lift:tail">
           <script src="/js/libs/jquery.ui.widget.min.js"></script>
           <script src="/js/libs/jquery.iframe-transport.js"></script>
           <script src="/js/libs/jquery.fileupload.js"></script>
           <script src="/js/ajax-file-upload.js"></script>
-        </span>
+        </span-->
+        <div class="floatcenter">
+            <div class="matwrap text">
+              <section class="static_page">
+                <hgroup>
+                  <h1>Protecting the Legacy</h1>
+                  <h2>Recording the History of Vera Stark</h2>
+                </hgroup>
+                <p>Seen Vera lately?  Share what you've discovered with us here:
+                </p>
+                <div id="new_artifact" class="lift:NewArtifact?form=post&multipart=true dotted_box">
+                  <label for="file_to_upload">Select a file to upload - JPG, PNG, GIF, MP3, WAV, OGG</label>
+                  <br /><input type="file" name="file_to_upload" title="Select a file to upload" />
+  
+                  <br />&nbsp;
+                  <br />- or -
+                  <br />&nbsp;
+  
+                  <label for="video_to_link" class="visuallyhidden">Paste a YouTube URL</label>
+                  <br /><input type="text" name="video_to_link" class="default_text" title="Paste a YouTube URL here" />
+  
+                  <br />&nbsp;
+                  <br /><input type="submit" value="Submit Artifact" />
+                </div>
+                <span class="flourish"></span>
+              </section>
+            </div>
+        </div>
+        <div class="flags_left">
+        </div>
+        <div class="flags_right">
+        </div>
+      </div>
+
+      <!--div id="artifact_new">
         <div class="floatcenter">
           <div class="matwrap text">
             
             <section class="static_page">
               <p>Form goes here.
               </p>
-              <div id="image" style="width:640px; height:180px; background:gray"><span>Drop image here</span></div>
-              <form id="new_artifact" class="lift:NewArtifact?form=post&multipart=true">
+              <div id="new_artifact" class="lift:NewArtifact?form=post&multipart=true">
                 <p>Use this form to upload a digital copy of an artifact relevant
                   to the life and legacy of Vera Stark.
                 </p>
                 <p><input type="file" id="artifact_file" /></p>
                 <p><input type="submit" value="Send file" id="submit_artifact" /></p>
-              </form>
+              </div>
               <span class="flourish"></span>
             </section>
           </div>
         </div>
-      </div>
+      </div-->
       <div id="artifact_list">
         <div class="floatcenter">
           <div class="matwrap text">
@@ -101,7 +134,7 @@
       <div id="artifact_item">
         <div class="floatcenter">
             <div class="matwrap image">
-              <img src="/img/belleposter.jpg" class="artifact" />
+              <img src="/img/belleposter.jpg" class="artifact lift:ArtifactImage" />
             </div>
         </div>
         <div class="flags_left">
@@ -117,10 +150,10 @@
 
     <!-- Sidebar section -->
     <div id="sidebar">
-      <div id="sidebar_talk" class="sidebar"><div class="card">
+      <div id="sidebar_talk" class="sidebar"><div class="card lift:ArtifactSnippet">
     
         <!-- Artifact Description -->
-        <section class="lift:ArtifactSnippet">
+        <section>
           <a href="/profile.html?u=herbforrester"><img src="/img/avatar_herb.png" /></a>
           <hgroup>
             <h2 class="artist">Unknown Artist</h2>
@@ -140,28 +173,27 @@
         
         <!-- Comment Section -->
         <aside>
-          <article class="comment">
+          <div class="artifact-comments">
+          <article class="comment clearable">
             <a href="/profile.html?u=bradbuchanan"><img src="/img/avatar_brad.png" /></a>
             <a href="/profile.html?u=bradbuchanan">Brad Buchanan</a>
             I love this part.  It always reminds me how human Vera was, and how she saw the world much like the
             rest of us do.
             <p class="comment_age">3 days ago</p>
-            
           </article>
-          <article class="comment">
+          <article class="comment clearable">
             <a href="/profile.html?u=valentinewiggin"><img src="/img/avatar_valentine.png" /></a>
             <a href="/profile.html?u=valentinewiggin">Valentine Wiggin</a>
             I disagree.  This sounds so fake and melodramatic - it can't be true.
             <p class="comment_age">2 days ago</p>
-            
           </article>
-          <article class="comment">
+          <article class="comment clearable">
             <a href="/profile.html?u=jameswood"><img src="/img/avatar_james.png" /></a>
             <a href="/profile.html?u=jameswood">James Wood</a>
             Where's the next section?
             <p class="comment_age">1 hour ago</p>
-            
           </article>
+          </div>
           
           <form id="comment-field" class="lift:CommentField?form=post">
             <textarea>Leave a comment...</textarea>
