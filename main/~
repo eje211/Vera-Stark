@@ -120,13 +120,13 @@ class ArtifactContainerSnippet(ap: ArtifactParam) {
     "#artifact_item [class]" #> "without_sidebar"
 
   def renderNew =
-    "#artifact_new ^^"       #> "*" &
+    "#artifact_new ^^"       #> "*"               &
     "#artifact_new [id]"     #> "content"
 
 }
 
 class ArtifactSnippet(ap: ArtifactPage) {
-  def render =
+  def render = {
     ".artist *"              #> ap.a.artist.is                        &
     ".title *"               #> ap.a.title.is                         &
     ".date"                  #> ap.a.date.is                          &
@@ -138,14 +138,14 @@ class ArtifactSnippet(ap: ArtifactPage) {
         <a href="/profile/bradbuchanan">{c.owner.map(s => s.firstName + " " + s.lastName) openOr "Annonymous"}</a>
         {c.content.is}
         <p class="comment_age">Today</p>
-      </article> ) & 
-    "#comment-field [class+]" #> (if (User.currentUserId isEmpty) "clearable" else "") andThen
-    "#comment-field"          #> ClearClearable
+      </article>
+    )
+  }
 }
 
 class ArtifactImage(ap: ArtifactPage) {
   def render =
-    "img [src]" #> ap.a.url.is
+    "img [src]" #> {ap.a.url.is}
 }
 
 class NewArtifact {
@@ -208,7 +208,7 @@ class CommentField(ap: ArtifactPage) {
     def processComment = 
       if (content.length > 0) {
         Comment.create.content(content).ownerid(User.currentUserId.map(_.toInt) openOr 1).date(now).art_id(ap.a.id).published(true).save
-        S.redirectTo("/artifact/" + ap.a.id.toString)
+        S.redirectTo("/artifact/" ap.a.id.toString)
       }
 
     "textarea"    #> SHtml.onSubmit(content = _) &

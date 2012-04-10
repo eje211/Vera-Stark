@@ -23,7 +23,6 @@ import edu.cmu.etc.verastark.lib._
  */
 class Boot {
   def boot {
-
     DB.defineConnectionManager(DefaultConnectionIdentifier, DBVendor)
     // }
 
@@ -46,6 +45,8 @@ class Boot {
 
       AutobiographyPageMenu.menu >> Hidden,
       Menu(Loc("AutobiographyStaticLink", Link("journal" :: "index" ::  Nil, true, "/journal/index"), "Autobiography", LocGroup("left"), Hidden)),
+
+      Menu(Loc("Contribute", Link("artifact" :: "new" ::  Nil, true, "/artifact/new"), "Contribute", LocGroup("left"), Hidden)),
 
       // more complex because this menu allows anything in the
       // /static path to be visible
