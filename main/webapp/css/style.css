@@ -420,6 +420,8 @@ div#content {
       padding: 2em;
     }
     div#content section hgroup {
+    }
+    div#content section hgroup.with_flourish {
       padding-bottom: 60px;
       margin-bottom: 30px;
       background-image: url('/img/flourish_150_33.png');
@@ -436,7 +438,12 @@ div#content {
       margin-top: 0;
       margin-bottom: 0;
     }
-    div#content section hgroup h2 {
+      div#content section h1.user_name {
+        text-align: right;
+        font-family: "Tw Cen MT", sans-serif;
+        margin-bottom: 0;
+      }
+    div#content section h2 {
       text-align: left;
       font-family: "Tw Cen MT", sans-serif;
       font-size: 22pt;
@@ -446,10 +453,27 @@ div#content {
       margin: -22px 0px 0px 4em;
       margin-bottom: 0;
     }
+      div#content section h2.user_rank {
+        text-align: right;
+      }
+    div#content section h3 {
+      text-align: left;
+      font-family: "Tw Cen MT", sans-serif;
+      font-size: 18pt;
+      font-weight: bold;
+      color: #6e321b;
+      margin-bottom: 0;
+      border-bottom: groove 2px #fff;
+    }
     div#content section ul {
       list-style: none;
       text-align: left;
     }
+      div#content section ul.right {
+        text-align: right;
+        margin: 0;
+        padding: 0;
+      }
     div#content section p {
       text-align: left;
     }
@@ -634,11 +658,72 @@ div.sidebar {
       width: 100%;
       height: 1.4em;
     }
-  
-  
+
+/* Contribute Page Elements */
+.dotted_box {
+  margin: 2em;
+  padding: 2em;
+  text-align: center;
+  border: dashed 3px #555;
+  color: #555;
+}
+div.static_page input.file {
+  width: 80%;
+  border: solid 1px #ccc;
+}
+div.static_page input.text {
+  width: 80%;
+}
+    
+/* Default Text Classes */
+.default_text {}
+.default_text_active { color: #aaa; font-style: italic; text-align: center; }
+    
+    
+    
+/* OpenID Login Form */
+form#openid_form {
+  position: fixed;
+  left: 2em;
+  right: 2em;
+  top: 30px;
+  background-color: white;
+  border: groove 4px white;
+  padding: 2em;
+  text-align: center;
+}
 
 
 /* Special Cases */
+div#content img#profile_page_photos {
+  position: absolute;
+  left: -290px;
+  top: -30px;
+  width: 494px;
+  height: 960px;
+  max-width: 494px;
+  max-height: 960px;
+}
+div#content img#profile_page_user_avatar {
+  position: absolute;
+  left: -117px;
+  top: 35px;
+  width: 228px;
+  -ms-transform:rotate(14.5deg); /* IE 9 */
+  -moz-transform:rotate(14.5deg); /* Firefox */
+  -webkit-transform:rotate(14.5deg); /* Safari and Chrome */
+  -o-transform:rotate(14.5deg); /* Opera */
+  transform:rotate(14.5deg);
+}
+div#content div.profile_column {
+  margin-left: 150px;
+  text-align: left;
+  line-height: 1.1;
+}
+div#content p.user_description {
+  font-style: italic;
+  text-align: right;
+}
 div#content img#vera_fashion_shots {
   position: absolute;
   right: -190px;
@@ -688,38 +773,10 @@ h1#vera_verastark {
   color: black;
   margin: 0;
 }
-.dotted_box {
-  margin: 2em;
-  padding: 2em;
-  text-align: center;
-  border: dashed 3px #555;
-  color: #555;
-}
-div.static_page input.file {
-  width: 80%;
-  border: solid 1px #ccc;
-}
-div.static_page input.text {
-  width: 80%;
-}
 
-/* Default Text Classes */
-.default_text {}
-.default_text_active { color: #aaa; font-style: italic; text-align: center; }
-    
-    
-    
-/* OpenID Login Form */
-form#openid_form {
-  position: fixed;
-  left: 2em;
-  right: 2em;
-  top: 30px;
-  background-color: white;
-  border: groove 4px white;
-  padding: 2em;
-  text-align: center;
-}
+
+
+
 
 
 
