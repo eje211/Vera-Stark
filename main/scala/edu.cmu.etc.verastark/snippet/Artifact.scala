@@ -167,9 +167,16 @@ class NewArtifact {
       case _ => ()
     }
 
-    "type=file"   #> SHtml.fileUpload(fph => fileHandler = Full(fph)) &
-    "type=submit" #> SHtml.submit("Send artifact", saveImage _)
+    "type=file"              #> SHtml.fileUpload(fph => fileHandler = Full(fph))      &
+    "type=submit"            #> SHtml.submit("Send artifact", saveImage _)
   }
+}
+
+class ContributeFilter {
+  def render =
+    "#no_user [class+]"      #> (if (User.currentUserId isEmpty) "" else "clearable") &
+    "#new_artifact [class+]" #> (if (User.currentUserId isEmpty) "clearable" else "") andThen
+    "*"                      #> ClearClearable
 }
 
 class ArtifactList {

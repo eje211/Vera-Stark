@@ -10,8 +10,10 @@ import net.liftweb.json.JsonDSL._
 import net.liftweb.common.{Box, Full, Empty}
 import net.liftweb.http.BadResponse
 import net.liftweb.util.StringHelpers
+import net.liftweb.util.Helpers._
 
-import java.io.{InputStream, StringReader, File, FileOutputStream}
+import java.io._
+import javax.activation.MimetypesFileTypeMap;
 
 import edu.cmu.etc.verastark.model.Artifact
 
@@ -53,6 +55,20 @@ object UploadManager extends RestHelper {
       }
       */
       InMemoryResponse(Array[Byte](), ("Content-Type", "image/png") :: Nil, Nil, 200)
+    }
+    case "testing" :: imageId :: _ Get req => {
+      println("In REST helper for: " + imageId)
+      val f = new File(System.getProperty("user.dir") + "/src/main/webapp/upload/" + imageId + ".png")
+      println(new MimetypesFileTypeMap().getContentType(f))
+      f.exists match {
+        case true  => {
+          println("File exists.")
+          val fis = new FileInputStream(f)
+          StreamingResponse(fis, () => fis.close,
+            f.length, List("Content-Type" -> "image/png"), Nil, 200)
+        }
+        case false => InMemoryResponse(Array(), ("Content-Type", "text/plain") :: Nil, Nil, 404)
+      }
     }
   }
 }
