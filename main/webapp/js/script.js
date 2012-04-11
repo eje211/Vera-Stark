@@ -5,7 +5,6 @@
 /* Utility */
 function clamp(val, min, max) { return Math.max(min, Math.min(max, val)); }
 
-
 /* Positioning fixes on window resize events */
 var windowResizeTimer;
 var fixPositions = function() {
@@ -133,9 +132,6 @@ var defaultTextFocus = function(event) {
       $(this).removeClass("default_text_active");
       $(this).val("");
     }
-    else {
-      $(this).select();
-    }
   }
 var defaultTextBlur = function(event) {
     if ( $(this).val() == "" ) {
@@ -143,9 +139,25 @@ var defaultTextBlur = function(event) {
       $(this).val($(this).prop("title"));
     }
   }
-var defaultTextMouseUp = function(event) {
+/* Select on click in text fields */
+var selectTextFocus = function(event) {
+    if ( $(this).val() != $(this).prop("title") ) {
+      $(this).select();
+    }
+  }
+var selectTextMouseUp = function(event) {
   event.preventDefault();
 }
+
+/* Comment box special behavior */
+var commentBoxKeyDown = function(event) {
+    if ( event.keyCode == 13 ) { // Enter Key
+      if ( ! event.shiftKey ) { // Without Shift
+        event.preventDefault();
+        $("form#comment-field").submit();
+      }
+    }
+  }
   
 /* Page Initialization */
 window.onload = function() {
@@ -162,10 +174,14 @@ window.onload = function() {
     });
     
   // Establish text-replace behavior on default_text fields
+  $(".select_text").focus( selectTextFocus );
+  $(".select_text").mouseup( selectTextMouseUp );
   $(".default_text").focus( defaultTextFocus );
   $(".default_text").blur( defaultTextBlur );
-  $(".default_text").mouseup( defaultTextMouseUp );
   $(".default_text").blur();
+  
+  // Establish comment box behaviors
+  $(".comment_box").keydown( commentBoxKeyDown );
 
   // Fix up element positions based on window size
   fixPositions();
