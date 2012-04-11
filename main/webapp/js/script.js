@@ -78,11 +78,13 @@ if ( $("#flag_talk").length ) {
         $("div#sidebar_edit").css("display", "none");
         $("div#content").removeClass("without_sidebar");
         $("div#content").addClass("with_sidebar");
+        $("#flag_talk").attr("href", "#talk");
       }
       else {
         $("div#sidebar_talk").css("display", "none");
         $("div#content").addClass("without_sidebar");
         $("div#content").removeClass("with_sidebar");
+        $("#flag_talk").attr("href", "#");
       }
       fixPositions();
     });
@@ -93,17 +95,19 @@ if ( $("#flag_talk").length ) {
 }
 if ( $("#flag_edit").length ) {
   // Click behavior
-  $("#flag_edit").click(function() {
+  $("#flag_edit").click(function(event) {
       if ( $("div#sidebar_edit").css("display") == "none" ) {
         $("div#sidebar_edit").css("display", "block");
         $("div#sidebar_talk").css("display", "none");
         $("div#content").removeClass("without_sidebar");
         $("div#content").addClass("with_sidebar");
+        $("#flag_edit").attr("href", "#edit");
       }
       else {
         $("div#sidebar_edit").css("display", "none");
         $("div#content").addClass("without_sidebar");
         $("div#content").removeClass("with_sidebar");
+        $("#flag_edit").attr("href", "#");
       }
       fixPositions();
     });
@@ -166,4 +170,10 @@ window.onload = function() {
   // Fix up element positions based on window size
   fixPositions();
   $("div.matwrap").css("visibility", "visible");
+  
+  // Default tab opening
+  if ( $("#flag_talk").length && $(location).prop("hash") == "#talk" )
+    $("#flag_talk").click();
+  else if ( $("#flag_edit").length && $(location).prop("hash") == "#edit" )
+    $("#flag_edit").click();
 }
