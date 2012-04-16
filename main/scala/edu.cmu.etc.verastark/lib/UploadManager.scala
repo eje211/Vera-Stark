@@ -11,6 +11,7 @@ import net.liftweb.common.{Box, Full, Empty}
 import net.liftweb.http.BadResponse
 import net.liftweb.util.StringHelpers
 import net.liftweb.util.Helpers._
+import net.liftweb.mapper.By
 
 import java.io._
 import javax.activation.MimetypesFileTypeMap;
@@ -56,16 +57,14 @@ object UploadManager extends RestHelper {
       */
       InMemoryResponse(Array[Byte](), ("Content-Type", "image/png") :: Nil, Nil, 200)
     }
-    case "testing" :: imageId :: _ Get req => {
-      println("In REST helper for: " + imageId)
-      val f = new File(System.getProperty("user.dir") + "/src/main/webapp/upload/" + imageId + ".png")
-      println(new MimetypesFileTypeMap().getContentType(f))
+    case "upload" :: imageName :: _ Get req => {
+      val art = Artifact.find(By(Artifact.filename, imageName))
+      val f = new File("/var/images/" + imageName)
       f.exists match {
         case true  => {
-          println("File exists.")
           val fis = new FileInputStream(f)
-          StreamingResponse(fis, () => fis.close,
-            f.length, List("Content-Type" -> "image/png"), Nil, 200)
+          StreamingResponse(fis, () => fis.close, f.length,
+            List("Content-Type" -> (art.map(_.filetype.is) openOr "image/png")), Nil, 200)
         }
         case false => InMemoryResponse(Array(), ("Content-Type", "text/plain") :: Nil, Nil, 404)
       }

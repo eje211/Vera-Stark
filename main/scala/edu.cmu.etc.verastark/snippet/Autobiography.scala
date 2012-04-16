@@ -9,85 +9,83 @@ import java.util.Date
 import code.lib._
 import sitemap._
 import Helpers._
+import mapper.By
+import textile._
+
+import java.lang.Integer
+import java.lang.NumberFormatException
 
 import edu.cmu.etc.verastark.model._
 
 class AutobiographyParam
-case class  AutobiographyPage(pageName: String) extends AutobiographyParam
-case object AutobiographyIndex extends AutobiographyParam
-case object AutobiographyEdit extends AutobiographyParam
-
-object AutobiographyPagesList {
-  def render(in:NodeSeq):NodeSeq =
-    AutobiographyTools.getPageTitles.flatMap { text => bind("page", in, "title" -> <a href={"/journal/" + text}>{text}</a>)}
-}
+case class  AutobiographyPage(page: Autobiography) extends AutobiographyParam
+case object AutobiographyIndex                     extends AutobiographyParam
+case object AutobiographyEdit                      extends AutobiographyParam
+case object AutobiographyNotFound                  extends AutobiographyParam
 
 object AutobiographyPageMenu {
-  def parse(name: String) = name match {
+  def parse(id: String) = id match {
     case "" | "index" => Full(AutobiographyIndex)
     case "new"        => Full(AutobiographyEdit)
-    case _            => Full(AutobiographyPage(name))
+    case _            => {
+      try {
+        val iid = Integer.parseInt(id)
+        var page = Autobiography.find(By(Autobiography.id, iid))
+        page match {
+          case Full(page) => Full(AutobiographyPage(page))
+          case _          => Full(AutobiographyIndex)
+        }
+      }
+      catch { // Default behavior: go to index
+        case e: NumberFormatException => Full(AutobiographyIndex)
+      }
+    }
   }
   def encode(ap: AutobiographyParam) = ap match {
-    case AutobiographyPage(name) => name
-    case _                       => "index"
+    case AutobiographyPage(id) => id.toString
+    case AutobiographyEdit     => "new"
+    case AutobiographyNotFound => "index"
+    case _                     => "index"
   }
 
-  val menu = Menu.param[AutobiographyParam]("Autobiography", "Autobiography", parse _, encode _) / "journal"
+  val menu = Menu.param[AutobiographyParam]("Autobiography", "Autobiography", parse _, encode _) / "autobiography"
   lazy val loc = menu.toLoc
 
   def render = "*" #> "Autobiography" // loc.currentValue.map(_.pageName)
-}
-
-object AutobiographyHelper {
-  def current_page(title: String) =
-    // Create a new page if there isn't one already
-    AutobiographyTools.getPageByTitle(title) match {
-      case head :: tail => head
-      case Nil => new Autobiography
-    }
-}
-
-class AutobiographyForm(ap:AutobiographyPage) {
-  object title extends RequestVar("")
-  object content extends RequestVar("")
-  var current_page = AutobiographyHelper.current_page(ap.pageName)
-  def edit(xhtml:NodeSeq):NodeSeq = {
-    def processJournalPage() = current_page.save
-  
-    bind("abpage", xhtml,
-      "title"   -> current_page.title.toForm,
-      "content" -> current_page.content.toForm,
-      "submit"  -> SHtml.submit("Write in Vera's Journal", processJournalPage)
-    )
-  }
 }
 
 class AutobiographyContainer(ap: AutobiographyParam) {
   def render = ap match {
     case AutobiographyIndex      => "#AutobiographyPagesList ^^" #> "*"
     case AutobiographyEdit       => "#AutobiographyEditForm ^^"  #> "*"
-    case AutobiographyPage(name) =>
+    case AutobiographyPage(a) =>
       if   (S.param("edit") isDefined) "#AutobiographyEditForm ^^"      #> "*"
       else "#AutobiographyPage ^^"  #> "*"
   }
 }
 
-class AutobiographyPageSnippet(ap:AutobiographyPage) {
+object AutobiographyPagesList {
+  def render(in:NodeSeq):NodeSeq =
+    AutobiographyTools.getPageTitles.flatMap { text => bind("page", in, "title" -> <a href={"/journal/" + text}>{text}</a>)}
+}
+
+class AutobiographyForm(a:Autobiography) {
+  var title   = ""
+  var content = ""
   def render = {
-    // THE FOLLOWING LINE IS NOT SECURE IS SHOULD BE CHANGED!!!
-    val current_page = AutobiographyHelper.current_page(ap.pageName)
-    "h2 *" #> current_page.title &
-    "p *"  #> current_page.content
+    def processJournalPage() = a.title(title).content(content).
+      ownerid(User.currentUserId.map(_.toInt) openOr 1).changed(now).save
+  
+    ".title"         #> SHtml.onSubmit(title = _)          &
+    ".title [value]" #> a.title.is                         &
+    ".content"       #> SHtml.onSubmit(content = _)        &
+    ".content *"     #> a.content.is                       &
+    "type=submit"    #> SHtml.submit("Write in Vera's Journal", processJournalPage)
   }
 }
 
-object AutobiographyScreen extends LiftScreen {
-  object page extends ScreenVar(Autobiography.create)
-
-  addFields(() => page.is)
-
-  val shouldSave = field("Save", false)
-
-  def finish() {}
+class AutobiographyPageSnippet(a:Autobiography) {
+  def render =
+    "h2 *" #> a.title.is &
+    "p *"  #> TextileParser.toHtml(a.content.is)
 }

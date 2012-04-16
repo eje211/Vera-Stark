@@ -73,8 +73,9 @@ class ArtifactEditForm(ap:ArtifactPage) {
     var artist  = ""
     var content = ""
     var date    = ""
+    var apdate  = new Date
     def processArtifact = {
-      ap.a.title(title).artist(artist).content(content).date(date).changed(now).save
+      ap.a.title(title).artist(artist).content(content).date(date).changed(now).app_date(apdate).save
       S.redirectTo("/artifact/" + ap.a.id.toString)
     }
 
@@ -86,6 +87,9 @@ class ArtifactEditForm(ap:ArtifactPage) {
     ".description *"  #> ap.a.content.is             &
     ".date"           #> SHtml.onSubmit(date = _)    &
     ".date [value]"   #> ap.a.date.is                &
+    ".apdate"         #> SHtml.onSubmit((s: String) => 
+      apdate = new SimpleDateFormat("y/M/dd").parse(s))      &
+    ".apdate [value]" #> ap.a.app_date.toString      &
     "type=submit"     #> SHtml.submit("Submit", processArtifact _)
   }
 }
@@ -104,9 +108,10 @@ class ArtifactContainer(ai: Artifactid) {
 
 class ArtifactContainerSnippet(ap: ArtifactParam) {
   def render = ap match {
-    case ArtifactList    => renderList
-    case ArtifactNew     => renderNew
-    case ArtifactPage(p) => renderPage
+    case ArtifactList     => renderList
+    case ArtifactNew      => renderNew
+    case ArtifactPage(p)  => renderPage
+    case ArtifactNotFound => renderNotFound
   }
 
   def renderList =
@@ -120,8 +125,13 @@ class ArtifactContainerSnippet(ap: ArtifactParam) {
     "#artifact_item [class]" #> "without_sidebar"
 
   def renderNew =
-    "#artifact_new ^^"       #> "*" &
+    "#artifact_new ^^"       #> "*"       &
     "#artifact_new [id]"     #> "content"
+
+  def renderNotFound =
+    "#artifact_none ^^"      #> "*"           &
+    "#artifact_none [class]" #> "static_page" &
+    "#artifact_none [id]"    #> "content"
 
 }
 
@@ -129,7 +139,7 @@ class ArtifactSnippet(ap: ArtifactPage) {
   def render =
     ".artist *"              #> ap.a.artist.is                        &
     ".title *"               #> ap.a.title.is                         &
-    ".date"                  #> ap.a.date.is                          &
+    ".date *"                #> ap.a.date.is                          &
     ".description *"         #> TextileParser.toHtml(ap.a.content.is) &
     ".authorName *"          #> (ap.a.owner.map(u => u.firstName + " " + u.lastName) openOr "Unknown") &
     ".artifact-comments"     #> Comment.findAll(By(Comment.art_id, ap.a.id)).flatMap(c =>
@@ -152,19 +162,25 @@ class NewArtifact {
   def render = {
     var fileHandler: Box[FileParamHolder] = Empty
     def saveImage = fileHandler match {
-      case Full(file: FileParamHolder) => {
-        var art = Artifact.create// Not efficient but we need the ID now.
+      case Full(file: FileParamHolder) if (file.mimeType.startsWith("image/")) => {
+        var art = Artifact.create
+        // Not super efficient to save now, but we need the artifact's ID for the rest.
         art.save
-        art.url("/upload/" + art.id.toString + ".png").title("New Artifact").save
-        var f = new File(System.getProperty("user.dir") + "/src/main/webapp/upload/" + art.id.toString + ".png")
-        if (!f.exists) f.createNewFile
-        var output = new FileOutputStream(f)
-        try {output.write(file.file)}
-        catch {case e => println(e)}
-        finally {output.close; output = null}
-        S.redirectTo("/artifact/" + art.id.toString)
+        val filename = "0" * (5 - art.id.toString.length) + art.id + "." + file.fileName
+        art.url("/upload/" + filename).title(file.fileName.slice(0, file.fileName.lastIndexOf(".")).replace('_', ' ')).
+          filename(filename).filetype(file.mimeType).ownerid(User.currentUserId.map(_.toInt) openOr 1).save
+        var f = new File("/var/images/" + filename)
+        if (!f.exists) {
+          f.createNewFile
+          var output = new FileOutputStream(f)
+          try {output.write(file.file)}
+          catch {case e => println(e)}
+          finally {output.close; output = null}
+          S.redirectTo("/artifact/" + art.id + "#edit")
+        }
+        S.notice("We're sorry. There's been a problem processing your artifact upload. Please try again. If that still doesn't work, contant us.")
       }
-      case _ => ()
+      case _ => S.notice("We're sorry. There's been a problem processing your artifact. Please try again. If that still doesn't work, contant us.")
     }
 
     "type=file"              #> SHtml.fileUpload(fph => fileHandler = Full(fph))      &
@@ -215,7 +231,7 @@ class CommentField(ap: ArtifactPage) {
     def processComment = 
       if (content.length > 0) {
         Comment.create.content(content).ownerid(User.currentUserId.map(_.toInt) openOr 1).date(now).art_id(ap.a.id).published(true).save
-        S.redirectTo("/artifact/" + ap.a.id.toString)
+        S.redirectTo("/artifact/" + ap.a.id.toString + "#talk")
       }
 
     "textarea"    #> SHtml.onSubmit(content = _) &

@@ -38,13 +38,14 @@ class Boot {
 
     // Build SiteMap
     def sitemap = SiteMap(
-      Menu.i("Home") / "index" >> Hidden >> LocGroup("left"), // >>  User.AddUserMenusAfter, // the simple way to declare a menu
+      Menu.i("Index") / "index" >> Hidden, // >>  User.AddUserMenusAfter, // the simple way to declare a menu
+      Menu.i("Vera") / "vera" >> Hidden >> LocGroup("left"), // >>  User.AddUserMenusAfter, // the simple way to declare a menu
 
       ArtifactPageMenu.menu >> Hidden,
       Menu(Loc("ArtifactStaticLink", Link("artifact" :: "index" :: Nil, true, "/artifact/index"), "Artifact", LocGroup("left"), Hidden)),
 
       AutobiographyPageMenu.menu >> Hidden,
-      Menu(Loc("AutobiographyStaticLink", Link("journal" :: "index" ::  Nil, true, "/journal/index"), "Autobiography", LocGroup("left"), Hidden)),
+      Menu(Loc("AutobiographyStaticLink", Link("autobiography" :: "index" ::  Nil, true, "/autobiography/index"), "Autobiography", LocGroup("left"), Hidden)),
 
       Menu(Loc("Contribute", Link("artifact" :: "new" ::  Nil, true, "/artifact/new"), "Contribute", LocGroup("left"), Hidden)),
 

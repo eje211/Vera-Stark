@@ -79,7 +79,7 @@
                   <br />&nbsp;
   
                   <label for="video_to_link" class="visuallyhidden">Paste a YouTube URL</label>
-                  <br /><input type="text" name="video_to_link" class="default_text" title="Paste a YouTube URL here" />
+                  <br /><input type="text" id="video_to_link" name="video_to_link" class="default_text" title="Paste a YouTube URL here" />
   
                   <br />&nbsp;
                   <br /><input type="submit" value="Submit Artifact" />
@@ -134,6 +134,21 @@
           </div>
         </div>
       </div>
+      <div id="artifact_none">
+        <div class="floatcenter">
+          <div class="matwrap text">
+            <section class="static_page">
+              <hgroup>
+                <h1>We're sorry...</h1>
+                <h2>the article you're looking for doesn't seem to exist...</h2>
+              </hgroup>
+              <p>It may have been moved, deleted or may be in the process of being edited...
+              </p>
+              <span class="flourish"></span>
+            </section>
+          </div>
+        </div>
+      </div>
       <div id="artifact_item">
         <div class="floatcenter">
             <div class="matwrap image">
@@ -161,7 +176,7 @@
           <hgroup>
             <h2 class="artist">Unknown Artist</h2>
             <h1 class="title">Poster for <em>The Belle of New Orleans</em></h1>
-            <h3 class="time_period">ca. <span class="date">1933</span></h3>
+            <h3 class="time_period">ca. 1933</h3>
             <h3 class="author">Submitted by <a class="authorName" href="/profile.html?u=herbforrester">Herb Forrester</a></h3>
            </hgroup>
           <p class="description">
@@ -198,10 +213,10 @@
           </article>
           </div>
           
-          <form id="comment-field" class="lift:CommentField?form=post">
+          <div id="comment-field" class="lift:CommentField?form=post" action=.#talk">
             <textarea class="default_text comment_box" title="Leave a comment..."></textarea>
             <input type="submit" />
-          </form>
+          </div>
         </aside>
         
     </div><span class="footer_flourish"></span></div>
@@ -215,13 +230,16 @@
           <h5>Artist</h5><input type="text" class="artist" value="Unknown Artist" />
           <h5>Title</h5><input type="text" class="title" value="Poster for The Belle of New Orleans" />
           <h5>Date</h5><input type="text" class="date" value="ca. 1933" />
+          <h5>Approximate date</h5><p>
+          Enter an appoximate date for the article in YYYY/MM/DD format. This is used for sorting the
+          artifcats in chronological order.</p>
+            <input type="text" class="apdate" value="01/01/1978" />
           <h5>Description</h5><textarea class="description">A poster for The Belle of New Orleans (1933). 
 Featuring Gloria Mitchell. 
  
 This film marked Vera's first appearance on the silver screen. She played the role of Tilly the maid, opposite Gloria Mitchell. Her famous line in the final scene of the movie set the tone for her future career: "Hold on, and together we'll face a new day!"</textarea>
           <div class="buttons">
             <input type="submit" value="Save" />
-            <input type="button" value="Cancel" />
             <input type="button" value="Delete" />
           </div>
         </form>

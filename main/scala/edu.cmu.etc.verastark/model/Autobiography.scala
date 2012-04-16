@@ -6,9 +6,12 @@ import net.liftweb.common.Full
 class Autobiography extends LongKeyedMapper[Autobiography] with IdPK {
   def getSingleton = Autobiography
 
-  object title extends MappedString(this, 140)
-  object content extends MappedTextarea(this, 10000)
-  object published extends MappedBoolean(this)
+  object title     extends MappedString        (this, 140)
+  object content   extends MappedTextarea      (this, 10000)
+  object published extends MappedBoolean       (this)
+  object ownerid   extends MappedLongForeignKey(this, User)
+  object changed   extends MappedDateTime      (this)
+  def    owner =   User.find(By(User.id, this.ownerid))
 }
 
 object Autobiography extends Autobiography with LongKeyedMetaMapper[Autobiography]
