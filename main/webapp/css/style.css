@@ -693,6 +693,21 @@ form#openid_form {
   text-align: center;
 }
 
+/* Autobiography Edit Form */
+form#autobiography_new_form {
+  text-align: left;
+}
+  form#autobiography_new_form label{
+    display: block;
+    font-size: 12pt;
+    margin-top: 12px;
+    margin-bottom: -2px;
+  }
+  form#autobiography_new_form textarea {
+    width: 100%;
+    height: 10em;
+  }
+  
 
 /* Special Cases */
 div#content img#profile_page_photos {

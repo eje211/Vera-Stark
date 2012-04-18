@@ -194,5 +194,6 @@ window.onload = function() {
     $("#flag_edit").click();
 
   // Activate datepicker
-  $(".apdate").datepicker({dateFormat: "yy/mm/dd"})
+  if ( $(".apdate").datepicker )
+    $(".apdate").datepicker({dateFormat: "yy/mm/dd"})
 }
