@@ -8,6 +8,8 @@ class Autobiography extends LongKeyedMapper[Autobiography] with IdPK {
 
   object title     extends MappedString        (this, 140)
   object content   extends MappedTextarea      (this, 10000)
+  object date      extends MappedTextarea      (this, 200)
+  object app_date  extends MappedDate          (this)
   object published extends MappedBoolean       (this)
   object ownerid   extends MappedLongForeignKey(this, User)
   object changed   extends MappedDateTime      (this)

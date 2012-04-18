@@ -27,6 +27,8 @@ object User extends User with MetaOpenIDProtoUser[User] with LongKeyedMetaMapper
   
   override def loginMenuLoc: Box[Menu] =  
     Full(Menu(Loc("Login", loginPath, "Sign In", loginMenuLocParams)))  
+
+  // override val basePath: List[String] = "user" :: Nil
 }
 
 /**

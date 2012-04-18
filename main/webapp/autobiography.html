@@ -50,7 +50,7 @@
   <div id="main" role="main" class="clearfix lift:surround?with=default&at=content">
   
     <!-- Main artifact -->
-    <div id="content">
+    <div id="content" class="lift:AutobiographyContainer">
       <div id="autobiography_page" class="without_sidebar">
         <div class="floatcenter">
             <div class="matwrap text">
@@ -79,6 +79,72 @@
             </div>
         </div>
       </div><!-- autobiography_page -->
+      <!-- Main artifact -->
+      <div id="autobiography_index" class="static_page">
+        <div class="floatcenter">
+            <div class="matwrap text">
+              
+              <section class="static_page lift:AutobiographyList">
+                <img src="/img/ItRainedOnMyParade.png" id="it_rained_on_my_parade" alt="It Rained On My Parade: The Autobiography of Vera Stark" />
+                <span class="flourish"></span>
+                <hgroup class="with_flourish visuallyhidden">
+                  <h1>It Rained on My Parade</h1>
+                  <h2>The Autobiography of Vera Stark</h2>
+                </hgroup>
+                <p>Here is some paragraph text to go along with it.
+                </p>
+                <ul>
+                  <li class="clearable">The Belle of New Orleans (1933)</li>
+                  <li class="clearable">Songs of Dixie (1934)</li>
+                  <li class="clearable">Two Doves (1934)</li>
+                  <li class="clearable">God's Fitful Chilluns (1934)</li>
+                </ul>
+                <span class="flourish"></span>
+              </section>
+            </div>
+        </div>
+        <div class="flags_left">
+        </div>
+        <div class="flags_right">
+        </div>
+      </div><!-- autbiography index -->
+      <div id="autobiography_new" class="static_page">
+        <div class="floatcenter">
+          <div class="matwrap text">
+            
+            <section class="static_page">
+              <img src="/img/protecting-legacy.png" id="protecting_the_legacy" alt="Protecting the Legacy: Recording the History of Vera Stark" />
+              <span class="flourish"></span>
+              <hgroup class="with_flourish visuallyhidden">
+                <h1>Protecting the Legacy</h1>
+                <h2>Recording the History of Vera Stark</h2>
+              </hgroup>
+              <p>As you probably know, Vera Stark's autobiography is now almost impossible to find. There are many parodies and inaccurate copies floating around the world.
+              </p>
+              <p>If you have found what you believe to be a page of Vera's autobiography, copy it here. Remember: we have to keep Vera's legacy alive!
+              </p>
+              <div id="not_logged_in">
+                <p>Sorry. You must be logged in to contribute to the Vera Stark website.
+              </p></div>
+              <form class="dotted_box lift:AutobiographyNewForm" id="autobiography_new_form">
+                <label for="autobiography_title">Title for this passage</label>
+                <br /><input type="text" name="autobiography_title" />
+
+                <label for="text_body">Carefully copy the text of Vera's autbiography here. You can format it with <a href="http://en.wikipedia.org/wiki/Textile_(markup_language)#Formatting_help_table">Textile</a>.</label>
+                <br /><textarea name="text_body"></textarea>
+
+                <label for="text_date">Period that this passage covers</label>
+                <br /><input type="text" name="text_date" />
+         
+                <label for="text_app_date">An approximate date that we can use to order this passage in YYYY/MM/DD format</label>
+                <br /><input type="text" name="text_app_date" class="apdate" />
+         
+                <br /><input type="submit" value="Submit Page" />
+              </form>
+              <span class="flourish"></span>
+            </section>
+          </div>
+      </div><!-- new autobiography -->
       <div class="flags_left">
         <a href="#prev" id="flag_prev">Previous</a>
       </div>

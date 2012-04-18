@@ -5,28 +5,28 @@ import net.liftweb._
 import net.liftweb.http._
 import net.liftweb.util._
 import net.liftweb.common._
-import java.util.Date
 import code.lib._
 import sitemap._
 import Helpers._
-import mapper.By
+import mapper.{By, OrderBy, Ascending}
 import textile._
 
-import java.lang.Integer
-import java.lang.NumberFormatException
+import java.lang.{Integer, NumberFormatException}
+import java.util.Date
+import java.text.SimpleDateFormat
 
 import edu.cmu.etc.verastark.model._
 
-class AutobiographyParam
+class AutobiographyParam                           extends VeraObject
 case class  AutobiographyPage(page: Autobiography) extends AutobiographyParam
 case object AutobiographyIndex                     extends AutobiographyParam
-case object AutobiographyEdit                      extends AutobiographyParam
+case object AutobiographyNew                       extends AutobiographyParam
 case object AutobiographyNotFound                  extends AutobiographyParam
 
 object AutobiographyPageMenu {
   def parse(id: String) = id match {
     case "" | "index" => Full(AutobiographyIndex)
-    case "new"        => Full(AutobiographyEdit)
+    case "new"        => Full(AutobiographyNew)
     case _            => {
       try {
         val iid = Integer.parseInt(id)
@@ -43,7 +43,7 @@ object AutobiographyPageMenu {
   }
   def encode(ap: AutobiographyParam) = ap match {
     case AutobiographyPage(id) => id.toString
-    case AutobiographyEdit     => "new"
+    case AutobiographyNew      => "new"
     case AutobiographyNotFound => "index"
     case _                     => "index"
   }
@@ -56,12 +56,25 @@ object AutobiographyPageMenu {
 
 class AutobiographyContainer(ap: AutobiographyParam) {
   def render = ap match {
-    case AutobiographyIndex      => "#AutobiographyPagesList ^^" #> "*"
-    case AutobiographyEdit       => "#AutobiographyEditForm ^^"  #> "*"
-    case AutobiographyPage(a) =>
-      if   (S.param("edit") isDefined) "#AutobiographyEditForm ^^"      #> "*"
-      else "#AutobiographyPage ^^"  #> "*"
+    case AutobiographyIndex   => renderIndex
+    case AutobiographyNew     => renderNew
+    case AutobiographyPage(a) => renderPage
   }
+
+  def renderIndex =
+    "#autobiography_index ^^"          #> "*"                &
+    "#autobiography_index [class+]"    #> "static_page"      &
+    "#autobiography_index [id]"        #> "content"
+  def renderNew   =
+    "#autobiography_new ^^"            #> "*"                &
+    "#autobiography_new [id]"          #> "content"          &
+    "#autobiography_new_form [class+]" #> (if(User.currentUser isEmpty) "clearable" else "") &
+    "#not_logged_in [class+]"          #> (if(User.currentUser isEmpty) "" else "clearable") andThen
+    ClearClearable
+  def renderPage  =
+    "#autobiography_page ^^"           #> "*"                &
+    "#autobiography_page [+class]"     #> "without_sidebars" &
+    "#autobiography_page [id]"         #> "content"
 }
 
 object AutobiographyPagesList {
@@ -88,4 +101,34 @@ class AutobiographyPageSnippet(a:Autobiography) {
   def render =
     "h2 *" #> a.title.is &
     "p *"  #> TextileParser.toHtml(a.content.is)
+}
+
+class AutobiographyList {
+  def render =
+    "ul *" #> Autobiography.findAll(By(Autobiography.published, true), OrderBy(Autobiography.app_date, Ascending)
+    ).flatMap(
+      a => <li><a href={"/autobiography/" + a.id}>{a.title}</a></li>
+    ) & ClearClearable
+}
+
+class AutobiographyNewForm {
+  var title  = ""
+  var text   = ""
+  var date   = ""
+  var apdate: Date = _
+  def processAutobiography = {
+    Autobiography.create.title(title).content(text).date(date).
+    app_date(apdate).ownerid(User.currentUserId.map(_.toInt) openOr 0).
+    changed(now).published(true).save
+    S.redirectTo("/autobiography/index")
+  }
+    
+  def render =
+    "name=autobiography_title" #> SHtml.onSubmit(title  = _) &
+    "name=text_body"           #> SHtml.onSubmit(text   = _) &
+    "name=text_date"           #> SHtml.onSubmit(date   = _) &
+    "name=text_app_date"       #> SHtml.onSubmit((s: String) => 
+      apdate = new SimpleDateFormat("y/M/dd").parse(s))      &
+    "type=submit"              #> SHtml.submit("Submit the page", processAutobiography _)
+             
 }

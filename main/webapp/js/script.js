@@ -192,4 +192,7 @@ window.onload = function() {
     $("#flag_talk").click();
   else if ( $("#flag_edit").length && $(location).prop("hash") == "#edit" )
     $("#flag_edit").click();
+
+  // Activate datepicker
+  $(".apdate").datepicker({dateFormat: "yy/mm/dd"})
 }

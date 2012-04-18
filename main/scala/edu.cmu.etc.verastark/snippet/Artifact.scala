@@ -17,7 +17,7 @@ import java.io._
 
 import edu.cmu.etc.verastark.model._
 
-class ArtifactParam
+class ArtifactParam                   extends VeraObject
 // case class  ArtifactID(id: Int)       extends ArtifactParam
 case object ArtifactNew               extends ArtifactParam
 case object ArtifactList              extends ArtifactParam
@@ -168,7 +168,8 @@ class NewArtifact {
         art.save
         val filename = "0" * (5 - art.id.toString.length) + art.id + "." + file.fileName
         art.url("/upload/" + filename).title(file.fileName.slice(0, file.fileName.lastIndexOf(".")).replace('_', ' ')).
-          filename(filename).filetype(file.mimeType).ownerid(User.currentUserId.map(_.toInt) openOr 1).save
+          filename(filename).filetype(file.mimeType).
+          ownerid(User.currentUserId.map(_.toInt) openOr 1).app_date(new Date(71035201)).save // Default date set to Apr 2 1972, near Vear's disapearance
         var f = new File("/var/images/" + filename)
         if (!f.exists) {
           f.createNewFile
