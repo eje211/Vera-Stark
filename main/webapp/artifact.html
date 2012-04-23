@@ -88,9 +88,11 @@
               </section>
             </div>
         </div>
-        <div class="flags_left">
-        </div>
-        <div class="flags_right">
+        <div>
+          <div class="flags_left">
+          </div>
+          <div class="flags_right">
+          </div>
         </div>
       </div>
 
@@ -155,13 +157,15 @@
               <img src="/img/belleposter.jpg" class="artifact lift:ArtifactImage" />
             </div>
         </div>
-        <div class="flags_left">
-          <a href="#prev" id="flag_prev">Previous</a>
-        </div>
-        <div class="flags_right lift:ProcessFlags">
-          <a href="#next" id="flag_next">Next</a>
-          <a href="#talk" id="flag_talk">Talk</a>
-          <a href="#edit" id="flag_edit">Edit</a>
+        <div class="lift:FlagArtDestination">
+          <div class="flags_left">
+            <a href="#prev" id="flag_prev">Previous</a>
+          </div>
+          <div class="flags_right lift:ProcessFlags">
+            <a href="#next" id="flag_next">Next</a>
+            <a href="#talk" id="flag_talk">Talk</a>
+            <a href="#edit" id="flag_edit">Edit</a>
+          </div>
         </div>
       </div>
     </div>
@@ -172,7 +176,7 @@
     
         <!-- Artifact Description -->
         <section>
-          <a href="/profile.html?u=herbforrester"><img src="/img/avatar_herb.png" /></a>
+          <a id="profilelink" href="/profile.html?u=herbforrester"><img id="authorimg" src="/img/avatar_herb.png" /></a>
           <hgroup>
             <h2 class="artist">Unknown Artist</h2>
             <h1 class="title">Poster for <em>The Belle of New Orleans</em></h1>

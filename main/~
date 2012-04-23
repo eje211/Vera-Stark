@@ -56,10 +56,8 @@ class Boot {
       Menu.i("About") / "about" >> Hidden >> LocGroup("left"),
       
       Menu.i("Backstage") / "backstage",
-      Menu.param[User]("User", "User", (s: String) => 
-        User.find(By(User.id, try {Integer.parseInt(s)} catch {case (e: NumberFormatException) => 0} ))
-        , _.toString) / "user" >> Hidden
-    )
+      Menu.param[User]("User", "User", _ => User.find(By(User.id, Integer.parseString(_) open_!)), _.toString) / "user" >> Hidden
+      )
 
     def sitemapMutators = User.sitemapMutator
 

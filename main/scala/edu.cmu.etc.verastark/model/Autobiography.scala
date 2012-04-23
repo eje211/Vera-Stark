@@ -3,21 +3,23 @@ package edu.cmu.etc.verastark.model
 import net.liftweb.mapper._
 import net.liftweb.common.Full
 
-class Autobiography extends LongKeyedMapper[Autobiography] with IdPK {
+class Autobiography extends LongKeyedMapper[Autobiography] with OneToMany[Long, Autobiography] with IdPK {
   def getSingleton = Autobiography
 
-  object title     extends MappedString        (this, 140)
-  object content   extends MappedTextarea      (this, 10000)
-  object date      extends MappedTextarea      (this, 200)
-  object app_date  extends MappedDate          (this)
-  object published extends MappedBoolean       (this)
-  object ownerid   extends MappedLongForeignKey(this, User)
-  object changed   extends MappedDateTime      (this)
-  def    owner =   User.find(By(User.id, this.ownerid))
+  object title       extends MappedString        (this, 140)
+  object content     extends MappedTextarea      (this, 10000)
+  object description extends MappedTextarea      (this, 10000)
+  object date        extends MappedString        (this, 200)
+  object app_date    extends MappedDate          (this)
+  object published   extends MappedBoolean       (this)
+  object ownerid     extends MappedLongForeignKey(this, User)
+  object changed     extends MappedDateTime      (this)
+  object annotations extends MappedOneToMany     (Annotation, Annotation.bio_id, OrderBy(Annotation.date, Ascending))
+  def    owner =     User.find(By(User.id, this.ownerid))
 }
 
 object Autobiography extends Autobiography with LongKeyedMetaMapper[Autobiography]
-
+/*
 object AutobiographyTools extends Autobiography with LongKeyedMetaMapper[Autobiography] {
   val allPages:List[Autobiography] = Autobiography.findAll
   def getPageTitles:List[String] = Autobiography.findAllFields(Seq[SelectableField](Autobiography.title)
@@ -27,4 +29,4 @@ object AutobiographyTools extends Autobiography with LongKeyedMetaMapper[Autobio
   def getPageByTitle(title: String): List[Autobiography] = Autobiography.findAll(
     By(Autobiography.title, title))
 }
-
+*/

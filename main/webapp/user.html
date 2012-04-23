@@ -27,7 +27,7 @@
        Create your own custom Modernizr build: www.modernizr.com/download/ -->
   <script src="/js/libs/modernizr-2.5.3.min.js"></script>
 </head>
-<body>
+<body class="lift:content_id=main">
   <!--[if lt IE 7]><p class=chromeframe>Your browser is <em>ancient!</em> <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience this site.</p><![endif]-->
   <header class="clearfix">
     <nav>
@@ -47,57 +47,62 @@
       </ul>
     </nav>
   </header>
-  <div id="main" role="main" class="clearfix">
+  <div id="main" role="main" class="clearfix lift:surround?with=default&at=content">
   
     <!-- Main artifact -->
-    <div id="content" class="static_page">
-      <div class="floatcenter">
-          <div class="matwrap text">
-            
-            <section class="static_page">
-              <img src="/img/profile_photos.png" id="profile_page_photos" />
-              <img src="/img/avatar_brad_large.jpg" id="profile_page_user_avatar" />
-              <hgroup>
-                <h1 class="user_name">Brad Buchanan</h1>
-                <h2 class="user_rank">Curatorial Assistant</h2>
-              </hgroup>              
-              <ul class="right">
-                <li>Joined 6/18/2012</li>
-                <li>Artifacts submitted: 12</li>
-                <li>Respect: +4</li>
-              </ul>
+    <div id="content" class="static_page lift:UserProfile">
+      <div id="user-id">
+        <div class="floatcenter">
+            <div class="matwrap text">
               
-              <div class="profile_column">
-                <p class="user_description"><q>A film is never really good unless the camera is an eye in the head of a poet.</q> - Orson Welles
-                </p>
-              </div>
-              
-              <ul class="right">
-                <li><a href="#">[Edit Profile]</a></li>
-              </ul>
-              
-              <span class="flourish"></span>
-              
-              <div class="profile_column">
-                
-
-                <h3>Your Contributions</h3>
-                <ul>
-                  <li><a href="/artifact/">Poster for "The Belle of New Orleans"</a></li>
-                  <li><a href="/artifact/">Autobiography Excerpt</a></li>
-                  <li><a href="/artifact/">Contribution 3</a></li>
-                  <li><a href="/artifact/">Contribution 4</a></li>
-                  <li><a href="/artifact/">Contribution 5</a></li>
-                  <li><a href="/artifact/">Contribution 6</a></li>
-                  <li><a href="/contribute.html">[Contribute something new]</a></li>
+              <section class="static_page">
+                <img src="/img/profile_photos.png" id="profile_page_photos" />
+                <img src="/img/avatar_brad_large.jpg" id="profile_page_user_avatar" />
+                <hgroup>
+                  <h1 class="user_name">Brad Buchanan</h1>
+                  <h2 class="user_rank">Curatorial Assistant</h2>
+                </hgroup>              
+                <ul class="right">
+                  <li>Joined <span id="joined">6/18/2012</span></li>
+                  <li>Artifacts submitted: <span id="count">12</span></li>
+                  <!-- li>Respect: +4</li -->
                 </ul>
-              </div>
-              
-              <span class="flourish"></span>
-              
-            </section>
-          </div>
-      </div>
+                
+                <div class="profile_column">
+                  <p class="user_description"><q>A film is never really good unless the camera is an eye in the head of a poet.</q> - Orson Welles
+                  </p>
+                </div>
+                
+                <ul class="right">
+                  <li><a href="#">[Edit Profile]</a></li>
+                </ul>
+                
+                <span class="flourish"></span>
+                
+                <div class="profile_column">
+                  
+  
+                  <h3>Your Contributions</h3>
+                  <ul id="contributions">
+                    <li><a href="/artifact/">Poster for "The Belle of New Orleans"</a></li>
+                    <li><a href="/artifact/">Autobiography Excerpt</a></li>
+                    <li><a href="/artifact/">Contribution 3</a></li>
+                    <li><a href="/artifact/">Contribution 4</a></li>
+                    <li><a href="/artifact/">Contribution 5</a></li>
+                    <li><a href="/artifact/">Contribution 6</a></li>
+                    <li><a href="/contribute.html">[Contribute something new]</a></li>
+                  </ul>
+                </div>
+                
+                <span class="flourish"></span>
+                
+              </section>
+            </div>
+        </div>
+        <div id="no-user">
+          <p> No user </p>
+        </div>
+      <div>
       <div class="flags_left">
       </div>
       <div class="flags_right">

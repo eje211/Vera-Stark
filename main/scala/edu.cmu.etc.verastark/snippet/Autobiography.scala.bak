@@ -18,7 +18,7 @@ import java.text.SimpleDateFormat
 import edu.cmu.etc.verastark.model._
 
 class AutobiographyParam                           extends VeraObject
-case class  AutobiographyPage(a: Autobiography) extends AutobiographyParam
+case class  AutobiographyPage(page: Autobiography) extends AutobiographyParam
 case object AutobiographyIndex                     extends AutobiographyParam
 case object AutobiographyNew                       extends AutobiographyParam
 case object AutobiographyNotFound                  extends AutobiographyParam
@@ -29,7 +29,8 @@ object AutobiographyPageMenu {
     case "new"        => Full(AutobiographyNew)
     case _            => {
       try {
-        var page = Autobiography.find(By(Autobiography.id, Integer.parseInt(id)))
+        val iid = Integer.parseInt(id)
+        var page = Autobiography.find(By(Autobiography.id, iid))
         page match {
           case Full(page) => Full(AutobiographyPage(page))
           case _          => Full(AutobiographyIndex)
@@ -76,10 +77,30 @@ class AutobiographyContainer(ap: AutobiographyParam) {
     "#autobiography_page [id]"         #> "content"
 }
 
-class AutobiographyPageSnippet(ap:AutobiographyPage) {
+object AutobiographyPagesList {
+  def render(in:NodeSeq):NodeSeq =
+    AutobiographyTools.getPageTitles.flatMap { text => bind("page", in, "title" -> <a href={"/journal/" + text}>{text}</a>)}
+}
+
+class AutobiographyForm(a:Autobiography) {
+  var title   = ""
+  var content = ""
+  def render = {
+    def processJournalPage() = a.title(title).content(content).
+      ownerid(User.currentUserId.map(_.toInt) openOr 1).changed(now).save
+  
+    ".title"         #> SHtml.onSubmit(title = _)          &
+    ".title [value]" #> a.title.is                         &
+    ".content"       #> SHtml.onSubmit(content = _)        &
+    ".content *"     #> a.content.is                       &
+    "type=submit"    #> SHtml.submit("Write in Vera's Journal", processJournalPage)
+  }
+}
+
+class AutobiographyPageSnippet(a:Autobiography) {
   def render =
-    //"h2 *" #> a.title.is &
-    "#autobiography_text *"  #> TextileParser.toHtml(ap.a.content.is)
+    "h2 *" #> a.title.is &
+    "p *"  #> TextileParser.toHtml(a.content.is)
 }
 
 class AutobiographyList {
@@ -110,73 +131,4 @@ class AutobiographyNewForm {
       apdate = new SimpleDateFormat("y/M/dd").parse(s))      &
     "type=submit"              #> SHtml.submit("Submit the page", processAutobiography _)
              
-}
-
-class AutobiographyTalkSnippet(ap: AutobiographyPage) {
-  def render = 
-    ".title *"                   #> ap.a.title.is                         &
-    ".time_period *"             #> ap.a.date.is                          &
-    ".description [class+]"      #> (if(ap.a.description.is.length == 0) "clearable" else "") &
-    ".description *"             #> TextileParser.toHtml(ap.a.description.is) &
-    ".author *"                  #> (ap.a.owner.map(u => u.firstName + " " + u.lastName) openOr "Unknown") &
-    "#autobiography-annotations" #> Annotation.findAll(By(Annotation.bio_id, ap.a.id)).flatMap(a =>
-      <article class="comment">
-        <a href="/profile/bradbuchanan"><img src="/img/avatar_herb.png" /></a>
-        <a href="/profile/bradbuchanan">{a.owner.map(s => s.firstName + " " + s.lastName) openOr "Annonymous"}</a>
-        {a.content.is}
-        <p class="comment_age">Today</p>
-      </article> ) & 
-    "#annotation-login [class+]" #> (if (User.currentUserId isEmpty) "" else "clearable") andThen ClearClearable &
-    "#annotation-form [class+]"  #> (if (User.currentUserId isEmpty) "clearable" else "") andThen ClearClearable
-}
-
-class AnnotationField(ap: AutobiographyPage) {
-  def render = {
-    var content   = ""
-    var art_id    = 0
-    var published = true
-    def processAnnotation = 
-      if (content.length > 0) {
-        Annotation.create.content(content).ownerid(User.currentUserId.map(_.toInt) open_!).date(now).bio_id(ap.a.id).published(true).save
-        S.redirectTo("/autobiography/" + ap.a.id + "#talk")
-      }
-
-    "textarea"    #> SHtml.onSubmit(content = _) &
-    "type=submit" #> SHtml.submit("Annotate this page", processAnnotation _)
-  }
-}
-
-class AutobiographyEditForm(ap:AutobiographyPage) {
-  def render = {
-    var title       = ""
-    var artist      = ""
-    var content     = ""
-    var description = ""
-    var date        = ""
-    var apdate      = new Date
-    def processAutobiography = {
-      ap.a.title(title).content(content).description(description).date(date).changed(now).app_date(apdate).save
-      S.redirectTo("/artifact/" + ap.a.id.toString)
-    }
-
-    ".title"          #> SHtml.onSubmit(title = _)       &
-    ".title [value]"  #> ap.a.title.is                   &
-    ".description"    #> SHtml.onSubmit(description = _) &
-    ".description *"  #> ap.a.description.is             &
-    ".content"        #> SHtml.onSubmit(content = _)     &
-    ".content *"      #> ap.a.content.is                 &
-    ".date"           #> SHtml.onSubmit(date = _)        &
-    ".date [value]"   #> ap.a.date.is                    &
-    ".apdate"         #> SHtml.onSubmit((s: String) => 
-      apdate = new SimpleDateFormat("y/M/dd").parse(s))  &
-    ".apdate [value]" #> ap.a.app_date.toString          &
-    "type=submit"     #> SHtml.submit("Submit", processAutobiography _)
-  }
-}
-
-class AutobiographySidebars(ap: AutobiographyParam) {
-  def render = ap match {
-    case a: AutobiographyPage => "*" #> ClearClearable
-    case _ => ".sidebar [class+]" #> "clearable" andThen ClearClearable
-  }
 }

@@ -8,6 +8,7 @@ import Helpers._
 import mapper.By
 
 import edu.cmu.etc.verastark.model.{User, Artifact, Autobiography}
+import edu.cmu.etc.verastark.lib.FlagLinks
 
 class VeraObject
 
@@ -28,4 +29,37 @@ class ProcessFlags(vera: VeraObject) {
     "#flag_edit [class+]" #> (if(visible_?) "" else "clearable") andThen
     ClearClearable
   }
+}
+
+/*
+class FlagDestination {
+  def render =
+    "#flag_next" #> <a id="flag_next" href={"/artifact/" + FlagLinks.firstart(0)} title={FlagLinks.firstart(1)}>Next</a>
+}
+*/
+
+class FlagIndexDestination {
+  def render =
+    "#flag_next" #> <a id="flag_next" href={"/artifact/" + (FlagLinks.firstart.map(_(0)) open_!)} title={(FlagLinks.firstart.map(_(1)) open_!)}>Next</a>
+}
+
+class FlagArtDestination(ap: ArtifactPage) {
+  def render = {
+    var next: Box[List[String]] = Empty
+    var prev: Box[List[String]] = Empty
+    next = FlagLinks.nextart(ap.a.id.is.toInt)
+    if (next isEmpty) next = FlagLinks.firstart
+    prev = FlagLinks.prevart(ap.a.id.is.toInt)
+    if (prev isEmpty) prev = FlagLinks.lastart
+    println(next)
+    println(prev)
+    // "*" #> ClearClearable
+    "#flag_next" #> <a id="flag_next" href={"/artifact/" + (next.map(_(0)) open_!)} title={(next.map(_(1)) open_!)}>Next</a> &
+    "#flag_prev" #> <a id="flag_prev" href={"/artifact/" + (prev.map(_(0)) open_!)} title={(prev.map(_(1)) open_!)}>Previous</a>
+  }
+}
+
+class FlagBioDestination(ap: AutobiographyPage) {
+  def render =
+    "*" #> ClearClearable
 }

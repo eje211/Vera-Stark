@@ -6,6 +6,7 @@ import _root_.net.liftweb.common._
 import _root_.net.liftweb.sitemap.{Menu, Loc}
 import _root_.net.liftweb.http.S
 import net.liftweb.openid.{OpenIDProtoUser, MetaOpenIDProtoUser}
+import Helpers._
 
 
 /**
@@ -28,6 +29,12 @@ object User extends User with MetaOpenIDProtoUser[User] with LongKeyedMetaMapper
   override def loginMenuLoc: Box[Menu] =  
     Full(Menu(Loc("Login", loginPath, "Sign In", loginMenuLocParams)))  
 
+  // Save the time and date the user signed up.
+  override def actionsAfterSignup(theUser: TheUserType, func: () => Nothing): Nothing = {
+    theUser.memberSince(now).save
+    func()
+  }
+
   // override val basePath: List[String] = "user" :: Nil
 }
 
@@ -37,17 +44,17 @@ object User extends User with MetaOpenIDProtoUser[User] with LongKeyedMetaMapper
 class User extends LongKeyedMapper[User] with OpenIDProtoUser[User] {
   def getSingleton = User // what's the "meta" server
 
-  object editor extends MappedBoolean(this)
+  object editor      extends MappedBoolean (this)
+  object memberSince extends MappedDateTime(this)
+  object quotation   extends MappedTextarea(this, 2000)
 
   //Default OpenIDProtoUser implementation uses nickname so swapping this out for standard FirstName Surname (Email) format.
-  /*
   override def niceName: String = (firstName.is, lastName.is, email.is) match {
-    case (f, l, e) if f.length > 1 && l.length > 1 => f+" "+l+" ("+e+")"
-    case (f, _, e) if f.length > 1 => f+" ("+e+")"
-    case (_, l, e) if l.length > 1 => l+" ("+e+")"
-    case (_, _, e) => e
+    case (f, l, _) if f.length > 1 && l.length > 1 => f+" "+l
+    case (f, _, _) if f.length > 1 => f
+    case (_, l, _) if l.length > 1 => l
+    case (_, _, e) => e.split("@")(0)
   }
-  */
 
 }
 

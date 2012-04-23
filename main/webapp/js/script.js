@@ -195,5 +195,5 @@ window.onload = function() {
 
   // Activate datepicker
   if ( $(".apdate").datepicker )
-    $(".apdate").datepicker({dateFormat: "yy/mm/dd"})
+    $(".apdate").datepicker({dateFormat: "yy/mm/dd", changeMonth: true, changeYear: true, defaultDate: "1972/05/01"})
 }

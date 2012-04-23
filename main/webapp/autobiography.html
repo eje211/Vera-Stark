@@ -54,7 +54,7 @@
       <div id="autobiography_page" class="without_sidebar">
         <div class="floatcenter">
             <div class="matwrap text">
-              <section>
+              <section class="lift:AutobiographyPageSnippet">
                 <span class="flourish"></span>
                 <div id="autobiography_text">
                   <p>Lottie could always make me laugh. She kept insisting that she had no interest in returning to acting, but when the role of Mammy Gummie opened up in the "The Belle of New Orleans" she did everything short of sacrificing a chicken to get the part. On the first day of filming she was the first to arrive and the last to leave. Her work ethic was incredible, and I learned a great deal from watching her perform.
@@ -77,6 +77,14 @@
                 <span class="flourish"></span>
               </section>
             </div>
+        </div>
+        <div class="flags_left">
+          <a href="#prev" id="flag_prev">Previous</a>
+        </div>
+        <div class="flags_right">
+          <a href="#next" id="flag_next">Next</a>
+          <a href="#talk" id="flag_talk">Talk</a>
+          <a href="#edit" id="flag_edit">Edit</a>
         </div>
       </div><!-- autobiography_page -->
       <!-- Main artifact -->
@@ -147,90 +155,121 @@
           </div>
         </div>
       </div><!-- new autobiography -->
-      <div class="flags_left">
-        <a href="#prev" id="flag_prev">Previous</a>
-      </div>
-      <div class="flags_right">
-        <a href="#next" id="flag_next">Next</a>
-        <a href="#talk" id="flag_talk">Talk</a>
-      </div>
     </div><!-- content -->
     
-    <!-- Sidebar section -->
-    <div id="sidebar_talk" class="sidebar"><div class="card">
-    
-        <!-- Artifact Description -->
-        <section>
-          <a href="/profile.html?u=herbforrester"><img src="/img/avatar_herb.png" /></a>
-          <hgroup>
-            <h2 class="artist">Vera Stark</h2>
-            <h1 class="title">Excerpt from <em>It Rained on My Parade</em></h1>
-            <h3 class="time_period">ca. 1969</h3>
-            <h3 class="author">Submitted by <a href="/profile.html?u=herbforrester">Herb Forrester</a></h3>
-           </hgroup>
-          <p class="description">
-            Vera Stark the actress.  The singer.  The lover.  The civil rights activist.  The maid.
-            The housewife.  The teacher.  The femme fatale.  The comic.  The tragedienne.
-            The murderer.  The murdered.  The missing.  The performer.  The legend.  Vera Stark
-            wore a cascade of faces on and off the silver screen, and was eventually buried under
-            their weight.  Or perhaps she wasn't.  Perhaps she just needed to retreat from the
-            limelight, to live in the shadows behind the curtain, anonymous and beyond scrutiny.
-          </p>
-        </section>
-        
-        <!-- Comment Section -->
-        <aside>
-          <article class="comment">
-            <a href="/profile.html?u=bradbuchanan"><img src="/img/avatar_brad.png" /></a>
-            <a href="/profile.html?u=bradbuchanan">Brad Buchanan</a>
-            I love this part.  It always reminds me how human Vera was, and how she saw the world much like the
-            rest of us do.
-            <p class="comment_age">3 days ago</p>
-            
-          </article>
-          <article class="comment">
-            <a href="/profile.html?u=valentinewiggin"><img src="/img/avatar_valentine.png" /></a>
-            <a href="/profile.html?u=valentinewiggin">Valentine Wiggin</a>
-            I disagree.  This sounds so fake and melodramatic - it can't be true.
-            <p class="comment_age">2 days ago</p>
-            
-          </article>
-          <article class="comment">
-            <a href="/profile.html?u=jameswood"><img src="/img/avatar_james.png" /></a>
-            <a href="/profile.html?u=jameswood">James Wood</a>
-            Where's the next section?
-            <p class="comment_age">1 hour ago</p>
-            
-          </article>
-          <article class="comment">
-            <a href="/profile.html?u=bradbuchanan"><img src="/img/avatar_brad.png" /></a>
-            <a href="/profile.html?u=bradbuchanan">Brad Buchanan</a>
-            I love this part.  It always reminds me how human Vera was, and how she saw the world much like the
-            rest of us do.
-            <p class="comment_age">3 days ago</p>
-            
-          </article>
-          <article class="comment">
-            <a href="/profile.html?u=valentinewiggin"><img src="/img/avatar_valentine.png" /></a>
-            <a href="/profile.html?u=valentinewiggin">Valentine Wiggin</a>
-            I disagree.  This sounds so fake and melodramatic - it can't be true.
-            <p class="comment_age">2 days ago</p>
-            
-          </article>
-          <article class="comment">
-            <a href="/profile.html?u=jameswood"><img src="/img/avatar_james.png" /></a>
-            <a href="/profile.html?u=jameswood">James Wood</a>
-            Where's the next section?
-            <p class="comment_age">1 hour ago</p>
-            
-          </article>
-          
-          <form>
-            <textarea>Leave a comment...</textarea>
+    <div id="sidebars" class="lift:AutobiographySidebars">
+      <!-- Sidebar section -->
+      <div id="sidebar_edit" class="sidebar"><div class="card">
+      
+          <!-- Artifact Description -->
+          <form class="lift:AutobiographyEditForm?form=post">
+            <h2 class="underlined">Edit Artifact</h2>
+            <h5>Artist</h5><input type="text" class="artist" value="Unknown Artist" />
+            <h5>Title</h5><input type="text" class="title" value="Poster for The Belle of New Orleans" />
+            <h5>Date</h5><input type="text" class="date" value="ca. 1933" />
+            <h5>Approximate date</h5><p>
+            Enter an appoximate date for the article in YYYY/MM/DD format. This is used for sorting the
+            artifcats in chronological order.</p>
+              <input type="text" class="apdate" value="1978/04/02" />
+            <h5>Description</h5><textarea class="description">A poster for The Belle of New Orleans (1933). 
+  Featuring Gloria Mitchell. 
+   
+  This film marked Vera's first appearance on the silver screen. She played the role of Tilly the maid, opposite Gloria Mitchell. Her famous line in the final scene of the movie set the tone for her future career: "Hold on, and together we'll face a new day!"</textarea>
+            <h5>Text for this page</h5><textarea class="content">A poster for The Belle of New Orleans (1933). 
+  Featuring Gloria Mitchell. 
+   
+  This film marked Vera's first appearance on the silver screen. She played the role of Tilly the maid, opposite Gloria Mitchell. Her famous line in the final scene of the movie set the tone for her future career: "Hold on, and together we'll face a new day!"</textarea>
+            <div class="buttons">
+              <input type="submit" value="Save" />
+              <input type="button" value="Delete" />
+            </div>
           </form>
-        </aside>
-        
-    </div><span class="footer_flourish"></span></div>
+          
+        </div><span class="footer_flourish"></span>
+      </div><!-- sidebar edit div -->
+  
+      <!-- Sidebar section -->
+      <div id="sidebar_talk" class="sidebar lift:AutobiographyTalkSnippet"><div class="card">
+      
+          <!-- Artifact Description -->
+          <section class="">
+            <a href="/profile.html?u=herbforrester"><img src="/img/avatar_herb.png" /></a>
+            <hgroup>
+              <h2 class="artist">Vera Stark</h2>
+              <h1 class="title">Excerpt from <em>It Rained on My Parade</em></h1>
+              <h3 class="time_period">ca. 1969</h3>
+              <h3 class="author">Submitted by <a href="/profile.html?u=herbforrester">Herb Forrester</a></h3>
+            </hgroup>
+            <p class="description">
+              Vera Stark the actress.  The singer.  The lover.  The civil rights activist.  The maid.
+              The housewife.  The teacher.  The femme fatale.  The comic.  The tragedienne.
+              The murderer.  The murdered.  The missing.  The performer.  The legend.  Vera Stark
+              wore a cascade of faces on and off the silver screen, and was eventually buried under
+              their weight.  Or perhaps she wasn't.  Perhaps she just needed to retreat from the
+              limelight, to live in the shadows behind the curtain, anonymous and beyond scrutiny.
+            </p>
+          </section>
+          
+          <!-- Comment Section -->
+          <aside>
+            <div id="autobiography-annotations">
+              <article class="comment">
+                <a href="/profile.html?u=bradbuchanan"><img src="/img/avatar_brad.png" /></a>
+                <a href="/profile.html?u=bradbuchanan">Brad Buchanan</a>
+                I love this part.  It always reminds me how human Vera was, and how she saw the world much like the
+                rest of us do.
+                <p class="comment_age">3 days ago</p>
+                
+              </article>
+              <article class="comment">
+                <a href="/profile.html?u=valentinewiggin"><img src="/img/avatar_valentine.png" /></a>
+                <a href="/profile.html?u=valentinewiggin">Valentine Wiggin</a>
+                I disagree.  This sounds so fake and melodramatic - it can't be true.
+                <p class="comment_age">2 days ago</p>
+                
+              </article>
+              <article class="comment">
+                <a href="/profile.html?u=jameswood"><img src="/img/avatar_james.png" /></a>
+                <a href="/profile.html?u=jameswood">James Wood</a>
+                Where's the next section?
+                <p class="comment_age">1 hour ago</p>
+                
+              </article>
+              <article class="comment">
+                <a href="/profile.html?u=bradbuchanan"><img src="/img/avatar_brad.png" /></a>
+                <a href="/profile.html?u=bradbuchanan">Brad Buchanan</a>
+                I love this part.  It always reminds me how human Vera was, and how she saw the world much like the
+                rest of us do.
+                <p class="comment_age">3 days ago</p>
+                
+              </article>
+              <article class="comment">
+                <a href="/profile.html?u=valentinewiggin"><img src="/img/avatar_valentine.png" /></a>
+                <a href="/profile.html?u=valentinewiggin">Valentine Wiggin</a>
+                I disagree.  This sounds so fake and melodramatic - it can't be true.
+                <p class="comment_age">2 days ago</p>
+                
+              </article>
+              <article class="comment">
+                <a href="/profile.html?u=jameswood"><img src="/img/avatar_james.png" /></a>
+                <a href="/profile.html?u=jameswood">James Wood</a>
+                Where's the next section?
+                <p class="comment_age">1 hour ago</p>
+                
+              </article>
+            </div>
+            
+            <p id="annotation-login">Please log in to leave a comment! The more we share about Vera, the longer the legend will live on!
+            </p>
+            <form id="annotation-form" class="lift:AnnotationField?form=post">
+              <textarea>Leave a comment...</textarea>
+              <input type="submit" />
+            </form>
+          </aside>
+          
+        </div><span class="footer_flourish"></span>
+      </div><!-- sidebar talk -->
+    </div><!-- sidebars -->
     
   </div>
 

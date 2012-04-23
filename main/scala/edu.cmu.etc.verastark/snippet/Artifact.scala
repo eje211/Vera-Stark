@@ -16,9 +16,9 @@ import mapper.By
 import java.io._
 
 import edu.cmu.etc.verastark.model._
+import edu.cmu.etc.verastark.lib.{Gravatar, RenderUser}
 
 class ArtifactParam                   extends VeraObject
-// case class  ArtifactID(id: Int)       extends ArtifactParam
 case object ArtifactNew               extends ArtifactParam
 case object ArtifactList              extends ArtifactParam
 case class  ArtifactPage(a: Artifact) extends ArtifactParam
@@ -140,12 +140,15 @@ class ArtifactSnippet(ap: ArtifactPage) {
     ".artist *"              #> ap.a.artist.is                        &
     ".title *"               #> ap.a.title.is                         &
     ".date *"                #> ap.a.date.is                          &
+    "#authorimg"             #> Gravatar.gravatar(ap.a.owner, 60)     &
+    "#profilelink [href]"    #> RenderUser(ap.a.owner)                &
     ".description *"         #> TextileParser.toHtml(ap.a.content.is) &
     ".authorName *"          #> (ap.a.owner.map(u => u.firstName + " " + u.lastName) openOr "Unknown") &
+    ".authorName [href]"     #> RenderUser(ap.a.owner)                &
     ".artifact-comments"     #> Comment.findAll(By(Comment.art_id, ap.a.id)).flatMap(c =>
       <article class="comment">
-        <a href="/profile/bradbuchanan"><img src="/img/avatar_herb.png" /></a>
-        <a href="/profile/bradbuchanan">{c.owner.map(s => s.firstName + " " + s.lastName) openOr "Annonymous"}</a>
+        <a href={RenderUser(c.owner)}>{Gravatar.gravatar(c.owner, 50)}</a>
+        <a href={RenderUser(c.owner)}>{c.owner.map(_.niceName) openOr "Annonymous"}</a>
         {c.content.is}
         <p class="comment_age">Today</p>
       </article> ) & 
