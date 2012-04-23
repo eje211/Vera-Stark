@@ -798,7 +798,40 @@ h1#vera_verastark {
 }
 
 
-
+div.splash_image {
+  position: fixed;
+  z-index: -1;
+  top: 0; bottom: 0; left: 0; right: 0;
+  overflow: none;
+  background: #333 url('/img/lace.png') center;
+}
+  div.splash_image div.curtain_left {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: url('/img/curtain_left.png') left no-repeat;
+    background-size: contain;
+  }
+  div.splash_image div.curtain_right {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: url('/img/curtain_right.png') right no-repeat;
+    background-size: contain;
+  }
+  div.splash_image div.three_veras {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: url('/img/three_veras.png') center bottom no-repeat;
+    background-size: auto 80%;
+  }
 
 
 
