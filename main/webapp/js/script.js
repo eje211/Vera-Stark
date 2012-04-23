@@ -55,6 +55,7 @@ $(window).resize(function() {
 /* Add functionality to tabs */
 if ( $("#flag_next").length ) {
   $("#flag_next").click(function() {
+      window.location = $(this).attr("href");
     });
   // Add global keyboard shortcut
   $(document).keydown(function(event) { // "N" or "J" for "Next"
@@ -63,6 +64,7 @@ if ( $("#flag_next").length ) {
 }
 if ( $("#flag_prev").length ) {
   $("#flag_prev").click(function() {
+      window.location = $(this).attr("href");
     });
   // Add global keyboard shortcut
   $(document).keydown(function(event) { // "P" or "K" for "Previous"
