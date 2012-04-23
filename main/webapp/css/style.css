@@ -832,6 +832,23 @@ div.splash_image {
     background: url('/img/three_veras.png') center bottom no-repeat;
     background-size: auto 80%;
   }
+  
+div.splash_blurb {
+  position: fixed;
+  z-index: 1;
+  top: 80px;
+  left: 60px;
+  background-color: white;
+  border: solid #222 3px;
+  padding: 1.5em;
+  font-style: italic;
+  
+  -ms-transform:rotate(-7deg); /* IE 9 */
+  -moz-transform:rotate(-7deg); /* Firefox */
+  -webkit-transform:rotate(-7deg); /* Safari and Chrome */
+  -o-transform:rotate(-7deg); /* Opera */
+  transform:rotate(-7deg);
+}
 
 
 
