@@ -51,8 +51,6 @@ class FlagArtDestination(ap: ArtifactPage) {
     if (next isEmpty) next = FlagLinks.firstart
     prev = FlagLinks.prevart(ap.a.id.is.toInt)
     if (prev isEmpty) prev = FlagLinks.lastart
-    println(next)
-    println(prev)
     // "*" #> ClearClearable
     "#flag_next" #> <a id="flag_next" href={"/artifact/" + (next.map(_(0)) open_!)} title={(next.map(_(1)) open_!)}>Next</a> &
     "#flag_prev" #> <a id="flag_prev" href={"/artifact/" + (prev.map(_(0)) open_!)} title={(prev.map(_(1)) open_!)}>Previous</a>
@@ -60,6 +58,15 @@ class FlagArtDestination(ap: ArtifactPage) {
 }
 
 class FlagBioDestination(ap: AutobiographyPage) {
-  def render =
-    "*" #> ClearClearable
+  def render = {
+    var next: Box[List[String]] = Empty
+    var prev: Box[List[String]] = Empty
+    next = FlagLinks.nextbio(ap.a.id.is.toInt)
+    if (next isEmpty) next = FlagLinks.firstbio
+    prev = FlagLinks.prevbio(ap.a.id.is.toInt)
+    if (prev isEmpty) prev = FlagLinks.lastbio
+    // "*" #> ClearClearable
+    "#flag_next" #> <a id="flag_next" href={"/autobiography/" + (next.map(_(0)) open_!)} title={(next.map(_(1)) open_!)}>Next</a> &
+    "#flag_prev" #> <a id="flag_prev" href={"/autobiography/" + (prev.map(_(0)) open_!)} title={(prev.map(_(1)) open_!)}>Previous</a>
+  }
 }
