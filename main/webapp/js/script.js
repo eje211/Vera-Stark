@@ -82,12 +82,14 @@ if ( $("#flag_talk").length ) {
         $("div#content").removeClass("without_sidebar");
         $("div#content").addClass("with_sidebar");
         $("#flag_talk").attr("href", "#talk");
+        updateNavAnchors("#talk");
       }
       else {
         $("div#sidebar_talk").css("display", "none");
         $("div#content").addClass("without_sidebar");
         $("div#content").removeClass("with_sidebar");
         $("#flag_talk").attr("href", "#");
+        updateNavAnchors("#");
       }
       fixPositions();
     });
@@ -105,12 +107,14 @@ if ( $("#flag_edit").length ) {
         $("div#content").removeClass("without_sidebar");
         $("div#content").addClass("with_sidebar");
         $("#flag_edit").attr("href", "#edit");
+        updateNavAnchors("#edit");
       }
       else {
         $("div#sidebar_edit").css("display", "none");
         $("div#content").addClass("without_sidebar");
         $("div#content").removeClass("with_sidebar");
         $("#flag_edit").attr("href", "#");
+        updateNavAnchors("#");
       }
       fixPositions();
     });
@@ -119,6 +123,15 @@ if ( $("#flag_edit").length ) {
       if (event.which == 69) { $("#flag_edit").click(); }
     });
 }
+
+// Update next/previous hrefs to match page anchors
+var updateNavAnchors = function(newHash) {
+    var nextHref = $("#flag_next").attr("href").replace(/#.*/,'').concat(newHash);
+    $("#flag_next").attr("href", nextHref);
+    
+    var prevHref = $("#flag_prev").attr("href").replace(/#.*/,'').concat(newHash);
+    $("#flag_prev").attr("href", prevHref);
+  };
 
 /****************************************************************************/
 /* Comment form behavior */
@@ -212,4 +225,7 @@ window.onload = function() {
   // Activate datepicker
   if ( $(".apdate").datepicker )
     $(".apdate").datepicker({dateFormat: "yy/mm/dd", changeMonth: true, changeYear: true, defaultDate: "1972/05/01"})
+    
+  // Match nav to sidebar state
+  updateNavAnchors(window.location.hash);
 }
