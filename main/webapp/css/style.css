@@ -613,12 +613,30 @@ div.sidebar {
     div.sidebar article.comment a {
       font-weight: bold;
     }
-    div.sidebar article.comment p.comment_age {
+    div.sidebar article.comment p.comment_subline {
       font-size: 10pt;
-      font-style: italic;
-      color: #999;
       margin: 0;
     }
+      div.sidebar article.comment .comment_age {
+        font-style: italic;
+        color: #999;
+      }
+      div.sidebar article.comment .comment_controls {
+        
+      }
+      div.sidebar article.comment .comment_controls a {
+        color: #000;
+        font-weight: normal;
+      }
+        div.sidebar article.comment .comment_controls a:hover {
+          text-decoration: underline;
+        }
+        div.sidebar article.comment a.comment_delete {
+        }
+          div.sidebar article.comment a.comment_delete:hover {
+            color: #d00;
+            text-decoration: underline;
+          }
     div.sidebar p#comment-login, div.sidebar p#annotation-login {
       padding: 10px 0 10px 0;
       border-top: 2px groove #fff;
