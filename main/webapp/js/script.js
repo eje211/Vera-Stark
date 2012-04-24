@@ -2,9 +2,11 @@
   Something
 */
 
+/****************************************************************************/
 /* Utility */
 function clamp(val, min, max) { return Math.max(min, Math.min(max, val)); }
 
+/****************************************************************************/
 /* Positioning fixes on window resize events */
 var windowResizeTimer;
 var fixPositions = function() {
@@ -51,7 +53,7 @@ $(window).resize(function() {
     windowResizeTimer = setTimeout(fixPositions, 2);
   });
 
-  
+/****************************************************************************/
 /* Add functionality to tabs */
 if ( $("#flag_next").length ) {
   $("#flag_next").click(function() {
@@ -118,7 +120,7 @@ if ( $("#flag_edit").length ) {
     });
 }
 
-  
+/****************************************************************************/
 /* Comment form behavior */
 // By default, stop event propagation on all text fields
 $.map($("input"), function(e, i) {
@@ -141,11 +143,14 @@ var defaultTextBlur = function(event) {
       $(this).val($(this).prop("title"));
     }
   }
-  
+
 /* Iterate through form on submit, clear fields
    where value=title? */
 var defaultTextFormFix = function(event) {
-  
+  $(this).find("default_text").map(function() {
+      if ( $(this).val() == $(this).prop("title") )
+        $(this).val("");
+    });
 }
 
 /* Select on click in text fields */
@@ -167,7 +172,8 @@ var commentBoxKeyDown = function(event) {
       }
     }
   }
-  
+
+/****************************************************************************/
 /* Page Initialization */
 window.onload = function() {
 
@@ -188,6 +194,7 @@ window.onload = function() {
   $(".default_text").focus( defaultTextFocus );
   $(".default_text").blur( defaultTextBlur );
   $(".default_text").blur();
+  $("form").submit(defaultTextFormFix);
   
   // Establish comment box behaviors
   $(".comment_box").keydown( commentBoxKeyDown );
