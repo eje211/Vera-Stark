@@ -141,6 +141,13 @@ var defaultTextBlur = function(event) {
       $(this).val($(this).prop("title"));
     }
   }
+  
+/* Iterate through form on submit, clear fields
+   where value=title? */
+var defaultTextFormFix = function(event) {
+  
+}
+
 /* Select on click in text fields */
 var selectTextFocus = function(event) {
     if ( $(this).val() != $(this).prop("title") ) {

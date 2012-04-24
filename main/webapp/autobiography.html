@@ -257,10 +257,12 @@
               </article>
             </div>
             
-            <p id="annotation-login">Please log in to leave a comment! The more we share about Vera, the longer the legend will live on!
-            </p>
+            <p id="annotation-login">You must <a href="/user_mgt/login">sign in</a> to comment.
+              <br />Not a member?  <a href="/user_mgt/login">Register in seconds</a> with OpenID.
+              </p>
+              
             <form id="annotation-form" class="lift:AnnotationField?form=post">
-              <textarea>Leave a comment...</textarea>
+              <textarea class="default_text comment_box" title="Leave a comment..."></textarea>
               <input type="submit" />
             </form>
           </aside>
