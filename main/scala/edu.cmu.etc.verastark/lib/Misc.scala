@@ -24,7 +24,7 @@ object Gravatar {
 }
 
 object RenderUser {
-  def apply(u: Box[User]) = "/users/" + (u.map(_.id.is.toString) openOr "1")
+  def apply(u: Box[User]) = "/user/" + (u.map(_.id.is.toString) openOr "1")
 }
 
 object FlagLinks {
