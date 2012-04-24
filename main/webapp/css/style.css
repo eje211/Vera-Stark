@@ -419,6 +419,10 @@ div#content {
       max-width: 600px;
       padding: 2em;
     }
+      div#content section.static_page.wide_page {
+        width: 900px;
+        max-width: 900px;
+      }
     div#content section hgroup {
     }
     div#content section hgroup.with_flourish {
@@ -494,6 +498,18 @@ div#content {
       margin-top: 30px;
       margin-bottom: 30px;
     }
+    
+  div#content section table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+    div#content section table tr {
+      border-bottom: solid 1px white;
+    }
+    div#content section table tr:first-child {
+      border-bottom: groove 2px white;
+    }
+    
   div#content p img.dropcap {
     float: left;
     height: 1.8em;
