@@ -740,22 +740,29 @@ form#openid_form {
 }
 
 /* User Edit Page */
-form#content {
+.edit-user-profile form#content {
   float: left;
   margin-left: 50%;
   margin-top: 30px;
 }
-  form#content table {
+  .edit-user-profile form#content table {
     margin-left: -50%;
     background-color: #ddd;
     border: solid #aaa 4px;
   }
-    form#content table td {
+    .edit-user-profile form#content table td {
       padding: 0.6em;
     }
-    form#content table tr td:first-child {
+    .edit-user-profile form#content table tr td:first-child {
       font-weight: bold;
     }
+.edit-user-profile  p {
+  display: block;
+  margin: 3em;
+  padding: 1em;
+  background-color: #ddd;
+  border: solid #aaa 4px;
+}
     
 /* Browse Page */
 div.browse_images {
