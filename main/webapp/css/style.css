@@ -231,6 +231,7 @@ body {
 img.flourish {
 }
 
+/*-------------------------------------------------------------------------*/
 /* Header Styles */
 header {
   background-color:black;
@@ -259,7 +260,7 @@ header {
       color: white;
       font-family: "Tw Cen MT", sans-serif;
       font-weight: normal;
-      font-size: 12pt;
+      font-size: 14pt;
       text-decoration: none;
     }
     header li a:visited { color: white; }
@@ -268,9 +269,10 @@ header {
     margin-right: 4px;
   }
     header li#homeicon img {
-      height: 19px;
+      height: 22px;
     }
 
+/*-------------------------------------------------------------------------*/
 /* Artifact view Content Styles */
 #main {
 }
@@ -932,6 +934,20 @@ div.splash_blurb {
   transform:rotate(-7deg);
 }
 
+/*-------------------------------------------------------------------------*/
+/* Lift Notification Style */
+div#lift__noticesContainer__ {
+  display: block;
+  background-color: #000;
+  color: #eb0;
+  font-family: "Tw Cen MT", sans-serif;
+  border-top: solid #000 1px;
+  border-bottom: solid #333 1px;
+}
+  div#lift__noticesContainer__ ul {
+    margin: 2px;
+    list-style: none;
+  }
 
 
 
