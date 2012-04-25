@@ -126,11 +126,15 @@ if ( $("#flag_edit").length ) {
 
 // Update next/previous hrefs to match page anchors
 var updateNavAnchors = function(newHash) {
-    var nextHref = $("#flag_next").attr("href").replace(/#.*/,'').concat(newHash);
-    $("#flag_next").attr("href", nextHref);
+    if ( $("#flag_next").length ) {
+      var nextHref = $("#flag_next").attr("href").replace(/#.*/,'').concat(newHash);
+      $("#flag_next").attr("href", nextHref);
+      }
     
-    var prevHref = $("#flag_prev").attr("href").replace(/#.*/,'').concat(newHash);
-    $("#flag_prev").attr("href", prevHref);
+    if ( $("#flag_prev").length ) {
+      var prevHref = $("#flag_prev").attr("href").replace(/#.*/,'').concat(newHash);
+      $("#flag_prev").attr("href", prevHref);
+      }
   };
 
 /****************************************************************************/

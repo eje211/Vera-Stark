@@ -754,6 +754,26 @@ form#content {
     form#content table tr td:first-child {
       font-weight: bold;
     }
+    
+/* Browse Page */
+div.browse_images {
+  text-align: center;
+  margin-top: 20px;
+}
+  div.browse_images img {
+    width: 200px;
+    height: 133px;
+  }
+  div.browse_images div.matwrap_thumb {
+    display: inline-block;
+    position: relative;
+    margin: 5px;
+    
+    background-image: url('/img/website_yellowtexture_vera.png');
+    -moz-box-shadow: inset -1px -1px 3px 3px rgba(0,0,0,0.5);
+    -webkit-box-shadow: inset -1px -1px 3px 3px rgba(0,0,0,0.5);
+    box-shadow: inset -1px -1px 3px 3px rgba(0,0,0,0.5);
+  }
 
 /* Autobiography Edit Form */
 form#autobiography_new_form {
