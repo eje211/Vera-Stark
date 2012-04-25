@@ -738,21 +738,24 @@ form#openid_form {
 }
 
 /* User Edit Page */
-form#content {
+#edit-user-profile form {
   float: left;
   margin-left: 50%;
   margin-top: 30px;
 }
-  form#content table {
+  #edit-user-profile form table {
     margin-left: -50%;
     background-color: #ddd;
     border: solid #aaa 4px;
   }
-    form#content table td {
+    #edit-user-profile form content table td {
       padding: 0.6em;
     }
-    form#content table tr td:first-child {
+    #edit-user-profile form table tr td:first-child {
       font-weight: bold;
+    }
+    #edit-user-profile form table textarea {
+      width: 90%;
     }
 
 /* Autobiography Edit Form */
