@@ -843,11 +843,7 @@ div.splash_blurb {
   padding: 1.5em;
   font-style: italic;
   
-  -ms-transform:rotate(-7deg); /* IE 9 */
-  -moz-transform:rotate(-7deg); /* Firefox */
-  -webkit-transform:rotate(-7deg); /* Safari and Chrome */
-  -o-transform:rotate(-7deg); /* Opera */
-  transform:rotate(-7deg);
+  
 }
 
 
