@@ -937,7 +937,10 @@ div.splash_blurb {
   background-color: gray;
   border: solid #222 0.5px;
   padding: 1.5em;
-  
+  font-family: "Myriad Pro", "Tw Cen MT", sans-serif;
+  font-size: 22px;
+  font-weight: normal;
+  color: #6e321b;
   
   
 }
