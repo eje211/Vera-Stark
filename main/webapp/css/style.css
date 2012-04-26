@@ -896,7 +896,7 @@ h1#vera_verastark {
 div.splash_image {
   position: fixed;
   z-index: -1;
-  top:60px; bottom:350px; left:0; right:0;
+  top:0; bottom:350px; left:0; right:0;
   overflow: none;
   background: #333 url('/img/lace.png') center;
 }
@@ -931,17 +931,17 @@ div.splash_image {
 div.splash_blurb {
 	position: fixed;
 	z-index: 1;
-	top: 550px;
+	height: 310px;
 	left: 60px;
 	right: 60px;
     bottom: 10px;
 	background-color: rgba(0,0,0,0.8);
-	padding: 2em;
+	padding: 10px;
 	font-family:"Tw Cen MT", sans-serif;
 	font-size: 16px;
 	color:#F90;
 	font-weight:lighter;
-	padding-right:5em
+	overflow:none;
 }
 
 /*-------------------------------------------------------------------------*/
