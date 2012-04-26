@@ -2,9 +2,11 @@
   Something
 */
 
+/****************************************************************************/
 /* Utility */
 function clamp(val, min, max) { return Math.max(min, Math.min(max, val)); }
 
+/****************************************************************************/
 /* Positioning fixes on window resize events */
 var windowResizeTimer;
 var fixPositions = function() {
@@ -51,7 +53,7 @@ $(window).resize(function() {
     windowResizeTimer = setTimeout(fixPositions, 2);
   });
 
-  
+/****************************************************************************/
 /* Add functionality to tabs */
 if ( $("#flag_next").length ) {
   $("#flag_next").click(function() {
@@ -80,12 +82,14 @@ if ( $("#flag_talk").length ) {
         $("div#content").removeClass("without_sidebar");
         $("div#content").addClass("with_sidebar");
         $("#flag_talk").attr("href", "#talk");
+        updateNavAnchors("#talk");
       }
       else {
         $("div#sidebar_talk").css("display", "none");
         $("div#content").addClass("without_sidebar");
         $("div#content").removeClass("with_sidebar");
         $("#flag_talk").attr("href", "#");
+        updateNavAnchors("#");
       }
       fixPositions();
     });
@@ -103,12 +107,14 @@ if ( $("#flag_edit").length ) {
         $("div#content").removeClass("without_sidebar");
         $("div#content").addClass("with_sidebar");
         $("#flag_edit").attr("href", "#edit");
+        updateNavAnchors("#edit");
       }
       else {
         $("div#sidebar_edit").css("display", "none");
         $("div#content").addClass("without_sidebar");
         $("div#content").removeClass("with_sidebar");
         $("#flag_edit").attr("href", "#");
+        updateNavAnchors("#");
       }
       fixPositions();
     });
@@ -118,7 +124,20 @@ if ( $("#flag_edit").length ) {
     });
 }
 
-  
+// Update next/previous hrefs to match page anchors
+var updateNavAnchors = function(newHash) {
+    if ( $("#flag_next").length ) {
+      var nextHref = $("#flag_next").attr("href").replace(/#.*/,'').concat(newHash);
+      $("#flag_next").attr("href", nextHref);
+      }
+    
+    if ( $("#flag_prev").length ) {
+      var prevHref = $("#flag_prev").attr("href").replace(/#.*/,'').concat(newHash);
+      $("#flag_prev").attr("href", prevHref);
+      }
+  };
+
+/****************************************************************************/
 /* Comment form behavior */
 // By default, stop event propagation on all text fields
 $.map($("input"), function(e, i) {
@@ -141,6 +160,16 @@ var defaultTextBlur = function(event) {
       $(this).val($(this).prop("title"));
     }
   }
+
+/* Iterate through form on submit, clear fields
+   where value=title? */
+var defaultTextFormFix = function(event) {
+  $(this).find("default_text").map(function() {
+      if ( $(this).val() == $(this).prop("title") )
+        $(this).val("");
+    });
+}
+
 /* Select on click in text fields */
 var selectTextFocus = function(event) {
     if ( $(this).val() != $(this).prop("title") ) {
@@ -160,7 +189,8 @@ var commentBoxKeyDown = function(event) {
       }
     }
   }
-  
+
+/****************************************************************************/
 /* Page Initialization */
 window.onload = function() {
 
@@ -181,6 +211,7 @@ window.onload = function() {
   $(".default_text").focus( defaultTextFocus );
   $(".default_text").blur( defaultTextBlur );
   $(".default_text").blur();
+  $("form").submit(defaultTextFormFix);
   
   // Establish comment box behaviors
   $(".comment_box").keydown( commentBoxKeyDown );
@@ -198,4 +229,7 @@ window.onload = function() {
   // Activate datepicker
   if ( $(".apdate").datepicker )
     $(".apdate").datepicker({dateFormat: "yy/mm/dd", changeMonth: true, changeYear: true, defaultDate: "1972/05/01"})
+    
+  // Match nav to sidebar state
+  updateNavAnchors(window.location.hash);
 }

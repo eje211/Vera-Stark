@@ -78,13 +78,15 @@
               </section>
             </div>
         </div>
-        <div class="flags_left">
-          <a href="#prev" id="flag_prev">Previous</a>
-        </div>
-        <div class="flags_right">
-          <a href="#next" id="flag_next">Next</a>
-          <a href="#talk" id="flag_talk">Talk</a>
-          <a href="#edit" id="flag_edit">Edit</a>
+        <div class="lift:FlagBioDestination">
+          <div class="flags_left">
+            <a href="#prev" id="flag_prev">Previous</a>
+          </div>
+          <div class="flags_right lift:ProcessFlags">
+            <a href="#next" id="flag_next">Next</a>
+            <a href="#talk" id="flag_talk">Talk</a>
+            <a href="#edit" id="flag_edit">Edit</a>
+          </div>
         </div>
       </div><!-- autobiography_page -->
       <!-- Main artifact -->
@@ -191,7 +193,7 @@
       
           <!-- Artifact Description -->
           <section class="">
-            <a href="/profile.html?u=herbforrester"><img src="/img/avatar_herb.png" /></a>
+            <a id="profilelink" href="/profile.html?u=herbforrester"><img id="authorimg" src="/img/avatar_herb.png" /></a>
             <hgroup>
               <h2 class="artist">Vera Stark</h2>
               <h1 class="title">Excerpt from <em>It Rained on My Parade</em></h1>
@@ -257,10 +259,12 @@
               </article>
             </div>
             
-            <p id="annotation-login">Please log in to leave a comment! The more we share about Vera, the longer the legend will live on!
-            </p>
+            <p id="annotation-login">You must <a href="/user_mgt/login">sign in</a> to comment.
+              <br />Not a member?  <a href="/user_mgt/login">Register in seconds</a> with OpenID.
+              </p>
+              
             <form id="annotation-form" class="lift:AnnotationField?form=post">
-              <textarea>Leave a comment...</textarea>
+              <textarea class="default_text comment_box" title="Leave a comment..."></textarea>
               <input type="submit" />
             </form>
           </aside>

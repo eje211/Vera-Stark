@@ -16,6 +16,7 @@ import java.util.Date
 import java.text.SimpleDateFormat
 
 import edu.cmu.etc.verastark.model._
+import edu.cmu.etc.verastark.lib.{Gravatar, RenderUser}
 
 class AutobiographyParam                           extends VeraObject
 case class  AutobiographyPage(a: Autobiography) extends AutobiographyParam
@@ -98,7 +99,7 @@ class AutobiographyNewForm {
   def processAutobiography = {
     Autobiography.create.title(title).content(text).date(date).
     app_date(apdate).ownerid(User.currentUserId.map(_.toInt) openOr 0).
-    changed(now).published(true).save
+    changed(now).published(true).deleted(false).genuine(false).save
     S.redirectTo("/autobiography/index")
   }
     
@@ -117,12 +118,14 @@ class AutobiographyTalkSnippet(ap: AutobiographyPage) {
     ".title *"                   #> ap.a.title.is                         &
     ".time_period *"             #> ap.a.date.is                          &
     ".description [class+]"      #> (if(ap.a.description.is.length == 0) "clearable" else "") &
+    "#profilelink [href]"        #> RenderUser(ap.a.owner)                &
+    "#authorimg"                 #> Gravatar.gravatar(ap.a.owner, 60)     &
     ".description *"             #> TextileParser.toHtml(ap.a.description.is) &
     ".author *"                  #> (ap.a.owner.map(u => u.firstName + " " + u.lastName) openOr "Unknown") &
     "#autobiography-annotations" #> Annotation.findAll(By(Annotation.bio_id, ap.a.id)).flatMap(a =>
       <article class="comment">
-        <a href="/profile/bradbuchanan"><img src="/img/avatar_herb.png" /></a>
-        <a href="/profile/bradbuchanan">{a.owner.map(s => s.firstName + " " + s.lastName) openOr "Annonymous"}</a>
+        <a href={RenderUser(a.owner)}>{Gravatar.gravatar(a.owner, 50)}</a>
+        <a href={RenderUser(a.owner)}>{a.owner.map(_.niceName) openOr "Annonymous"}</a>
         {a.content.is}
         <p class="comment_age">Today</p>
       </article> ) & 
@@ -156,7 +159,11 @@ class AutobiographyEditForm(ap:AutobiographyPage) {
     var apdate      = new Date
     def processAutobiography = {
       ap.a.title(title).content(content).description(description).date(date).changed(now).app_date(apdate).save
-      S.redirectTo("/artifact/" + ap.a.id.toString)
+      S.redirectTo("/autobiography/" + ap.a.id.toString)
+    }
+    def deleteAutobiography = {
+      ap.a.deleted(!ap.a.deleted.is).save
+      S.notice("The page of Vera's autobiogrpahy called \"" + ap.a.title.is + "\" is now marked for " + (if (ap.a.deleted.is) "" else "un") +  "deletion.")
     }
 
     ".title"          #> SHtml.onSubmit(title = _)       &
@@ -170,7 +177,8 @@ class AutobiographyEditForm(ap:AutobiographyPage) {
     ".apdate"         #> SHtml.onSubmit((s: String) => 
       apdate = new SimpleDateFormat("y/M/dd").parse(s))  &
     ".apdate [value]" #> ap.a.app_date.toString          &
-    "type=submit"     #> SHtml.submit("Submit", processAutobiography _)
+    "type=submit"     #> SHtml.submit("Submit", processAutobiography _) &
+    "type=button"     #> SHtml.submit(if(ap.a.deleted.is) "Undelete" else "Delete", deleteAutobiography _)
   }
 }
 

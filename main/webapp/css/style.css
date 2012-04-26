@@ -231,6 +231,7 @@ body {
 img.flourish {
 }
 
+/*-------------------------------------------------------------------------*/
 /* Header Styles */
 header {
   background-color:black;
@@ -259,7 +260,7 @@ header {
       color: white;
       font-family: "Tw Cen MT", sans-serif;
       font-weight: normal;
-      font-size: 12pt;
+      font-size: 14pt;
       text-decoration: none;
     }
     header li a:visited { color: white; }
@@ -268,9 +269,10 @@ header {
     margin-right: 4px;
   }
     header li#homeicon img {
-      height: 19px;
+      height: 22px;
     }
 
+/*-------------------------------------------------------------------------*/
 /* Artifact view Content Styles */
 #main {
 }
@@ -419,6 +421,10 @@ div#content {
       max-width: 600px;
       padding: 2em;
     }
+      div#content section.static_page.wide_page {
+        width: 900px;
+        max-width: 900px;
+      }
     div#content section hgroup {
     }
     div#content section hgroup.with_flourish {
@@ -494,6 +500,18 @@ div#content {
       margin-top: 30px;
       margin-bottom: 30px;
     }
+    
+  div#content section table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+    div#content section table tr {
+      border-bottom: solid 1px white;
+    }
+    div#content section table tr:first-child {
+      border-bottom: groove 2px white;
+    }
+    
   div#content p img.dropcap {
     float: left;
     height: 1.8em;
@@ -613,9 +631,37 @@ div.sidebar {
     div.sidebar article.comment a {
       font-weight: bold;
     }
-    div.sidebar article.comment p.comment_age {
-      font-size: 11pt;
+    div.sidebar article.comment p.comment_subline {
+      font-size: 10pt;
       margin: 0;
+    }
+      div.sidebar article.comment .comment_age {
+        font-style: italic;
+        color: #999;
+      }
+      div.sidebar article.comment .comment_controls {
+        
+      }
+      div.sidebar article.comment .comment_controls a {
+        color: #000;
+        font-weight: normal;
+      }
+        div.sidebar article.comment .comment_controls a:hover {
+          text-decoration: underline;
+        }
+        div.sidebar article.comment a.comment_delete {
+        }
+          div.sidebar article.comment a.comment_delete:hover {
+            color: #d00;
+            text-decoration: underline;
+          }
+    div.sidebar p#comment-login, div.sidebar p#annotation-login {
+      padding: 10px 0 10px 0;
+      border-top: 2px groove #fff;
+      text-align: center;
+    }
+    div.sidebar div#comment-field, div.sidebar div#annotation-field {
+      text-align: right;
     }
   /* Sidebar Form Properties */
   div.sidebar form h5 {
@@ -692,6 +738,55 @@ form#openid_form {
   padding: 2em;
   text-align: center;
 }
+
+/* User Edit Page */
+#edit-user-profile form {
+  float: left;
+  margin-left: 50%;
+  margin-top: 30px;
+}
+  #edit-user-profile form table {
+    margin-left: -50%;
+    background-color: #ddd;
+    border: solid #aaa 4px;
+  }
+    #edit-user-profile form content table td {
+      padding: 0.6em;
+    }
+    #edit-user-profile form table tr td:first-child {
+      font-weight: bold;
+    }
+    #edit-user-profile form table textarea {
+      width: 90%;
+    }
+#edit-user-profile  p {
+  display: block;
+  margin: 3em;
+  padding: 1em;
+  background-color: #ddd;
+  border: solid #aaa 4px;
+}
+    
+/* Browse Page */
+div.browse_images {
+  text-align: center;
+  margin-top: 20px;
+}
+  div.browse_images img {
+    width: 200px;
+    height: 133px;
+  }
+  div.browse_images div.matwrap_thumb {
+    display: inline-block;
+    position: relative;
+    margin: 5px;
+    
+    background-image: url('/img/website_yellowtexture_vera.png');
+    -moz-box-shadow: inset -1px -1px 3px 3px rgba(0,0,0,0.5);
+    -webkit-box-shadow: inset -1px -1px 3px 3px rgba(0,0,0,0.5);
+    box-shadow: inset -1px -1px 3px 3px rgba(0,0,0,0.5);
+  }
+>>>>>>> origin/master
 
 /* Autobiography Edit Form */
 form#autobiography_new_form {
@@ -846,6 +941,20 @@ div.splash_blurb {
   
 }
 
+/*-------------------------------------------------------------------------*/
+/* Lift Notification Style */
+div#lift__noticesContainer__ {
+  display: block;
+  background-color: #000;
+  color: #eb0;
+  font-family: "Tw Cen MT", sans-serif;
+  border-top: solid #000 1px;
+  border-bottom: solid #333 1px;
+}
+  div#lift__noticesContainer__ ul {
+    margin: 2px;
+    list-style: none;
+  }
 
 
 

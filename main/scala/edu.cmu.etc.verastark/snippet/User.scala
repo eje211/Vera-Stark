@@ -35,6 +35,7 @@ class UserProfile(u: User) {
                                else if (count == 2) "two" else count.toString)                                     &
     "#contributions *"    #> (if (contributions._2.length == 0) <i>No contributions yet!</i>
                                else contributions._2.map(c => <li><a href={"" + c(1) + c(0)}>{c(2)}</a></li>))     &
-    ".user_description *" #> TextileParser.toHtml(u.quotation.is)
+    ".user_description *" #> TextileParser.toHtml(u.quotation.is)                                                  &
+    ".right [class+]"     #> (if (User.currentUser.map(_.id == u.id) openOr false) "" else "clearable") andThen ClearClearable
   }
 }

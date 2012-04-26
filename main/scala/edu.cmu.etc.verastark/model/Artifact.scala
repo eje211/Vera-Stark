@@ -32,6 +32,7 @@ class Artifact extends LongKeyedMapper[Artifact] with OneToMany[Long, Artifact] 
   object published extends MappedBoolean       (this) // Visible to the public?
   object deleted   extends MappedBoolean       (this) // Is there a request to delete?
   object moderated extends MappedBoolean       (this) // Has a moderator seen this?
+  object genuine   extends MappedBoolean       (this) // Has a moderator seen this?
   object changed   extends MappedDateTime      (this) // Last time this artifact was changed
   object comments  extends MappedOneToMany     (Comment, Comment.art_id, OrderBy(Comment.date, Ascending))
   def    owner = User.find(By(User.id, this.ownerid))

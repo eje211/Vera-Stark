@@ -22,6 +22,12 @@ object User extends User with MetaOpenIDProtoUser[User] with LongKeyedMetaMapper
   // define the order fields will appear in forms and output
   override def fieldOrder = List(id, firstName, lastName, email,
   locale, timezone, password)
+  override def editFields = List(screenName, firstName, lastName, email,
+  quotation, locale, timezone)
+  override def editXhtml(theUser: TheUserType) = 
+    <div id="edit-user-profile">{super.editXhtml(theUser)}
+      <p class="about-gravatars">On Vera Stark online, each user is identified by their <a href="http://www.gravatar.com/">Gravatar</a>. A Gravatar is an image that follows you from site to site appearing beside your name when you do things like comment or post on a blog. You can can customize your Gravatar on <a href="http://www.gravatar.com">gravatar.com</a>.</p>
+    </div>
 
   // comment this line out to require email validations
   override def skipEmailValidation = true
@@ -46,14 +52,20 @@ class User extends LongKeyedMapper[User] with OpenIDProtoUser[User] {
 
   object editor      extends MappedBoolean (this)
   object memberSince extends MappedDateTime(this)
-  object quotation   extends MappedTextarea(this, 2000)
+  object quotation   extends MappedTextarea(this, 2000) {
+    override def displayName = "About yourself"
+  }
+  object screenName  extends MappedString  (this, 40) {
+    override def displayName = "Screen Name"
+  }
 
   //Default OpenIDProtoUser implementation uses nickname so swapping this out for standard FirstName Surname (Email) format.
-  override def niceName: String = (firstName.is, lastName.is, email.is) match {
+  override def niceName: String = (firstName.is, lastName.is, screenName.is) match {
+    case (_, _, s) if s.length > 1  => s
     case (f, l, _) if f.length > 1 && l.length > 1 => f+" "+l
     case (f, _, _) if f.length > 1 => f
     case (_, l, _) if l.length > 1 => l
-    case (_, _, e) => e.split("@")(0)
+    case _                         => "Annonymous"
   }
 
 }

@@ -12,6 +12,8 @@ class Autobiography extends LongKeyedMapper[Autobiography] with OneToMany[Long, 
   object date        extends MappedString        (this, 200)
   object app_date    extends MappedDate          (this)
   object published   extends MappedBoolean       (this)
+  object deleted     extends MappedBoolean       (this)
+  object genuine     extends MappedBoolean       (this)
   object ownerid     extends MappedLongForeignKey(this, User)
   object changed     extends MappedDateTime      (this)
   object annotations extends MappedOneToMany     (Annotation, Annotation.bio_id, OrderBy(Annotation.date, Ascending))

@@ -78,6 +78,10 @@ class ArtifactEditForm(ap:ArtifactPage) {
       ap.a.title(title).artist(artist).content(content).date(date).changed(now).app_date(apdate).save
       S.redirectTo("/artifact/" + ap.a.id.toString)
     }
+    def deleteArtifact = {
+      ap.a.deleted(!ap.a.deleted.is).save
+      S.notice("Artifact \"" + ap.a.title.is + "\" is now marked for " + (if (ap.a.deleted.is) "" else "un") +  "deletion.")
+    }
 
     ".title"          #> SHtml.onSubmit(title = _)   &
     ".title [value]"  #> ap.a.title.is               &
@@ -88,9 +92,10 @@ class ArtifactEditForm(ap:ArtifactPage) {
     ".date"           #> SHtml.onSubmit(date = _)    &
     ".date [value]"   #> ap.a.date.is                &
     ".apdate"         #> SHtml.onSubmit((s: String) => 
-      apdate = new SimpleDateFormat("y/M/dd").parse(s))      &
+      apdate = new SimpleDateFormat("y/M/dd").parse(s)) &
     ".apdate [value]" #> ap.a.app_date.toString      &
-    "type=submit"     #> SHtml.submit("Submit", processArtifact _)
+    "type=submit"     #> SHtml.submit("Submit", processArtifact _) &
+    "type=button"     #> SHtml.submit(if(ap.a.deleted.is) "Undelete" else "Delete", deleteArtifact _)
   }
 }
 
@@ -152,8 +157,8 @@ class ArtifactSnippet(ap: ArtifactPage) {
         {c.content.is}
         <p class="comment_age">Today</p>
       </article> ) & 
-    "#comment-field [class+]" #> (if (User.currentUserId isEmpty) "clearable" else "") andThen
-    "#comment-field"          #> ClearClearable
+    "#comment-field [class+]" #> (if (User.currentUser isEmpty) "clearable" else "") andThen ClearClearable &
+    "#comment-login [class+]" #> (if (User.currentUser isEmpty) "" else "clearable") andThen ClearClearable
 }
 
 class ArtifactImage(ap: ArtifactPage) {
@@ -171,8 +176,8 @@ class NewArtifact {
         art.save
         val filename = "0" * (5 - art.id.toString.length) + art.id + "." + file.fileName
         art.url("/upload/" + filename).title(file.fileName.slice(0, file.fileName.lastIndexOf(".")).replace('_', ' ')).
-          filename(filename).filetype(file.mimeType).
-          ownerid(User.currentUserId.map(_.toInt) openOr 1).app_date(new Date(71035201)).save // Default date set to Apr 2 1972, near Vear's disapearance
+          filename(filename).filetype(file.mimeType).deleted(false).genuine(true).
+          ownerid(User.currentUser.map(_.id) open_!).app_date(new Date(71035201)).save // Default date set to Apr 2 1972, near Vear's disapearance
         var f = new File("/var/images/" + filename)
         if (!f.exists) {
           f.createNewFile
@@ -194,8 +199,8 @@ class NewArtifact {
 
 class ContributeFilter {
   def render =
-    "#no_user [class+]"      #> (if (User.currentUserId isEmpty) "" else "clearable") &
-    "#new_artifact [class+]" #> (if (User.currentUserId isEmpty) "clearable" else "") andThen
+    "#no_user [class+]"      #> (if (User.currentUser isEmpty) "" else "clearable") &
+    "#new_artifact [class+]" #> (if (User.currentUser isEmpty) "clearable" else "") andThen
     "*"                      #> ClearClearable
 }
 
@@ -204,7 +209,7 @@ class ArtifactList {
     "ul *" #> Artifact.findAllByPreparedStatement({superconn =>
       superconn.connection.prepareStatement(
         "SELECT * FROM artifact a " /* +
-        "JOIN users current ON current.id = " + (User.currentUserId.map(_.toString) openOr "1") + " " +
+        "JOIN users current ON current.id = " + (User.currentUserId openOr "1") + " " +
         "JOIN users aowner ON a.ownerid = aowner.id " +
         "WHERE a.published = TRUE OR " +
         "aowner.id = current.id OR " +
@@ -234,7 +239,7 @@ class CommentField(ap: ArtifactPage) {
     var published = true
     def processComment = 
       if (content.length > 0) {
-        Comment.create.content(content).ownerid(User.currentUserId.map(_.toInt) openOr 1).date(now).art_id(ap.a.id).published(true).save
+        Comment.create.content(content).ownerid(User.currentUser.map(_.id) open_!).date(now).art_id(ap.a.id).published(true).save
         S.redirectTo("/artifact/" + ap.a.id.toString + "#talk")
       }
 
