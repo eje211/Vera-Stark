@@ -931,7 +931,7 @@ div.splash_image {
 div.splash_blurb {
   position: fixed;
   z-index: 1;
-  top: 300px;
+  top: 500px;
   left: 60px;
   background-color: white;
   border: solid #222 3px;
