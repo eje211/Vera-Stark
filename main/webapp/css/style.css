@@ -933,9 +933,9 @@ div.splash_blurb {
   z-index: 1;
   top: 500px;
   left: 60px;
-  right: 200px;
-  background-color: white;
-  border: solid #222 3px;
+  right: 60px;
+  background-color: gray;
+  border: solid #222 0.5px;
   padding: 1.5em;
   
   
