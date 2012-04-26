@@ -929,20 +929,18 @@ div.splash_image {
   }
   
 div.splash_blurb {
-  position: fixed;
-  z-index: 1;
-  top: 500px;
-  left: 60px;
-  right: 60px;
-  background-color: gray;
-  border: solid #222 0.5px;
-  padding: 1.5em;
-  font-family: "Myriad Pro", "Tw Cen MT", sans-serif;
-  font-size: 12px;
-  font-weight: normal;
-  color: white;
-  
-  
+	position: fixed;
+	z-index: 1;
+	top: 550px;
+	left: 60px;
+	right: 60px;
+bottom: 10px;
+	background-color: rgba(0,0,0,0.8);
+	padding: 3em;
+	font-family:"Tw Cen MT", sans-serif;
+	font-size: 15px;
+	color:#F90;
+	font-weight:lighter;
 }
 
 /*-------------------------------------------------------------------------*/
