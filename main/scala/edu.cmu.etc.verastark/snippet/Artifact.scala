@@ -17,6 +17,7 @@ import java.io._
 
 import edu.cmu.etc.verastark.model._
 import edu.cmu.etc.verastark.lib.{Gravatar, RenderUser}
+import edu.cmu.etc.verastark.lib.ModerateEnum._
 
 class ArtifactParam                   extends VeraObject
 case object ArtifactNew               extends ArtifactParam
@@ -176,7 +177,7 @@ class NewArtifact {
         art.save
         val filename = "0" * (5 - art.id.toString.length) + art.id + "." + file.fileName
         art.url("/upload/" + filename).title(file.fileName.slice(0, file.fileName.lastIndexOf(".")).replace('_', ' ')).
-          filename(filename).filetype(file.mimeType).deleted(false).genuine(true).
+          filename(filename).filetype(file.mimeType).deleted(false).genuine(true).created(now).
           ownerid(User.currentUser.map(_.id) open_!).app_date(new Date(71035201)).save // Default date set to Apr 2 1972, near Vear's disapearance
         var f = new File("/var/images/" + filename)
         if (!f.exists) {
@@ -236,10 +237,10 @@ class CommentField(ap: ArtifactPage) {
   def render = {
     var content   = ""
     var art_id    = 0
-    var published = true
+    var published = Published
     def processComment = 
       if (content.length > 0) {
-        Comment.create.content(content).ownerid(User.currentUser.map(_.id) open_!).date(now).art_id(ap.a.id).published(true).save
+        Comment.create.content(content).ownerid(User.currentUser.map(_.id) open_!).date(now).art_id(ap.a.id).published(Published).save
         S.redirectTo("/artifact/" + ap.a.id.toString + "#talk")
       }
 

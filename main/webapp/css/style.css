@@ -789,15 +789,18 @@ div.browse_images {
 >>>>>>> origin/master
 
 /* Autobiography Edit Form */
+form#notebook_new_form,
 form#autobiography_new_form {
   text-align: left;
 }
+  form#notebook_new_form label,
   form#autobiography_new_form label{
     display: block;
     font-size: 12pt;
     margin-top: 12px;
     margin-bottom: -2px;
   }
+  form#notebook_new_form textarea,
   form#autobiography_new_form textarea {
     width: 100%;
     height: 10em;

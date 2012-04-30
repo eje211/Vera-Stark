@@ -4,8 +4,8 @@ import net.liftweb.mapper._
 import net.liftweb.common.Full
 import edu.cmu.etc.verastark.lib.ModerateEnum
 
-class Autobiography extends LongKeyedMapper[Autobiography] with OneToMany[Long, Autobiography] with IdPK {
-  def getSingleton = Autobiography
+class Notebook extends LongKeyedMapper[Notebook] with OneToMany[Long, Notebook] with IdPK {
+  def getSingleton = Notebook
 
   object title       extends MappedString        (this, 140)
   object content     extends MappedTextarea      (this, 10000)
@@ -18,8 +18,8 @@ class Autobiography extends LongKeyedMapper[Autobiography] with OneToMany[Long, 
   object ownerid     extends MappedLongForeignKey(this, User)
   object changed     extends MappedDateTime      (this)
   object created     extends MappedDateTime      (this)
-  object annotations extends MappedOneToMany     (Annotation, Annotation.bio_id, OrderBy(Annotation.date, Ascending))
+  object annotations extends MappedOneToMany     (MarginNote, MarginNote.bio_id, OrderBy(MarginNote.date, Ascending))
   def    owner =     User.find(By(User.id, this.ownerid))
 }
 
-object Autobiography extends Autobiography with LongKeyedMetaMapper[Autobiography]
+object Notebook extends Notebook with LongKeyedMetaMapper[Notebook]

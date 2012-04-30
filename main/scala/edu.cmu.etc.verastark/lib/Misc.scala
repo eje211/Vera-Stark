@@ -61,3 +61,9 @@ object FlagLinks {
     Full(contributions._2(0))
   }
 }
+
+object ModerateEnum extends Enumeration {
+  type ModerateEnum = Value
+  val Pending, Published, Rejected = Value
+}
+import ModerateEnum._

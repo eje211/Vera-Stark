@@ -19,102 +19,102 @@ import edu.cmu.etc.verastark.model._
 import edu.cmu.etc.verastark.lib.{Gravatar, RenderUser}
 import edu.cmu.etc.verastark.lib.ModerateEnum._
 
-class AutobiographyParam                           extends VeraObject
-case class  AutobiographyPage(a: Autobiography) extends AutobiographyParam
-case object AutobiographyIndex                     extends AutobiographyParam
-case object AutobiographyNew                       extends AutobiographyParam
-case object AutobiographyNotFound                  extends AutobiographyParam
+class NotebookParam                           extends VeraObject
+case class  NotebookPage(a: Notebook)         extends NotebookParam
+case object NotebookIndex                     extends NotebookParam
+case object NotebookNew                       extends NotebookParam
+case object NotebookNotFound                  extends NotebookParam
 
-object AutobiographyPageMenu {
+object NotebookPageMenu {
   def parse(id: String) = id match {
-    case "" | "index" => Full(AutobiographyIndex)
-    case "new"        => Full(AutobiographyNew)
+    case "" | "index" => Full(NotebookIndex)
+    case "new"        => Full(NotebookNew)
     case _            => {
       try {
-        var page = Autobiography.find(By(Autobiography.id, Integer.parseInt(id)))
+        var page = Notebook.find(By(Notebook.id, Integer.parseInt(id)))
         page match {
-          case Full(page) => Full(AutobiographyPage(page))
-          case _          => Full(AutobiographyIndex)
+          case Full(page) => Full(NotebookPage(page))
+          case _          => Full(NotebookIndex)
         }
       }
       catch { // Default behavior: go to index
-        case e: NumberFormatException => Full(AutobiographyIndex)
+        case e: NumberFormatException => Full(NotebookIndex)
       }
     }
   }
-  def encode(ap: AutobiographyParam) = ap match {
-    case AutobiographyPage(id) => id.toString
-    case AutobiographyNew      => "new"
-    case AutobiographyNotFound => "index"
+  def encode(ap: NotebookParam) = ap match {
+    case NotebookPage(id) => id.toString
+    case NotebookNew      => "new"
+    case NotebookNotFound => "index"
     case _                     => "index"
   }
 
-  val menu = Menu.param[AutobiographyParam]("Autobiography", "Autobiography", parse _, encode _) / "autobiography"
+  val menu = Menu.param[NotebookParam]("Notebook", "Notebook", parse _, encode _) / "notebook"
   lazy val loc = menu.toLoc
 
-  def render = "*" #> "Autobiography" // loc.currentValue.map(_.pageName)
+  def render = "*" #> "Notebook" // loc.currentValue.map(_.pageName)
 }
 
-class AutobiographyContainer(ap: AutobiographyParam) {
+class NotebookContainer(ap: NotebookParam) {
   def render = ap match {
-    case AutobiographyIndex   => renderIndex
-    case AutobiographyNew     => renderNew
-    case AutobiographyPage(a) => renderPage
+    case NotebookIndex   => renderIndex
+    case NotebookNew     => renderNew
+    case NotebookPage(a) => renderPage
   }
 
   def renderIndex =
-    "#autobiography_index ^^"          #> "*"                &
-    "#autobiography_index [class+]"    #> "static_page"      &
-    "#autobiography_index [id]"        #> "content"
+    "#notebook_index ^^"          #> "*"                &
+    "#notebook_index [class+]"    #> "static_page"      &
+    "#notebook_index [id]"        #> "content"
   def renderNew   =
-    "#autobiography_new ^^"            #> "*"                &
-    "#autobiography_new [id]"          #> "content"          &
-    "#autobiography_new_form [class+]" #> (if(User.currentUser isEmpty) "clearable" else "") &
+    "#notebook_new ^^"            #> "*"                &
+    "#notebook_new [id]"          #> "content"          &
+    "#notebook_new_form [class+]" #> (if(User.currentUser isEmpty) "clearable" else "") &
     "#not_logged_in [class+]"          #> (if(User.currentUser isEmpty) "" else "clearable") andThen
     ClearClearable
   def renderPage  =
-    "#autobiography_page ^^"           #> "*"                &
-    "#autobiography_page [class+]"     #> "without_sidebars" &
-    "#autobiography_page [id]"         #> "content"
+    "#notebook_page ^^"           #> "*"                &
+    "#notebook_page [class+]"     #> "without_sidebars" &
+    "#notebook_page [id]"         #> "content"
 }
 
-class AutobiographyPageSnippet(ap:AutobiographyPage) {
+class NotebookPageSnippet(ap:NotebookPage) {
   def render =
     //"h2 *" #> a.title.is &
-    "#autobiography_text *"  #> TextileParser.toHtml(ap.a.content.is)
+    "#notebook_text *"  #> TextileParser.toHtml(ap.a.content.is)
 }
 
-class AutobiographyList {
+class NotebookList {
   def render =
-    "ul *" #> Autobiography.findAll(By(Autobiography.published, Published), OrderBy(Autobiography.app_date, Ascending)
+    "ul *" #> Notebook.findAll(By(Notebook.published, Published), OrderBy(Notebook.app_date, Ascending)
     ).flatMap(
-      a => <li><a href={"/autobiography/" + a.id}>{a.title}</a></li>
+      a => <li><a href={"/notebook/" + a.id}>{a.title}</a></li>
     ) & ClearClearable
 }
 
-class AutobiographyNewForm {
+class NotebookNewForm {
   var title  = ""
   var text   = ""
   var date   = ""
   var apdate: Date = _
-  def processAutobiography = {
-    Autobiography.create.title(title).content(text).date(date).created(now).
+  def processNotebook = {
+    Notebook.create.title(title).content(text).date(date).created(now).
     app_date(apdate).ownerid(User.currentUserId.map(_.toInt) openOr 0).
     changed(now).published(Published).deleted(false).genuine(false).save
-    S.redirectTo("/autobiography/index")
+    S.redirectTo("/notebook/index")
   }
     
   def render =
-    "name=autobiography_title" #> SHtml.onSubmit(title  = _) &
+    "name=notebook_title" #> SHtml.onSubmit(title  = _) &
     "name=text_body"           #> SHtml.onSubmit(text   = _) &
     "name=text_date"           #> SHtml.onSubmit(date   = _) &
     "name=text_app_date"       #> SHtml.onSubmit((s: String) => 
       apdate = new SimpleDateFormat("y/M/dd").parse(s))      &
-    "type=submit"              #> SHtml.submit("Submit the page", processAutobiography _)
+    "type=submit"              #> SHtml.submit("Submit the page", processNotebook _)
              
 }
 
-class AutobiographyTalkSnippet(ap: AutobiographyPage) {
+class NotebookTalkSnippet(ap: NotebookPage) {
   def render = 
     ".title *"                   #> ap.a.title.is                         &
     ".time_period *"             #> ap.a.date.is                          &
@@ -123,34 +123,34 @@ class AutobiographyTalkSnippet(ap: AutobiographyPage) {
     "#authorimg"                 #> Gravatar.gravatar(ap.a.owner, 60)     &
     ".description *"             #> TextileParser.toHtml(ap.a.description.is) &
     ".author *"                  #> (ap.a.owner.map(u => u.firstName + " " + u.lastName) openOr "Unknown") &
-    "#autobiography-annotations" #> Annotation.findAll(By(Annotation.bio_id, ap.a.id)).flatMap(a =>
+    "#notebook-margin-notes" #> MarginNote.findAll(By(MarginNote.bio_id, ap.a.id)).flatMap(a =>
       <article class="comment">
         <a href={RenderUser(a.owner)}>{Gravatar.gravatar(a.owner, 50)}</a>
         <a href={RenderUser(a.owner)}>{a.owner.map(_.niceName) openOr "Annonymous"}</a>
         {a.content.is}
         <p class="comment_age">Today</p>
       </article> ) & 
-    "#annotation-login [class+]" #> (if (User.currentUserId isEmpty) "" else "clearable") andThen ClearClearable &
-    "#annotation-form [class+]"  #> (if (User.currentUserId isEmpty) "clearable" else "") andThen ClearClearable
+    "#margin-note-login [class+]" #> (if (User.currentUserId isEmpty) "" else "clearable") andThen ClearClearable &
+    "#margin-note-form [class+]"  #> (if (User.currentUserId isEmpty) "clearable" else "") andThen ClearClearable
 }
 
-class AnnotationField(ap: AutobiographyPage) {
+class MarginNoteField(ap: NotebookPage) {
   def render = {
     var content   = ""
     var art_id    = 0
     var published = Published
-    def processAnnotation = 
+    def processMarginNote = 
       if (content.length > 0) {
-        Annotation.create.content(content).ownerid(User.currentUserId.map(_.toInt) open_!).date(now).bio_id(ap.a.id).published(Published).save
-        S.redirectTo("/autobiography/" + ap.a.id + "#talk")
+        MarginNote.create.content(content).ownerid(User.currentUserId.map(_.toInt) open_!).date(now).bio_id(ap.a.id).published(Published).save
+        S.redirectTo("/notebook/" + ap.a.id + "#talk")
       }
 
     "textarea"    #> SHtml.onSubmit(content = _) &
-    "type=submit" #> SHtml.submit("Annotate this page", processAnnotation _)
+    "type=submit" #> SHtml.submit("Annotate this page", processMarginNote _)
   }
 }
 
-class AutobiographyEditForm(ap:AutobiographyPage) {
+class NotebookEditForm(ap:NotebookPage) {
   def render = {
     var title       = ""
     var artist      = ""
@@ -158,11 +158,11 @@ class AutobiographyEditForm(ap:AutobiographyPage) {
     var description = ""
     var date        = ""
     var apdate      = new Date
-    def processAutobiography = {
+    def processNotebook = {
       ap.a.title(title).content(content).description(description).date(date).changed(now).app_date(apdate).save
-      S.redirectTo("/autobiography/" + ap.a.id.toString)
+      S.redirectTo("/notebook/" + ap.a.id.toString)
     }
-    def deleteAutobiography = {
+    def deleteNotebook = {
       ap.a.deleted(!ap.a.deleted.is).save
       S.notice("The page of Vera's autobiogrpahy called \"" + ap.a.title.is + "\" is now marked for " + (if (ap.a.deleted.is) "" else "un") +  "deletion.")
     }
@@ -178,14 +178,14 @@ class AutobiographyEditForm(ap:AutobiographyPage) {
     ".apdate"         #> SHtml.onSubmit((s: String) => 
       apdate = new SimpleDateFormat("y/M/dd").parse(s))  &
     ".apdate [value]" #> ap.a.app_date.toString          &
-    "type=submit"     #> SHtml.submit("Submit", processAutobiography _) &
-    "type=button"     #> SHtml.submit(if(ap.a.deleted.is) "Undelete" else "Delete", deleteAutobiography _)
+    "type=submit"     #> SHtml.submit("Submit", processNotebook _) &
+    "type=button"     #> SHtml.submit(if(ap.a.deleted.is) "Undelete" else "Delete", deleteNotebook _)
   }
 }
 
-class AutobiographySidebars(ap: AutobiographyParam) {
+class NotebookSidebars(ap: NotebookParam) {
   def render = ap match {
-    case a: AutobiographyPage => "*" #> ClearClearable
+    case a: NotebookPage => "*" #> ClearClearable
     case _ => ".sidebar [class+]" #> "clearable" andThen ClearClearable
   }
 }

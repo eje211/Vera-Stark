@@ -3,6 +3,7 @@ package edu.cmu.etc.verastark.model
 import net.liftweb.mapper._
 import net.liftweb.common._
 import net.liftweb.http.S
+import edu.cmu.etc.verastark.lib.ModerateEnum
 
 class Artifact extends LongKeyedMapper[Artifact] with OneToMany[Long, Artifact] with IdPK {
   def getSingleton = Artifact
@@ -29,10 +30,11 @@ class Artifact extends LongKeyedMapper[Artifact] with OneToMany[Long, Artifact] 
   object filename  extends MappedString        (this, 200)
   object filetype  extends MappedString        (this, 50)
   object app_date  extends MappedDate          (this) // An approximate exact date for the Timeline.
-  object published extends MappedBoolean       (this) // Visible to the public?
+  object published extends MappedEnum          (this, ModerateEnum) // Visible to the public?
   object deleted   extends MappedBoolean       (this) // Is there a request to delete?
   object moderated extends MappedBoolean       (this) // Has a moderator seen this?
   object genuine   extends MappedBoolean       (this) // Has a moderator seen this?
+  object created   extends MappedDateTime      (this)
   object changed   extends MappedDateTime      (this) // Last time this artifact was changed
   object comments  extends MappedOneToMany     (Comment, Comment.art_id, OrderBy(Comment.date, Ascending))
   def    owner = User.find(By(User.id, this.ownerid))

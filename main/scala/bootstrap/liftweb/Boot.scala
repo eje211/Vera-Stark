@@ -31,7 +31,7 @@ class Boot {
     // you don't need to use Mapper to use Lift... use
     // any ORM you want
     // Schemifier.schemify(true, Schemifier.infoF _, User, Autobiography)
-    Schemifier.schemify(true, Schemifier.infoF _, User, Autobiography, Item, Artifact, Comment, Annotation)
+    Schemifier.schemify(true, Schemifier.infoF _, User, Autobiography, Item, Artifact, Notebook, Comment, Annotation, MarginNote)
 
     // where to search snippet
     // LiftRules.addToPackages("code")
@@ -48,6 +48,9 @@ class Boot {
       AutobiographyPageMenu.menu >> Hidden,
       Menu(Loc("AutobiographyStaticLink", Link("autobiography" :: "index" ::  Nil, true, "/autobiography/index"), "Autobiography", LocGroup("left"), Hidden)),
 
+      NotebookPageMenu.menu >> Hidden,
+      Menu(Loc("NotebookStaticLink", Link("notebook" :: "index" ::  Nil, true, "/notebook/index"), "Notebook", LocGroup("left"), Hidden)),
+
       Menu(Loc("Add to the Legacy", Link("artifact" :: "new" ::  Nil, true, "/artifact/new"), "Add to the Legacy", LocGroup("left"), Hidden)),
 
       // more complex because this menu allows anything in the
@@ -57,7 +60,7 @@ class Boot {
       
       Menu.i("Backstage") / "backstage" >> Hidden >> LocGroup("left"),
 
-      Menu.i("Moderaation") / "moderate" >> If(() =>(User.currentUser.map(u => u.superUser.is || u.editor.is) openOr false), "Only editors can moderate."),
+      Menu.i("Moderation") / "moderate", // >> If(() =>(User.currentUser.map(u => u.superUser.is || u.editor.is) openOr false), "Only editors can moderate."),
       Menu.param[User]("User", "User", (s: String) => 
         User.find(By(User.id, try {Integer.parseInt(s)} catch {case (e: NumberFormatException) => 0} ))
         , _.toString) / "user" >> Hidden
