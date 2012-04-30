@@ -17,7 +17,6 @@ class ProcessFlags(vera: VeraObject) {
     val id = vera match {
       case AutobiographyPage(a: Autobiography) => Full(a.ownerid.is)
       case ArtifactPage(a: Artifact)           => Full(a.ownerid.is)
-      case ArtifactNew                         => Empty: Box[Int]
     }
     def visible_? =
       User.find(By(User.id, User.currentUserId.map(_.toInt) openOr 0)) match {

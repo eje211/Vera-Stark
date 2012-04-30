@@ -51,7 +51,7 @@ class Boot {
       NotebookPageMenu.menu >> Hidden,
       Menu(Loc("NotebookStaticLink", Link("notebook" :: "index" ::  Nil, true, "/notebook/index"), "Notebook", LocGroup("left"), Hidden)),
 
-      Menu(Loc("Add to the Legacy", Link("artifact" :: "new" ::  Nil, true, "/artifact/new"), "Add to the Legacy", LocGroup("left"), Hidden)),
+      Menu(Loc("Add to the Legacy", Link("contribute" ::  Nil, true, "/contribute"), "Add to the Legacy", LocGroup("left"), Hidden)),
 
       // more complex because this menu allows anything in the
       // /static path to be visible

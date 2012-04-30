@@ -20,7 +20,6 @@ import edu.cmu.etc.verastark.lib.{Gravatar, RenderUser}
 import edu.cmu.etc.verastark.lib.ModerateEnum._
 
 class ArtifactParam                   extends VeraObject
-case object ArtifactNew               extends ArtifactParam
 case object ArtifactList              extends ArtifactParam
 case class  ArtifactPage(a: Artifact) extends ArtifactParam
 case object ArtifactNotFound          extends ArtifactParam
@@ -40,14 +39,14 @@ object ArtifactPageMenu {
       Artifact.find(By(Artifact.id, value.toInt)).map( a => ArtifactPage(a)) or Full(ArtifactNotFound)
       // ArtifactTools.getArtifactById(1).map( a => ArtifactPage(a)) or Full(ArtifactNotFound)
     } catch {
-      case nfe: NumberFormatException =>
-        if (value == "new") Full(ArtifactNew)
-        else Full(ArtifactList)
+      case nfe: NumberFormatException => {
+        S.notice("We're sorry. We couldn't find the artifact you specified.")
+        Full(ArtifactList)
+      }
     }
 
   def encode(ap: ArtifactParam) = ap match {
     case ArtifactPage(a) => a.id.toString
-    case ArtifactNew     => "new"
     case ArtifactList    => "index"
   }
 
@@ -56,17 +55,6 @@ object ArtifactPageMenu {
 
   def render = "*" #> loc.currentValue.map(encode(_))
 }
-
-/*
-object ArtifactHelper {
-  def current_page(id: Int) =
-    // Create a new page if there isn't one already
-    ArtifactTools.getartifactById(id) match {
-      case head :: tail => head
-      case Nil => new Artifact
-    }
-}
-*/
 
 class ArtifactEditForm(ap:ArtifactPage) {
   def render = {
@@ -115,7 +103,6 @@ class ArtifactContainer(ai: Artifactid) {
 class ArtifactContainerSnippet(ap: ArtifactParam) {
   def render = ap match {
     case ArtifactList     => renderList
-    case ArtifactNew      => renderNew
     case ArtifactPage(p)  => renderPage
     case ArtifactNotFound => renderNotFound
   }
@@ -129,10 +116,6 @@ class ArtifactContainerSnippet(ap: ArtifactParam) {
     "#artifact_item ^^"      #> "*"               &
     "#artifact_item [id]"    #> "content"         &
     "#artifact_item [class]" #> "without_sidebar"
-
-  def renderNew =
-    "#artifact_new ^^"       #> "*"       &
-    "#artifact_new [id]"     #> "content"
 
   def renderNotFound =
     "#artifact_none ^^"      #> "*"           &

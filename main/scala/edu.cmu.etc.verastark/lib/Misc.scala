@@ -33,6 +33,11 @@ object FlagLinks {
   def firstbio   = askfirstlast("autobiography", true)
   def lastbio    = askfirstlast("autobiography", false)
   
+  def nextnote(id: Int)  = askdb("notebook", true,  id)
+  def prevnote(id: Int)  = askdb("notebook", false, id)
+  def firstnote   = askfirstlast("notebook", true)
+  def lastnote    = askfirstlast("notebook", false)
+  
   def nextart(id: Int)  = askdb("artifact", true,  id)
   def prevart(id: Int)  = askdb("artifact", false, id)
   def firstart   = askfirstlast("artifact", true)

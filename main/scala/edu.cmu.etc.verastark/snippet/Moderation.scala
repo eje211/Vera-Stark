@@ -54,6 +54,24 @@ class ModerationSnippet {
         SetHtml("autobio-%s-status".format(a.id.is), Text("Rejected"))
       })                                                                 &
       ClearClearable
+    ) &
+    "#notebook-moderation *" #> Notebook.findAll(By(Notebook.published, Pending)).map(a =>
+      ".note-title *"       #> a.title.is                                 &
+      ".note-title [href]"  #> "/notebook/%s".format(a.id.is)        &
+      ".note-author *"      #> (a.owner.map(_.niceName) openOr "unknown") &
+      ".note-author [href]" #> (a.owner.map("/user/" + _.id) openOr "/")  &
+      ".note-created *"     #> (new SimpleDateFormat("y-MM-d") format a.created.is) &
+      ".note-status *"      #> a.published                                &
+      ".note-status [id]"   #> "note-%s-status".format(a.id.is)        &
+      ".note-app [onclick]" #> SHtml.ajaxInvoke(() => {
+        a.published(Published).save
+        SetHtml("autonote-%s-status".format(a.id.is), Text("Published"))     
+      })                                                                 &
+      ".note-den [onclick]" #> SHtml.ajaxInvoke(() => {
+        a.published(Rejected).save
+        SetHtml("note-%s-status".format(a.id.is), Text("Rejected"))
+      })                                                                 &
+      ClearClearable
     )
 }
 

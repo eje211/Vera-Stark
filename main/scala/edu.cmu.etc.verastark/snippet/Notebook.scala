@@ -146,7 +146,7 @@ class MarginNoteField(ap: NotebookPage) {
       }
 
     "textarea"    #> SHtml.onSubmit(content = _) &
-    "type=submit" #> SHtml.submit("Annotate this page", processMarginNote _)
+    "type=submit" #> SHtml.submit("Write a note in the margin", processMarginNote _)
   }
 }
 

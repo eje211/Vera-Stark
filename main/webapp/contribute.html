@@ -27,7 +27,7 @@
        Create your own custom Modernizr build: www.modernizr.com/download/ -->
   <script src="/js/libs/modernizr-2.5.3.min.js"></script>
 </head>
-<body>
+<body class="lift:content_id=main">
   <!--[if lt IE 7]><p class=chromeframe>Your browser is <em>ancient!</em> <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience this site.</p><![endif]-->
   <header class="clearfix">
     <nav>
@@ -47,10 +47,10 @@
       </ul>
     </nav>
   </header>
-  <div id="main" role="main" class="clearfix">
+  <div id="main" role="main" class="lift:surround?with=default&at=content clearfix">
   
     <!-- Main artifact -->
-    <div id="content" class="static_page">
+    <div id="content" class="static_page lift:ContributeFilter">
       <div class="floatcenter">
           <div class="matwrap text">
             
@@ -63,7 +63,10 @@
               </hgroup>
               <p>Upload your Vera-related artifact(s) here:
               </p>
-              <form class="dotted_box">
+              <div id="no_user" class="dotted_box">
+                  <p>Only <a href="/user_mgt/login">logged in users</a> can post new content on the Vera Stark archives. It takes seconds to  <a href="/user_mgt/login">log in or register</a> with OpenID!</p>
+              </div>
+              <form id="new_artifact" class="lift:NewArtifact?form=post&multipart=true dotted_box">
                 <label for="file_to_upload">Select a file to upload - JPG, PNG, GIF only
 		(2MB restriction). Written material
 		should be typed directly on the website in the relevant sections. (Ex: To add to Vera's biography,
@@ -83,11 +86,18 @@
                 
                 <br />&nbsp;
 		<br /><input type="submit" value="Submit Artifact" />
+
                 <br />&nbsp;
                 <br />- or -
                 <br />&nbsp;
                 
                 <br />Help us <a href="/autobiography/new">restore Vera's autobiography</a>.
+
+                <br />&nbsp;
+                <br />- or -
+                <br />&nbsp;
+                
+                <br />Help us <a href="/notebook/new">Write about Vera in the Notebook</a>.
                 
                 
               </div>
