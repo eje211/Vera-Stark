@@ -937,12 +937,12 @@ div.splash_blurb {
 	height: 310px;
 	left: 60px;
 	right: 60px;
-    bottom: 10px;
+	bottom: 10px;
 	background-color: rgba(0,0,0,0.8);
 	padding: 10px;
 	font-family:"Tw Cen MT", sans-serif;
 	font-size: 16px;
-	color:#F90;
+	color:#A59B8D;
 	font-weight:lighter;
 	overflow:none;
 }
