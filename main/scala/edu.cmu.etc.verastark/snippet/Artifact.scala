@@ -12,6 +12,7 @@ import sitemap._
 import Helpers._
 import textile._
 import mapper.By
+import js.jquery.JqJsCmds.FadeOut
 
 import java.io._
 
@@ -24,23 +25,14 @@ case object ArtifactList              extends ArtifactParam
 case class  ArtifactPage(a: Artifact) extends ArtifactParam
 case object ArtifactNotFound          extends ArtifactParam
 
-/*
-object ArtifactidsList {
-  def render(in:NodeSeq):NodeSeq =
-    ArtifactTools.getPageTitles.flatMap { text => bind("page", in, "title" -> <a href={"/journal/" + text}>{text}</a>)}
-}
-*/
-
 object ArtifactPageMenu {
   def parse(value: String) =
     try {
-      // Repackage the box if it's full. Otherwise, send the placeholder object.
-      //ArtifactTools.getArtifactById(value.toInt).map( a => ArtifactPage(a)) or Full(ArtifactNotFound)
       Artifact.find(By(Artifact.id, value.toInt)).map( a => ArtifactPage(a)) or Full(ArtifactNotFound)
-      // ArtifactTools.getArtifactById(1).map( a => ArtifactPage(a)) or Full(ArtifactNotFound)
     } catch {
       case nfe: NumberFormatException => {
-        S.notice("We're sorry. We couldn't find the artifact you specified.")
+        if (value != "index")
+          S.notice("We're sorry. We couldn't find the artifact you specified.")
         Full(ArtifactList)
       }
     }
@@ -88,18 +80,6 @@ class ArtifactEditForm(ap:ArtifactPage) {
   }
 }
 
-/*
-class ArtifactContainer(ai: Artifactid) {
-  def render = ai.id match {
-    case "index" => "#ArtifactidsList ^^" #> "*"
-    case _       => (if (S.param("edit") isDefined)
-                      "#ArtifactEditForm ^^" #> "*"
-                      else "#Artifactid ^^" #> "*"
-                    )
-  }
-}
-*/
-
 class ArtifactContainerSnippet(ap: ArtifactParam) {
   def render = ap match {
     case ArtifactList     => renderList
@@ -132,15 +112,28 @@ class ArtifactSnippet(ap: ArtifactPage) {
     "#authorimg"             #> Gravatar.gravatar(ap.a.owner, 60)     &
     "#profilelink [href]"    #> RenderUser(ap.a.owner)                &
     ".description *"         #> TextileParser.toHtml(ap.a.content.is) &
-    ".authorName *"          #> (ap.a.owner.map(u => u.firstName + " " + u.lastName) openOr "Unknown") &
+    ".authorName *"          #> (ap.a.owner.map(_.niceName) openOr "Unknown") &
     ".authorName [href]"     #> RenderUser(ap.a.owner)                &
-    ".artifact-comments"     #> Comment.findAll(By(Comment.art_id, ap.a.id)).flatMap(c =>
-      <article class="comment">
-        <a href={RenderUser(c.owner)}>{Gravatar.gravatar(c.owner, 50)}</a>
-        <a href={RenderUser(c.owner)}>{c.owner.map(_.niceName) openOr "Annonymous"}</a>
-        {c.content.is}
-        <p class="comment_age">Today</p>
-      </article> ) & 
+    ".artifact-comments *"   #> Comment.findAll(By(Comment.art_id, ap.a.id)).map(c => {
+      def ownOrSuper =
+        User.currentUser.map(u => u.superUser.is || u.editor.is ||
+        (c.owner.map(_.id.is == u.id.is) openOr false)) openOr false
+      ".comment [id]"        #> "comment-id-%s".format(c.id.is)               &
+      ".comment-icon [href]" #> RenderUser(c.owner)                           &
+      "img"                  #> Gravatar.gravatar(c.owner, 50)                &
+      ".comment-content"     #> c.content                                     &
+      ".comment-user [href]" #> RenderUser(c.owner)                           &
+      ".comment-user *"      #> Text(c.owner.map(_.niceName) openOr "Annonymous") &
+      ".comment_age"         #> Text("Today")                                 &
+      ".delete_text [class+]" #> (if (ownOrSuper) "" else "clearable")  andThen
+      ClearClearable &
+      ".comment_delete [onclick]" #> SHtml.ajaxInvoke(() => {
+        if (ownOrSuper) {
+          c.delete_!
+          FadeOut( "comment-id-%s".format(c.id.is), new TimeSpan(0), new TimeSpan(500))} else ()
+        }
+      )
+    }) &
     "#comment-field [class+]" #> (if (User.currentUser isEmpty) "clearable" else "") andThen ClearClearable &
     "#comment-login [class+]" #> (if (User.currentUser isEmpty) "" else "clearable") andThen ClearClearable
 }
@@ -203,18 +196,6 @@ class ArtifactList {
       a => <li><a href={"/artifact/" + a.id}>{a.title}</a></li>
     ) & ClearClearable
 }
-
-/*
-object ArtifactScreen extends LiftScreen {
-  object page extends ScreenVar(Artifact.create)
-
-  addFields(() => page.is)
-
-  val shouldSave = field("Save", false)
-
-  def finish() {}
-}
-*/
 
 class CommentField(ap: ArtifactPage) {
   def render = {

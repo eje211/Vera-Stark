@@ -10,6 +10,7 @@ import sitemap._
 import Helpers._
 import mapper.{By, OrderBy, Ascending}
 import textile._
+import js.jquery.JqJsCmds.FadeOut
 
 import java.lang.{Integer, NumberFormatException}
 import java.util.Date
@@ -123,13 +124,26 @@ class AutobiographyTalkSnippet(ap: AutobiographyPage) {
     "#authorimg"                 #> Gravatar.gravatar(ap.a.owner, 60)     &
     ".description *"             #> TextileParser.toHtml(ap.a.description.is) &
     ".author *"                  #> (ap.a.owner.map(u => u.firstName + " " + u.lastName) openOr "Unknown") &
-    "#autobiography-annotations" #> Annotation.findAll(By(Annotation.bio_id, ap.a.id)).flatMap(a =>
-      <article class="comment">
-        <a href={RenderUser(a.owner)}>{Gravatar.gravatar(a.owner, 50)}</a>
-        <a href={RenderUser(a.owner)}>{a.owner.map(_.niceName) openOr "Annonymous"}</a>
-        {a.content.is}
-        <p class="comment_age">Today</p>
-      </article> ) & 
+    "#autobiography-annotations *" #> Annotation.findAll(By(Annotation.bio_id, ap.a.id)).map(a => {
+      def ownOrSuper =
+        User.currentUser.map(u => u.superUser.is || u.editor.is ||
+        (a.owner.map(_.id.is == u.id.is) openOr false)) openOr false
+      ".comment [id]"        #> "comment-id-%s".format(a.id.is)               &
+      ".comment-icon [href]" #> RenderUser(a.owner)                           &
+      "img"                  #> Gravatar.gravatar(a.owner, 50)                &
+      ".comment-content"     #> a.content                                     &
+      ".comment-user [href]" #> RenderUser(a.owner)                           &
+      ".comment-user *"      #> Text(a.owner.map(_.niceName) openOr "Annonymous") &
+      ".comment_age"         #> Text("Today")                                 &
+      ".delete_text [class+]" #> (if (ownOrSuper) "" else "clearable")  andThen
+      ClearClearable &
+      ".comment_delete [onclick]" #> SHtml.ajaxInvoke(() => {
+        if (ownOrSuper) {
+          a.delete_!
+          FadeOut( "comment-id-%s".format(a.id.is), new TimeSpan(0), new TimeSpan(500))} else ()
+        }
+      )
+    }) &
     "#annotation-login [class+]" #> (if (User.currentUserId isEmpty) "" else "clearable") andThen ClearClearable &
     "#annotation-form [class+]"  #> (if (User.currentUserId isEmpty) "clearable" else "") andThen ClearClearable
 }

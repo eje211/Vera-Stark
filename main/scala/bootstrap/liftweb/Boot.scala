@@ -60,7 +60,7 @@ class Boot {
       
       Menu.i("Backstage") / "backstage" >> Hidden >> LocGroup("left"),
 
-      Menu.i("Moderation") / "moderate", // >> If(() =>(User.currentUser.map(u => u.superUser.is || u.editor.is) openOr false), "Only editors can moderate."),
+      Menu.i("Moderation") / "moderate" >> If(() =>(User.currentUser.map(u => u.superUser.is || u.editor.is) openOr false), "Only editors can moderate."),
       Menu.param[User]("User", "User", (s: String) => 
         User.find(By(User.id, try {Integer.parseInt(s)} catch {case (e: NumberFormatException) => 0} ))
         , _.toString) / "user" >> Hidden
