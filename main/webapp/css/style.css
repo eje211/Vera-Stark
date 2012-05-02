@@ -334,7 +334,20 @@ div#content {
       
       padding-right: 40px;
     }
-    div.flags_right a#flag_next {
+    
+	div.flags_left a#flag_add {
+      background-image: url('/img/add.png');
+      background-repeat: no-repeat;
+      background-attachment: scroll;
+      background-position: right center;
+      
+      background-color: transparent;
+      border: none;
+      
+      padding-right: 90px;
+	}
+	
+	div.flags_right a#flag_next {
       background-image: url('/img/orange_tickets/ticket_stub_dark_orange.png');
       background-repeat: no-repeat;
       background-attachment: scroll;
@@ -880,6 +893,8 @@ div#content img#protecting_the_legacy {
   margin-left: -5%;
   width: 110%; max-width: 110%;
 }
+
+}
 h2#vera_redisovering {
   font-family: "Myriad Pro", "Tw Cen MT", sans-serif;
   font-size: 22px;
@@ -895,6 +910,14 @@ h1#vera_verastark {
   margin: 0;
 }
 
+div.splash_backstage {
+  position: fixed;
+  z-index: -1;
+  top:0; bottom: 100px; left:0; right:0;
+  overflow: none;
+  background: url('/img/vera_backstage.png') left no-repeat;
+}
+
 
 div.splash_image {
   position: fixed;
@@ -903,6 +926,8 @@ div.splash_image {
   overflow: none;
   background: #333 url('/img/lace.png') center;
 }
+
+
   div.splash_image div.curtain_left {
     position: absolute;
     top: 0;
