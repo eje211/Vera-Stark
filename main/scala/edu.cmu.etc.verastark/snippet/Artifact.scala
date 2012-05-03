@@ -1,6 +1,7 @@
 package edu.cmu.etc.verastark.snippet
 
-import scala.xml.{NodeSeq, Text}
+import scala.xml.{NodeSeq, Text, Unparsed}
+import scala.collection.immutable.ListMap
 import net.liftweb._
 import net.liftweb.http._
 import net.liftweb.util._
@@ -140,14 +141,50 @@ class ArtifactSnippet(ap: ArtifactPage) {
 
 class ArtifactImage(ap: ArtifactPage) {
   def render =
-    "img [src]" #> ap.a.url.is
+    if(ap.a.filetype.is == "external")
+      "img" #> {Unparsed(ap.a.url.is)}
+    else
+      "img [src]" #> ap.a.url.is
 }
 
 class NewArtifact {
   def render = {
     var fileHandler: Box[FileParamHolder] = Empty
+    var videoUrl:Box[String] = Empty
+    def saveArtifact = {
+      getVideo
+      if (videoUrl isEmpty) saveImage
+    }
+    def getVideo = {
+      val providers = ListMap(
+        "vimeo" -> """<iframe src="http://player.vimeo.com/video/%s" width="500" height="281" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>""",
+        "youtube" -> """<iframe width="560" height="315" src="http://www.youtube.com/embed/%s" frameborder="0" allowfullscreen></iframe>"""
+      )
+      def testProvider(p: scala.util.matching.Regex, url: String): Box[String] =
+        try {
+          val p(_, _, id, _) = url
+          if (id == "") Empty else Full(id)
+        } catch {case e: MatchError => (Empty)}
+      var id: Box[List[String]] = Empty
+      List(
+        List("vimeo", """((http://)?www\.)?vimeo\.com/(\d+)()?"""),
+        List("youtube", """((http://)?www\.)?youtube\.com/watch\?v=([^&]+)(&.*)?""")
+      ) foreach {(p) => {
+        val res = testProvider(p(1).r, videoUrl openOr "")
+        id = if (res isDefined) Full(List(p(0), res open_!)) else id
+      }}
+      videoUrl = id.map(i => providers(i(0)).format(i(1)))
+      if (videoUrl isDefined) {
+        var art = Artifact.create
+        art.url(videoUrl open_!).title("New Video").
+          filename("").filetype("external").deleted(false).genuine(true).created(now).
+          ownerid(User.currentUser.map(_.id) open_!).app_date(new Date(71035201)).save
+        S.redirectTo("/artifact/" + art.id + "#edit")
+      }
+    }
     def saveImage = fileHandler match {
-      case Full(file: FileParamHolder) if (file.mimeType.startsWith("image/")) => {
+      // First of all, see if there was a video link specified
+      case Full(file: FileParamHolder) if (file.mimeType.startsWith("image/") || file.length <= 1024*1024*2) => {
         var art = Artifact.create
         // Not super efficient to save now, but we need the artifact's ID for the rest.
         art.save
@@ -164,13 +201,19 @@ class NewArtifact {
           finally {output.close; output = null}
           S.redirectTo("/artifact/" + art.id + "#edit")
         }
-        S.notice("We're sorry. There's been a problem processing your artifact upload. Please try again. If that still doesn't work, contant us.")
+        S.notice("We're sorry. There's been a problem processing your artifact. Please try again. If that still doesn't work, contant us.")
       }
+      case Full(file: FileParamHolder) if (file.mimeType.startsWith("image/") && file.length > 1024*1024*2) =>
+        S.notice("The image you tried to upload is over 2 megabytes." +
+          "Please try to make the image smaller by using stronger compression or reducing the image's size.")
+      case Full(file: FileParamHolder) if (!file.mimeType.startsWith("image/")) =>
+        S.notice("The image you tried to upload doesn't seem to be an image. Please check it is an image and try again.")
       case _ => S.notice("We're sorry. There's been a problem processing your artifact. Please try again. If that still doesn't work, contant us.")
     }
 
     "type=file"              #> SHtml.fileUpload(fph => fileHandler = Full(fph))      &
-    "type=submit"            #> SHtml.submit("Send artifact", saveImage _)
+    "type=text"              #> SHtml.onSubmit(s => videoUrl = Full(s)) &
+    "type=submit"            #> SHtml.submit("Send artifact", saveArtifact _)
   }
 }
 
