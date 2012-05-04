@@ -24,7 +24,7 @@ object User extends User with MetaOpenIDProtoUser[User] with LongKeyedMetaMapper
   locale, timezone, password)
   override def editFields = List(screenName, firstName, lastName, email,
   quotation, locale, timezone)
-  override def editXhtml(theUser: TheUserType) = 
+  override def editXhtml(theUser: User) = 
     <div id="edit-user-profile">{super.editXhtml(theUser)}
       <p class="about-gravatars">On Vera Stark online, each user is identified by their <a href="http://www.gravatar.com/">Gravatar</a>. A Gravatar is an image that follows you from site to site appearing beside your name when you do things like comment or post on a blog. You can can customize your Gravatar on <a href="http://www.gravatar.com">gravatar.com</a>.</p>
     </div>
@@ -34,24 +34,15 @@ object User extends User with MetaOpenIDProtoUser[User] with LongKeyedMetaMapper
   
   override def loginMenuLoc: Box[Menu] =  
     Full(Menu(Loc("Login", loginPath, "Sign In", loginMenuLocParams)))  
-
-  // Save the time and date the user signed up.
-  override def actionsAfterSignup(theUser: TheUserType, func: () => Nothing): Nothing = {
-    theUser.memberSince(now).save
-    func()
-  }
-
-  // override val basePath: List[String] = "user" :: Nil
 }
 
 /**
  * An O-R mapped "User" class that includes first name, last name, password and we add a "Personal Essay" to it
  */
-class User extends LongKeyedMapper[User] with OpenIDProtoUser[User] {
+class User extends LongKeyedMapper[User] with OpenIDProtoUser[User] with CreatedUpdated {
   def getSingleton = User // what's the "meta" server
 
   object editor      extends MappedBoolean (this)
-  object memberSince extends MappedDateTime(this)
   object quotation   extends MappedTextarea(this, 2000) {
     override def displayName = "About yourself"
   }

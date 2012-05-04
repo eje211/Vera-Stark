@@ -28,14 +28,14 @@ class UserProfile(u: User) {
       "ORDER BY changed DESC", List(u.id.is, u.id.is))
     lazy val count = (Artifact.count(By(Artifact.ownerid, u.id.is)) +
       Autobiography.count(By(Autobiography.ownerid, u.id.is)))
-    ".user_rank *"        #> (if (u.superUser) "Curator" else if (u.editor) "Curiatorial Assistant" else "Member") &
-    ".user_name *"        #> u.niceName                                                                            &
-    "#joined"             #> (new SimpleDateFormat("EEEE MMMM d, yyyy") format u.memberSince.is)                   &
-    "#count"              #> (if (count == 0) "none yet" else if (count == 1) "one" 
-                               else if (count == 2) "two" else count.toString)                                     &
-    "#contributions *"    #> (if (contributions._2.length == 0) <i>No contributions yet!</i>
-                               else contributions._2.map(c => <li><a href={"" + c(1) + c(0)}>{c(2)}</a></li>))     &
-    ".user_description *" #> TextileParser.toHtml(u.quotation.is)                                                  &
-    ".right [class+]"     #> (if (User.currentUser.map(_.id == u.id) openOr false) "" else "clearable") andThen ClearClearable
+    ".user_rank *"           #> (if (u.superUser) "Curator" else if (u.editor) "Curiatorial Assistant" else "Member") &
+    ".user_name *"           #> u.niceName                                                                            &
+    "#joined"                #> (new SimpleDateFormat("EEEE MMMM d, yyyy") format u.createdAt.is)                     &
+    "#count"                 #> (if (count == 0) "none yet" else if (count == 1) "one" 
+                               else if (count == 2) "two" else count.toString)                                        &
+    "#contributions *"       #> (if (contributions._2.length == 0) <i>No contributions yet!</i>
+                               else contributions._2.map(c => <li><a href={"" + c(1) + c(0)}>{c(2)}</a></li>))        &
+    ".user_description *"    #> TextileParser.toHtml(u.quotation.is)                                                  &
+    ".edit_profile [class+]" #> (if (User.currentUser.map(_.id == u.id) openOr false) "" else "clearable") andThen ClearClearable
   }
 }

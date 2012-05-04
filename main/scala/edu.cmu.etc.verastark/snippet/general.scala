@@ -7,7 +7,7 @@ import util._
 import Helpers._
 import mapper.By
 
-import edu.cmu.etc.verastark.model.{User, Artifact, Autobiography}
+import edu.cmu.etc.verastark.model.{User, Artifact, Autobiography, Notebook}
 import edu.cmu.etc.verastark.lib.FlagLinks
 
 class VeraObject
@@ -17,6 +17,7 @@ class ProcessFlags(vera: VeraObject) {
     val id = vera match {
       case AutobiographyPage(a: Autobiography) => Full(a.ownerid.is)
       case ArtifactPage(a: Artifact)           => Full(a.ownerid.is)
+      case NotebookPage(a: Notebook)           => Full(a.ownerid.is)
     }
     def visible_? =
       User.find(By(User.id, User.currentUserId.map(_.toInt) openOr 0)) match {
@@ -63,6 +64,20 @@ class FlagBioDestination(ap: AutobiographyPage) {
     next = FlagLinks.nextbio(ap.a.id.is.toInt)
     if (next isEmpty) next = FlagLinks.firstbio
     prev = FlagLinks.prevbio(ap.a.id.is.toInt)
+    if (prev isEmpty) prev = FlagLinks.lastbio
+    // "*" #> ClearClearable
+    "#flag_next" #> <a id="flag_next" href={"/autobiography/" + (next.map(_(0)) open_!)} title={(next.map(_(1)) open_!)}>Next</a> &
+    "#flag_prev" #> <a id="flag_prev" href={"/autobiography/" + (prev.map(_(0)) open_!)} title={(prev.map(_(1)) open_!)}>Previous</a>
+  }
+}
+
+class FlagNoteDestination(ap: NotebookPage) {
+  def render = {
+    var next: Box[List[String]] = Empty
+    var prev: Box[List[String]] = Empty
+    next = FlagLinks.nextnote(ap.a.id.is.toInt)
+    if (next isEmpty) next = FlagLinks.firstbio
+    prev = FlagLinks.prevnote(ap.a.id.is.toInt)
     if (prev isEmpty) prev = FlagLinks.lastbio
     // "*" #> ClearClearable
     "#flag_next" #> <a id="flag_next" href={"/autobiography/" + (next.map(_(0)) open_!)} title={(next.map(_(1)) open_!)}>Next</a> &
