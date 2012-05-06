@@ -1,6 +1,6 @@
 package edu.cmu.etc.verastark.snippet
 
-import scala.xml.{NodeSeq, Text, Unparsed}
+import scala.xml.{NodeSeq, Text, Unparsed, XML}
 import scala.collection.immutable.ListMap
 import net.liftweb._
 import net.liftweb.http._
@@ -264,4 +264,22 @@ class CommentField(ap: ArtifactPage) {
     "textarea"    #> SHtml.onSubmit(content = _) &
     "type=submit" #> SHtml.submit("Write Comment", processComment _)
   }
+}
+
+class BrowseCollection {
+  def render = 
+    // ".browse-images" #> Artifact.findAll(By(Artifact.published, Published)).map(a =>
+    ClearClearable &
+    ".thumb" #> Artifact.findAll().map(a =>
+      "* ^*" #> "" &
+      "a [href]" #> "/artifact/%s".format(a.id.is) &
+      "img [src]" #> (if(a.filetype.startsWith("external/")) a.filetype.is.split('/')(1) match {
+          case "youtube" => "http://img.youtube.com/vi/%s/2.jpg".format(a.filename)
+          case "vimeo" =>
+            (XML.load(new java.net.URL("http://vimeo.com/api/v2/video/%s.xml".format(a.filename)).openStream) \\ "thumbnail_medium").text 
+          case _ => ""
+        } 
+        else a.url.is
+        )
+    )
 }
