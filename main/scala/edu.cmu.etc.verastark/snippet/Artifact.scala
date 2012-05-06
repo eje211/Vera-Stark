@@ -18,7 +18,7 @@ import js.jquery.JqJsCmds.FadeOut
 import java.io._
 
 import edu.cmu.etc.verastark.model._
-import edu.cmu.etc.verastark.lib.{Gravatar, RenderUser}
+import edu.cmu.etc.verastark.lib.{Gravatar, RenderUser, TimeAgoInWords}
 import edu.cmu.etc.verastark.lib.ModerateEnum._
 
 class ArtifactParam                   extends VeraObject
@@ -125,7 +125,17 @@ class ArtifactSnippet(ap: ArtifactPage) {
       ".comment-content"     #> c.content                                     &
       ".comment-user [href]" #> RenderUser(c.owner)                           &
       ".comment-user *"      #> Text(c.owner.map(_.niceName) openOr "Annonymous") &
-      ".comment_age"         #> Text("Today")                                 &
+      ".comment_age"         #> TimeAgoInWords(c.date.is)                     &
+      ".report [class+]"     #> (if(User.loggedIn_?) "" else "clearable") andThen
+      ClearClearable                                                          &
+      ".report [onclick]"    #> SHtml.ajaxInvoke(() => {
+        if (User.loggedIn_?) c.owner.map(u => {
+          u.report(u.report + 1).save
+          User.currentUser.map(u => u.whistle(u.whistle + 1).save)
+          S.notice("User %s was reported".format(u.niceName))
+        })
+        ()
+      })                                                                      &
       ".delete_text [class+]" #> (if (ownOrSuper) "" else "clearable")  andThen
       ClearClearable &
       ".comment_delete [onclick]" #> SHtml.ajaxInvoke(() => {
@@ -141,7 +151,7 @@ class ArtifactSnippet(ap: ArtifactPage) {
 
 class ArtifactImage(ap: ArtifactPage) {
   def render =
-    if(ap.a.filetype.is == "external")
+    if(ap.a.filetype.is.startsWith("external/"))
       "img" #> {Unparsed(ap.a.url.is)}
     else
       "img [src]" #> ap.a.url.is
@@ -177,7 +187,7 @@ class NewArtifact {
       if (videoUrl isDefined) {
         var art = Artifact.create
         art.url(videoUrl open_!).title("New Video").
-          filename("").filetype("external").deleted(false).genuine(true).created(now).
+          filename(id.map(_(1)) openOr "").filetype("external/"+(id.map(_(0)) openOr "")).deleted(false).genuine(true).created(now).
           ownerid(User.currentUser.map(_.id) open_!).app_date(new Date(71035201)).save
         S.redirectTo("/artifact/" + art.id + "#edit")
       }
@@ -246,7 +256,7 @@ class CommentField(ap: ArtifactPage) {
     var art_id    = 0
     var published = Published
     def processComment = 
-      if (content.length > 0) {
+      if (content.length > 0 && content != "Leave a comment...") {
         Comment.create.content(content).ownerid(User.currentUser.map(_.id) open_!).date(now).art_id(ap.a.id).published(Published).save
         S.redirectTo("/artifact/" + ap.a.id.toString + "#talk")
       }

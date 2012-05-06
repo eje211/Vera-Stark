@@ -10,14 +10,17 @@ import sitemap._
 import Helpers._
 import mapper.{By, OrderBy, Ascending}
 import textile._
-import js.jquery.JqJsCmds.FadeOut
+import js._
+import js.jquery.JqJsCmds._
+import js.JsCmds._
+import js.JE._
 
 import java.lang.{Integer, NumberFormatException}
 import java.util.Date
 import java.text.SimpleDateFormat
 
 import edu.cmu.etc.verastark.model._
-import edu.cmu.etc.verastark.lib.{Gravatar, RenderUser}
+import edu.cmu.etc.verastark.lib.{Gravatar, RenderUser, TimeAgoInWords}
 import edu.cmu.etc.verastark.lib.ModerateEnum._
 
 class AutobiographyParam                           extends VeraObject
@@ -94,30 +97,42 @@ class AutobiographyList {
 }
 
 class AutobiographyNewForm {
-  var title  = ""
-  var text   = ""
-  var date   = ""
-  var apdate: Date = _
-  def processAutobiography = {
-    Autobiography.create.title(title).content(text).date(date).created(now).
-    app_date(apdate).ownerid(User.currentUserId.map(_.toInt) openOr 0).
-    changed(now).published(Published).deleted(false).genuine(false).save
-    S.redirectTo("/autobiography/index")
-  }
+  def render = {
+    var title  = ""
+    var text   = ""
+    var date   = ""
+    var apdate: Box[Date] = Empty
+    var validated = true
+    var bio = Autobiography.create
+    def process(): JsCmd = {
+      bio.title(title).content(text).date(date).created(now).
+      // Default date is June 1 1952
+      app_date(apdate openOr new Date(-554860800000L)).ownerid(User.currentUser.map(_.id) open_!).
+      changed(now).published(Published).deleted(false).genuine(false)
+      if (title.length == 0) {S.error("blank", "The title field cannot be blank."); validated = false}
+      if (text.length == 0) {S.error("blank", "The description field cannot be blank."); validated = false}
+      if (date.length == 0 || date == "e.g. \"ca. 1970-1971\"") {S.error("blank", "The date field cannot be blank."); validated = false}
+      (if (validated) {
+        println("yes")
+        bio.save
+        RedirectTo("/autobiography/%s".format(bio.id.is))
+        }
+      else Noop)
+    }
     
-  def render =
-    "name=autobiography_title" #> SHtml.onSubmit(title  = _) &
-    "name=text_body"           #> SHtml.onSubmit(text   = _) &
-    "name=text_date"           #> SHtml.onSubmit(date   = _) &
-    "name=text_app_date"       #> SHtml.onSubmit((s: String) => 
-      apdate = new SimpleDateFormat("y/M/dd").parse(s))      &
-    "type=submit"              #> SHtml.submit("Submit the page", processAutobiography _)
-             
+    "#autobiography_title" #> SHtml.text(title, title = _) &
+    "#text_body"           #> SHtml.text(text, text = _)   &
+    "#text_date"           #> SHtml.text(date, date = _)   &
+    "#text_app_date"       #> (SHtml.text("1977/03/01", (s: String) => 
+      apdate = tryo(new SimpleDateFormat("y/M/dd").parse(s)) or Empty) ++
+    SHtml.hidden(process))
+  }
 }
 
 class AutobiographyTalkSnippet(ap: AutobiographyPage) {
   def render = 
     ".title *"                   #> ap.a.title.is                         &
+    ".title [id]"                #> "bio-%s-title".format(ap.a.title.is)  &
     ".time_period *"             #> ap.a.date.is                          &
     ".description [class+]"      #> (if(ap.a.description.is.length == 0) "clearable" else "") &
     "#profilelink [href]"        #> RenderUser(ap.a.owner)                &
@@ -129,12 +144,22 @@ class AutobiographyTalkSnippet(ap: AutobiographyPage) {
         User.currentUser.map(u => u.superUser.is || u.editor.is ||
         (a.owner.map(_.id.is == u.id.is) openOr false)) openOr false
       ".comment [id]"        #> "comment-id-%s".format(a.id.is)               &
+      ".report [class+]"     #> (if(User.loggedIn_?) "" else "clearable") andThen
+      ClearClearable                                                          &
+      ".report [onclick]"    #> SHtml.ajaxInvoke(() => {
+        if (User.loggedIn_?) a.owner.map(u => {
+          u.report(u.report + 1).save
+          User.currentUser.map(u => u.whistle(u.whistle + 1).save)
+          S.notice("User %s was reported.".format(u.niceName))
+        }) else println("Not logged in!")
+        ()
+      }) &
       ".comment-icon [href]" #> RenderUser(a.owner)                           &
       "img"                  #> Gravatar.gravatar(a.owner, 50)                &
       ".comment-content"     #> a.content                                     &
       ".comment-user [href]" #> RenderUser(a.owner)                           &
       ".comment-user *"      #> Text(a.owner.map(_.niceName) openOr "Annonymous") &
-      ".comment_age"         #> Text("Today")                                 &
+      ".comment_age"         #> TimeAgoInWords(a.date.is)                     &
       ".delete_text [class+]" #> (if (ownOrSuper) "" else "clearable")  andThen
       ClearClearable &
       ".comment_delete [onclick]" #> SHtml.ajaxInvoke(() => {
@@ -154,7 +179,7 @@ class AnnotationField(ap: AutobiographyPage) {
     var art_id    = 0
     var published = Published
     def processAnnotation = 
-      if (content.length > 0) {
+      if (content.length > 0 && content != "Leave a comment...") {
         Annotation.create.content(content).ownerid(User.currentUserId.map(_.toInt) open_!).date(now).bio_id(ap.a.id).published(Published).save
         S.redirectTo("/autobiography/" + ap.a.id + "#talk")
       }
@@ -193,7 +218,8 @@ class AutobiographyEditForm(ap:AutobiographyPage) {
       apdate = new SimpleDateFormat("y/M/dd").parse(s))  &
     ".apdate [value]" #> ap.a.app_date.toString          &
     "type=submit"     #> SHtml.submit("Submit", processAutobiography _) &
-    "type=button"     #> SHtml.submit(if(ap.a.deleted.is) "Undelete" else "Delete", deleteAutobiography _)
+    "type=button"     #> (SHtml.submit(if(ap.a.deleted.is) "Undelete" else "Delete", deleteAutobiography _) ++
+      (new AppendModerationButtons(ap).apply))
   }
 }
 

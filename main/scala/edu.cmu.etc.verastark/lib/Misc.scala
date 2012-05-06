@@ -4,6 +4,9 @@ import net.liftweb.common.{Box, Full, Empty}
 import net.liftweb.mapper.DB
 import scala.xml.{NodeSeq, Text}
 import java.security.MessageDigest
+import net.liftweb.util.Helpers.{year, month, day, TimeSpan, now}
+
+import java.util.Date
 
 import edu.cmu.etc.verastark.model.User
 
@@ -72,3 +75,23 @@ object ModerateEnum extends Enumeration {
   val Pending, Published, Rejected = Value
 }
 import ModerateEnum._
+
+object TimeAgoInWords {
+  def apply(d: Date) = 
+    (now.getTime - d.getTime) / 1000 match {
+      case d if (d / (86400 * 365) >= 2) => "%s years ago".format(d / (86400 * 365))
+      case d if (d / (86400 * 365) == 1) => "one year ago"
+      case d if (d / (86400 * 30) >= 2) => "%s months ago".format(d / (86400 * 30))
+      case d if (d / (86400 * 30) == 1) => "one month ago"
+      case d if (d / 86400 >= 21) => "three weeks ago"
+      case d if (d / 86400 >= 14) => "two weeks ago"
+      case d if (d / 86400 >= 7) => "one week ago"
+      case d if (d / 86400 >= 2) => "%s days ago".format(d / 86400)
+      case d if (d / 86400 == 1) => "one day ago"
+      case d if ((d % 86400) >= 7200) => "%s hours ago".format((d % 86400) / 24)
+      case d if ((d % 86400) >= 3600) => "about an hour ago"
+      case d if ((d % 86400) >= 120) => "%s minutes ago".format((d % 86400) / 60)
+      case d if ((d % 86400) >= 30) => "about a nimute ago"
+      case _ => "seconds ago"
+    }
+}
