@@ -24,8 +24,10 @@ class UserProfile(u: User) {
       "SELECT id, '/artifact/' AS type, title, changed " +
       "FROM artifact WHERE ownerid = ? UNION " +
       "SELECT id, '/autobiography/' AS type, title, changed " + 
-      "FROM autobiography WHERE ownerid = ? " +
-      "ORDER BY changed DESC", List(u.id.is, u.id.is))
+      "FROM autobiography WHERE ownerid = ? UNION " +
+      "SELECT id, '/notebook/' AS type, title, changed " + 
+      "FROM notebook WHERE ownerid = ? " +
+      "ORDER BY changed DESC", List(u.id.is, u.id.is, u.id.is))
     lazy val count = (Artifact.count(By(Artifact.ownerid, u.id.is)) +
       Autobiography.count(By(Autobiography.ownerid, u.id.is)))
     ".user_rank *"           #> (if (u.superUser) "Curator" else if (u.editor) "Curiatorial Assistant" else "Member") &

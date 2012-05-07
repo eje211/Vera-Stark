@@ -10,13 +10,14 @@ import sitemap._
 import Helpers._
 import mapper.{By, OrderBy, Ascending}
 import textile._
+import js.jquery.JqJsCmds.FadeOut
 
 import java.lang.{Integer, NumberFormatException}
 import java.util.Date
 import java.text.SimpleDateFormat
 
 import edu.cmu.etc.verastark.model._
-import edu.cmu.etc.verastark.lib.{Gravatar, RenderUser}
+import edu.cmu.etc.verastark.lib.{Gravatar, RenderUser, TimeAgoInWords}
 import edu.cmu.etc.verastark.lib.ModerateEnum._
 
 class NotebookParam                           extends VeraObject
@@ -97,7 +98,14 @@ class NotebookNewForm {
   var text   = ""
   var date   = ""
   var apdate: Date = _
+  var validated = true
+  def problemfield(name: Tuple2[String, String]) = if (name._2.length == 0) {
+    S.notice("The field \"%s\" must be filled!".format(name._1))
+    validated = false
+  }
   def processNotebook = {
+    List(("Tile", title), ("Description", text), ("Date", date)) foreach {problemfield _}
+    if (validated)
     Notebook.create.title(title).content(text).date(date).created(now).
     app_date(apdate).ownerid(User.currentUserId.map(_.toInt) openOr 0).
     changed(now).published(Published).deleted(false).genuine(false).save
@@ -123,13 +131,35 @@ class NotebookTalkSnippet(ap: NotebookPage) {
     "#authorimg"                 #> Gravatar.gravatar(ap.a.owner, 60)     &
     ".description *"             #> TextileParser.toHtml(ap.a.description.is) &
     ".author *"                  #> (ap.a.owner.map(u => u.firstName + " " + u.lastName) openOr "Unknown") &
-    "#notebook-margin-notes" #> MarginNote.findAll(By(MarginNote.bio_id, ap.a.id)).flatMap(a =>
-      <article class="comment">
-        <a href={RenderUser(a.owner)}>{Gravatar.gravatar(a.owner, 50)}</a>
-        <a href={RenderUser(a.owner)}>{a.owner.map(_.niceName) openOr "Annonymous"}</a>
-        {a.content.is}
-        <p class="comment_age">Today</p>
-      </article> ) & 
+    "#notebook-margin-notes" #> MarginNote.findAll(By(MarginNote.bio_id, ap.a.id)).map(c => {
+      def ownOrSuper =
+        User.currentUser.map(u => u.superUser.is || u.editor.is ||
+        (c.owner.map(_.id.is == u.id.is) openOr false)) openOr false
+      ".comment [id]"        #> "comment-id-%s".format(c.id.is)               &
+      ".comment-icon [href]" #> RenderUser(c.owner)                           &
+      "img"                  #> Gravatar.gravatar(c.owner, 50)                &
+      ".comment-content"     #> c.content                                     &
+      ".comment-user [href]" #> RenderUser(c.owner)                           &
+      ".comment-user *"      #> Text(c.owner.map(_.niceName) openOr "Annonymous") &
+      ".comment_age"         #> TimeAgoInWords(c.date)                        &
+      ".report [class+]"     #> (if(User.loggedIn_?) "" else "clearable") andThen
+      ClearClearable                                                          &
+      ".report [onclick]"    #> SHtml.ajaxInvoke(() => {
+        if (User.loggedIn_?) c.owner.map(u => {
+          u.report(u.report + 1).save
+          User.currentUser.map(u => u.whistle(u.whistle + 1).save)
+          S.notice("User %s was reported".format(u.niceName))
+        })
+        ()
+      })                                                                      &
+      ".delete_text [class+]" #> (if (ownOrSuper) "" else "clearable")  andThen
+      ClearClearable &
+      ".comment_delete [onclick]" #> SHtml.ajaxInvoke(() => {
+        if (ownOrSuper) {
+          c.delete_!
+          FadeOut( "comment-id-%s".format(c.id.is), new TimeSpan(0), new TimeSpan(500))} else ()
+      })
+    }) &
     "#margin-note-login [class+]" #> (if (User.currentUserId isEmpty) "" else "clearable") andThen ClearClearable &
     "#margin-note-form [class+]"  #> (if (User.currentUserId isEmpty) "clearable" else "") andThen ClearClearable
 }
@@ -140,7 +170,7 @@ class MarginNoteField(ap: NotebookPage) {
     var art_id    = 0
     var published = Published
     def processMarginNote = 
-      if (content.length > 0) {
+      if (content.length > 0 && content != "Leave a comment...") {
         MarginNote.create.content(content).ownerid(User.currentUserId.map(_.toInt) open_!).date(now).bio_id(ap.a.id).published(Published).save
         S.redirectTo("/notebook/" + ap.a.id + "#talk")
       }

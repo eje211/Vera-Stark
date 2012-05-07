@@ -6,9 +6,14 @@ import http._
 import util._
 import Helpers._
 import mapper.By
+import scala.xml.NodeSeq
+import scala.collection.immutable.ListMap
+
+import java.util.Date
 
 import edu.cmu.etc.verastark.model.{User, Artifact, Autobiography, Notebook}
 import edu.cmu.etc.verastark.lib.FlagLinks
+import edu.cmu.etc.verastark.lib.ModerateEnum._
 
 class VeraObject
 
@@ -30,13 +35,6 @@ class ProcessFlags(vera: VeraObject) {
     ClearClearable
   }
 }
-
-/*
-class FlagDestination {
-  def render =
-    "#flag_next" #> <a id="flag_next" href={"/artifact/" + FlagLinks.firstart(0)} title={FlagLinks.firstart(1)}>Next</a>
-}
-*/
 
 class FlagIndexDestination {
   def render =
@@ -83,4 +81,30 @@ class FlagNoteDestination(ap: NotebookPage) {
     "#flag_next" #> <a id="flag_next" href={"/autobiography/" + (next.map(_(0)) open_!)} title={(next.map(_(1)) open_!)}>Next</a> &
     "#flag_prev" #> <a id="flag_prev" href={"/autobiography/" + (prev.map(_(0)) open_!)} title={(prev.map(_(1)) open_!)}>Previous</a>
   }
+}
+
+class AppendModerationButtons(v: VeraObject) {
+  private def ap = v match {
+    case ArtifactPage(a:Artifact) => (a.published, a.id.is)
+    case AutobiographyPage(a:Autobiography) => (a.published, a.id.is)
+    case NotebookPage(n: Notebook) => (n.published, n.id.is)
+  }
+
+  private val buttons = List(
+    (Published, "Publish", "pub"),
+    (Rejected, "Deny", "den"),
+    (Pending, "Unmoderate", "pen")
+  )
+
+  private def button(t: Tuple3[ModerateEnum, String, String]):NodeSeq = 
+    SHtml.ajaxButton(t._2, () => {
+      ap._1(t._1).save
+      S.notice("Publication status set to %s.".format(ap._1))
+      js.JsCmds.Noop
+    }, "id" -> "%s-button-%s".format(t._3, ap._2))
+
+  def apply: NodeSeq =
+    if (User.currentUser.map(u =>u.superUser.is || u.editor.is) openOr false)
+     <div id="moderation-buttons">{(NodeSeq.Empty /: (buttons map (button(_)))) (_ ++ _)}</div>
+    else NodeSeq.Empty
 }

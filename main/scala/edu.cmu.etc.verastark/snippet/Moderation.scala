@@ -75,3 +75,29 @@ class ModerationSnippet {
     )
 }
 
+class UserModerationSnippet {
+  def render =
+    "#user-moderation *" #> User.findAll().map(u =>
+      ".user-name *"          #> u.niceName              &
+      ".user-name [href]"     #> "/user/%s".format(u.id) &
+      ".user-contributions *" #>
+        (Artifact.count(By(Artifact.ownerid, u.id.is)) +
+        Autobiography.count(By(Autobiography.ownerid, u.id.is)) +
+        Notebook.count(By(Notebook.ownerid, u.id.is)))   &
+      ".user-reported *"      #> u.report.is             &
+      ".user-whistled *"      #> u.whistle.is            &
+      ".user-edit *"          #> ((if (u.editor.is) "Revoke" else "Make") + " editor") &
+      ".user-edit [id]"       #> "user-%s-edit".format(u.id.is) &
+      ".user-edit [onclick]"  #> SHtml.ajaxInvoke(() => {
+        u.editor(!u.editor.is).save
+        SetHtml("user-%s-edit".format(u.id.is), Text((if (u.editor.is) "Revoke" else "Make") + " editor"))
+      }) &
+      ".user-super *"         #> ((if (u.superUser.is) "Revoke" else "Make") + " superuser") &
+      ".user-super [id]"      #> "user-%s-super".format(u.id.is) &
+      ".user-super *"         #> ((if (u.superUser.is) "Revoke" else "Make") + " superuser") &
+      ".user-super [onclick]" #> SHtml.ajaxInvoke(() => {
+        u.superUser(!u.superUser.is).save
+        SetHtml("user-%s-super".format(u.id.is), Text((if (u.editor.is) "Revoke" else "Make") + " superuser"))
+      })
+    )
+}

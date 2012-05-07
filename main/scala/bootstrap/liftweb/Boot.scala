@@ -43,7 +43,7 @@ class Boot {
       Menu.i("Vera") / "vera" >> Hidden >> LocGroup("left"), // >>  User.AddUserMenusAfter, // the simple way to declare a menu
 
       ArtifactPageMenu.menu >> Hidden,
-      Menu(Loc("ArtifactStaticLink", Link("artifact" :: "index" :: Nil, true, "/artifact/index"), "Artifact", LocGroup("left"), Hidden)),
+      Menu(Loc("ArtifactStaticLink", Link("browse" :: Nil, true, "/browse"), "The Collection", LocGroup("left"), Hidden)),
 
       AutobiographyPageMenu.menu >> Hidden,
       Menu(Loc("AutobiographyStaticLink", Link("autobiography" :: "index" ::  Nil, true, "/autobiography/index"), "Autobiography", LocGroup("left"), Hidden)),
@@ -61,6 +61,7 @@ class Boot {
       Menu.i("Backstage") / "backstage" >> Hidden >> LocGroup("left"),
 
       Menu.i("Moderation") / "moderate" >> If(() =>(User.currentUser.map(u => u.superUser.is || u.editor.is) openOr false), "Only editors can moderate."),
+      Menu.i("User Mgt") / "usermod" >> If(() => (User.currentUser.map(_.superUser.is) openOr false), "Only administrators can manage users."),
       Menu.param[User]("User", "User", (s: String) => 
         User.find(By(User.id, try {Integer.parseInt(s)} catch {case (e: NumberFormatException) => 0} ))
         , _.toString) / "user" >> Hidden

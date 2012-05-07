@@ -135,22 +135,23 @@
               <div id="not_logged_in">
                 <p class="dotted_box">Sorry. You must be <a href="/user_mgt/login">logged in</a> to contribute to the Vera Stark website.
               </p></div>
-              <form class="dotted_box lift:AutobiographyNewForm" id="autobiography_new_form">
+              <form class="lift:form.ajax" id="autobiography_new_form"><div class="dotted_box lift:AutobiographyNewForm">
+                <span class="lift:Msg?id=blank&errorClass=error">error</span>
                 <label for="autobiography_title">Title for this passage</label>
-                <input type="text" name="autobiography_title" />
+                <input type="text" id="autobiography_title" name="autobiography_title" />
 
                 <label for="text_body">Carefully copy the text of Vera's autbiography here. [<a href="http://en.wikipedia.org/wiki/Textile_(markup_language)#Formatting_help_table">Textile Help</a>]</label>
-                <textarea name="text_body"></textarea>
+                <textarea id="text_body" name="text_body"></textarea>
 
                 <label for="text_date">Period that this passage covers</label>
-                <input type="text" name="text_date" class="default_text" title='e.g. "ca. 1970-1971"' />
+                <input type="text" id="text_date" name="text_date" class="default_text" title='e.g. "ca. 1970-1971"' />
          
                 <label for="text_app_date">Approximate date (for ordering) in YYYY/MM/DD format</label>
-                <input type="text" name="text_app_date" class="apdate" />
+                <input type="text" id="text_app_date" name="text_app_date" class="apdate" />
          
                 <br />&nbsp;
                 <br /><input type="submit" value="Submit Page" />
-              </form>
+              </div></form>
               <span class="flourish"></span>
             </section>
           </div>
@@ -216,7 +217,7 @@
             <div id="autobiography-annotations">
               <article class="comment">
                 <a class="comment-icon" href="/profile.html?u=bradbuchanan"><img src="/img/avatar_brad.png" /></a>
-                <a class="comment-user" href="/profile.html?u=bradbuchanan">Brad Buchanan</a>
+                <a class="comment-user" href="/profile.html?u=bradbuchanan">Brad Buchanan</a><a class="report" href="#">[report]</a>
                 <span class="comment-content">I love this part.  It always reminds me how human Vera was, and how she saw the world much like the
                 rest of us do.</span>
                 <p class="comment_subline"><span class="comment_age">3 days ago</span>

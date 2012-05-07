@@ -34,6 +34,15 @@ object User extends User with MetaOpenIDProtoUser[User] with LongKeyedMetaMapper
   
   override def loginMenuLoc: Box[Menu] =  
     Full(Menu(Loc("Login", loginPath, "Sign In", loginMenuLocParams)))  
+
+  override def beforeCreate = {u: User =>
+    u.report(0).whistle(0)
+    ()} :: super.beforeCreate
+
+  onLogIn = {u: User => 
+    S.notice("Welcome to Vera Stark Online, %s!".format(u.niceName))
+    S.redirectTo(S.get("loginFrom") openOr "/")
+   ()} :: onLogIn
 }
 
 /**
@@ -46,6 +55,8 @@ class User extends LongKeyedMapper[User] with OpenIDProtoUser[User] with Created
   object quotation   extends MappedTextarea(this, 2000) {
     override def displayName = "About yourself"
   }
+  object report      extends MappedInt(this)
+  object whistle     extends MappedInt(this)
   object screenName  extends MappedString  (this, 40) {
     override def displayName = "Screen Name"
   }
