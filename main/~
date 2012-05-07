@@ -299,19 +299,17 @@ class BrowseCollection {
         } 
         else {
           val f = new File("/var/images/thumbs/%s".format(a.filename))
-          if (!f.exists) createThumb(a, f)
+          if (!f.exists) {
+            val img = ImageIO.read(new File("/var/images/%s".format(a.filename)))
+            val width  = if (img.getWidth <= 200) img.getWidth else 200
+            val height = if (img.getHeight <= 133) img.getHeight else 133
+            val x = if (width  < 200) 0 else (img.getWidth - 200) / 2
+            val y = if (height < 133) 0 else (img.getHeight - 133) / 4
+            val thumb = img.getSubimage(x, y, width, height)
+            ImageIO.write(thumb, a.filetype.split("/")(1), f)
+          }
           "/thumbnails/%s".format(a.filename)
           }
         )
     )
-  def createThumb(a: Artifact, f: File) = {
-    val img = ImageIO.read(new File("/var/images/%s".format(a.filename)))
-    val width  = if (img.getWidth <= 200) img.getWidth else 200
-    val height = if (img.getHeight <= 133) img.getHeight else 133
-    val x = if (width  < 200) 0 else clamp((img.getWidth / 3) - 100, 0, img.getWidth -width)
-    val y = if (height < 133) 0 else clamp((img.getHeight / 3) - 66, 0, img.getHeight - height)
-    val thumb = img.getSubimage(x, y, width, height)
-    ImageIO.write(thumb, a.filetype.split("/")(1), f)
-  }
-  def clamp(v: Int, min: Int, max: Int) = if (v < min) min else if (v > max) max else v
 }

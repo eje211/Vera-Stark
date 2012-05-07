@@ -16,6 +16,7 @@ import net.liftweb.mapper.By
 import java.io._
 import javax.activation.MimetypesFileTypeMap;
 
+import edu.cmu.etc.verastark.lib.ModerateEnum._
 import edu.cmu.etc.verastark.model.Artifact
 
 // import mongo.MongoStorage
@@ -60,7 +61,19 @@ object UploadManager extends RestHelper {
     case "upload" :: imageName :: _ Get req => {
       val art = Artifact.find(By(Artifact.filename, imageName))
       val f = new File("/var/images/" + imageName)
-      f.exists match {
+      f.exists && (art.map(_.published == Published) openOr false) match {
+        case true  => {
+          val fis = new FileInputStream(f)
+          StreamingResponse(fis, () => fis.close, f.length,
+            List("Content-Type" -> (art.map(_.filetype.is) openOr "image/png")), Nil, 200)
+        }
+        case false => InMemoryResponse(Array(), ("Content-Type", "text/plain") :: Nil, Nil, 404)
+      }
+    }
+    case "thumbnails" :: imageName :: _ Get req => {
+      val art = Artifact.find(By(Artifact.filename, imageName))
+      val f = new File("/var/images/thumbs/" + imageName)
+      f.exists && (art.map(_.published.is == Published) openOr false) match {
         case true  => {
           val fis = new FileInputStream(f)
           StreamingResponse(fis, () => fis.close, f.length,
