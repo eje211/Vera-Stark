@@ -49,7 +49,7 @@ class Boot {
       Menu(Loc("AutobiographyStaticLink", Link("autobiography" :: "index" ::  Nil, true, "/autobiography/index"), "Autobiography", LocGroup("left"), Hidden)),
 
       NotebookPageMenu.menu >> Hidden,
-      Menu(Loc("NotebookStaticLink", Link("notebook" :: "index" ::  Nil, true, "/notebook/index"), "Notebook", LocGroup("left"), Hidden)),
+      Menu(Loc("NotebookStaticLink", Link("scrapbook" :: "index" ::  Nil, true, "/scrapbook/index"), "Scrapbook", LocGroup("left"), Hidden)),
 
       Menu(Loc("Add to the Legacy", Link("contribute" ::  Nil, true, "/contribute"), "Add to the Legacy", LocGroup("left"), Hidden)),
 
@@ -58,7 +58,7 @@ class Boot {
       // Menu(Loc("Static", Link(List("static"), true, "/static/index"), "Static Content", LocGroup("left"), Hidden)),
       Menu.i("Herb") / "about" >> Hidden >> LocGroup("left"),
       
-      Menu.i("Backstage") / "backstage" >> Hidden >> LocGroup("left"),
+      Menu.i("Backstage") / "backstage" >> Hidden >> LocGroup("left") >> If (() => User.loggedIn_?, "Users have to be logged in to ga backstage."),
 
       Menu.i("Moderation") / "moderate" >> If(() =>(User.currentUser.map(u => u.superUser.is || u.editor.is) openOr false), "Only editors can moderate."),
       Menu.i("User Mgt") / "usermod" >> If(() => (User.currentUser.map(_.superUser.is) openOr false), "Only administrators can manage users."),
