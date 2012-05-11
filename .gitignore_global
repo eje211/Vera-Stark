@@ -5,3 +5,31 @@
 .*swm
 .*swl
 .*swk
+
+# building
+target
+null
+tmp*
+dist
+test-output
+
+# sbt
+target
+lib_managed
+src_managed
+project/boot
+
+# other scm
+.svn
+.CVS
+.hg*
+
+# switch to regexp syntax.
+#  syntax: regexp
+#  ^\.pc/
+
+# IntelliJ
+*.iml
+*.ipr
+*.iws
+.idea
