@@ -1,5 +1,5 @@
 #Source Hashes
-#Fri May 11 18:02:37 EDT 2012
+#Fri May 11 18:07:31 EDT 2012
 src/main/scala/edu.cmu.etc.verastark/model/DefaultOpenIDVendor.scala=e6afc444f80d84766198e62eb0081b563f467c48
 src/main/scala/code/lib/DependencyFactory.scala=e5d94ad2d69afe24876734d3cc8549a5f3a7c7fd
 src/main/scala/edu.cmu.etc.verastark/model/User.scala=47a3d9492206cf7dc249a1f38ec77e34b09e4b25
