@@ -58,7 +58,7 @@ class Boot {
       // Menu(Loc("Static", Link(List("static"), true, "/static/index"), "Static Content", LocGroup("left"), Hidden)),
       Menu.i("Herb") / "about" >> Hidden >> LocGroup("left"),
       
-      Menu.i("Backstage") / "backstage" >> Hidden >> LocGroup("left") >> If (() => User.loggedIn_?, "Users have to be logged in to ga backstage."),
+      Menu.i("Backstage") / "backstage" >> Hidden >> LocGroup("left") >> If (() => User.loggedIn_?, "Users have to be logged in to go backstage."),
 
       Menu.i("Moderation") / "moderate" >> If(() =>(User.currentUser.map(u => u.superUser.is || u.editor.is) openOr false), "Only editors can moderate."),
       Menu.i("User Mgt") / "usermod" >> If(() => (User.currentUser.map(_.superUser.is) openOr false), "Only administrators can manage users."),

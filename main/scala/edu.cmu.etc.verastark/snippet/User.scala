@@ -1,20 +1,13 @@
 package edu.cmu.etc.verastark.snippet
 
-import scala.xml.{NodeSeq, Text}
 import net.liftweb._
 import net.liftweb.http._
 import net.liftweb.util._
 import net.liftweb.common._
-import java.util.Date
-import java.text.SimpleDateFormat
-import code.lib._
-import sitemap._
 import Helpers._
 import textile._
 import mapper.{By, DB}
 import java.text.SimpleDateFormat
-import java.text.SimpleDateFormat
-import java.lang.Integer
 
 import edu.cmu.etc.verastark.model._
 

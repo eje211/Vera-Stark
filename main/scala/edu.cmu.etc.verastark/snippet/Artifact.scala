@@ -285,11 +285,10 @@ class CommentField(ap: ArtifactPage) {
 
 class BrowseCollection {
   def render = 
-    // ".browse-images" #> Artifact.findAll(By(Artifact.published, Published)).map(a =>
     ClearClearable &
     ".thumb" #> Artifact.findAll().map(a =>
       "* ^*" #> "" &
-      "a [href]" #> "/artifact/%s".format(a.id.is) &
+      "a [href]" #> "/artifact/%s#talk".format(a.id.is) &
       "a [title]" #> a.title.is &
       "img [src]" #> (if(a.filetype.startsWith("external/")) a.filetype.is.split('/')(1) match {
           case "youtube" => "http://img.youtube.com/vi/%s/2.jpg".format(a.filename)

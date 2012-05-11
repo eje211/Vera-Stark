@@ -38,7 +38,7 @@ class ProcessFlags(vera: VeraObject) {
 
 class FlagIndexDestination {
   def render =
-    "#flag_next [href]"  #> ("/artifact/" + (FlagLinks.firstart.map(_(0)) open_!)) &
+    "#flag_next [href]"  #> "/artifact/%s#talk".format(FlagLinks.firstart.map(_(0)) open_!) &
     "#flag_next [title]" #> (FlagLinks.firstart.map(_(1)) open_!)
 }
 
