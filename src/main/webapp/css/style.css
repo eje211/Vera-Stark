@@ -1,0 +1,1049 @@
+/*
+ * HTML5 Boilerplate
+ *
+ * What follows is the result of much research on cross-browser styling.
+ * Credit left inline and big thanks to Nicolas Gallagher, Jonathan Neal,
+ * Kroc Camen, and the H5BP dev community and team.
+ *
+ * Detailed information about this CSS: h5bp.com/css
+ *
+ * ==|== normalize ==========================================================
+ */
+
+
+/* =============================================================================
+   HTML5 display definitions
+   ========================================================================== */
+
+article, aside, details, figcaption, figure, footer, header, hgroup, nav, section { display: block; }
+audio, canvas, video { display: inline-block; *display: inline; *zoom: 1; }
+audio:not([controls]) { display: none; }
+[hidden] { display: none; }
+
+
+/* =============================================================================
+   Base
+   ========================================================================== */
+
+/*
+ * 1. Correct text resizing oddly in IE6/7 when body font-size is set using em units
+ * 2. Prevent iOS text size adjust on device orientation change, without disabling user zoom: h5bp.com/g
+ */
+
+html { font-size: 100%; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+
+html, button, input, select, textarea { font-family: sans-serif; color: #222; }
+
+body { margin: 0; font-size: 1em; line-height: 1.4; }
+
+/*
+ * Remove text-shadow in selection highlight: h5bp.com/i
+ * These selection declarations have to be separate
+ * Also: hot pink! (or customize the background color to match your design)
+ */
+
+::-moz-selection { background: #fe57a1; color: #fff; text-shadow: none; }
+::selection { background: #fe57a1; color: #fff; text-shadow: none; }
+
+
+/* =============================================================================
+   Links
+   ========================================================================== */
+
+a { color: #00e; }
+a:visited { color: #551a8b; }
+a:hover { color: #06e; }
+a:focus { outline: thin dotted; }
+
+/* Improve readability when focused and hovered in all browsers: h5bp.com/h */
+a:hover, a:active { outline: 0; }
+
+
+/* =============================================================================
+   Typography
+   ========================================================================== */
+
+abbr[title] { border-bottom: 1px dotted; }
+
+b, strong { font-weight: bold; }
+
+blockquote { margin: 1em 40px; }
+
+dfn { font-style: italic; }
+
+hr { display: block; height: 1px; border: 0; border-top: 1px solid #ccc; margin: 1em 0; padding: 0; }
+
+ins { background: #ff9; color: #000; text-decoration: none; }
+
+mark { background: #ff0; color: #000; font-style: italic; font-weight: bold; }
+
+/* Redeclare monospace font family: h5bp.com/j */
+pre, code, kbd, samp { font-family: monospace, serif; _font-family: 'courier new', monospace; font-size: 1em; }
+
+/* Improve readability of pre-formatted text in all browsers */
+pre { white-space: pre; white-space: pre-wrap; word-wrap: break-word; }
+
+q { quotes: none; }
+q:before, q:after { content: ""; content: none; }
+
+small { font-size: 85%; }
+
+/* Position subscript and superscript content without affecting line-height: h5bp.com/k */
+sub, sup { font-size: 75%; line-height: 0; position: relative; vertical-align: baseline; }
+sup { top: -0.5em; }
+sub { bottom: -0.25em; }
+
+
+/* =============================================================================
+   Lists
+   ========================================================================== */
+
+ul, ol { margin: 1em 0; padding: 0 0 0 40px; }
+dd { margin: 0 0 0 40px; }
+nav ul, nav ol { list-style: none; list-style-image: none; margin: 0; padding: 0; }
+
+
+/* =============================================================================
+   Embedded content
+   ========================================================================== */
+
+/*
+ * 1. Improve image quality when scaled in IE7: h5bp.com/d
+ * 2. Remove the gap between images and borders on image containers: h5bp.com/i/440
+ */
+
+img { border: 0; -ms-interpolation-mode: bicubic; vertical-align: middle; }
+
+/*
+ * Correct overflow not hidden in IE9
+ */
+
+svg:not(:root) { overflow: hidden; }
+
+
+/* =============================================================================
+   Figures
+   ========================================================================== */
+
+figure { margin: 0; }
+
+
+/* =============================================================================
+   Forms
+   ========================================================================== */
+
+form { margin: 0; }
+fieldset { border: 0; margin: 0; padding: 0; }
+
+/* Indicate that 'label' will shift focus to the associated form element */
+label { cursor: pointer; }
+
+/*
+ * 1. Correct color not inheriting in IE6/7/8/9
+ * 2. Correct alignment displayed oddly in IE6/7
+ */
+
+legend { border: 0; *margin-left: -7px; padding: 0; white-space: normal; }
+
+/*
+ * 1. Correct font-size not inheriting in all browsers
+ * 2. Remove margins in FF3/4 S5 Chrome
+ * 3. Define consistent vertical alignment display in all browsers
+ */
+
+button, input, select, textarea { font-size: 100%; margin: 0; vertical-align: baseline; *vertical-align: middle; }
+
+/*
+ * 1. Define line-height as normal to match FF3/4 (set using !important in the UA stylesheet)
+ */
+
+button, input { line-height: normal; }
+
+/*
+ * 1. Display hand cursor for clickable form elements
+ * 2. Allow styling of clickable form elements in iOS
+ * 3. Correct inner spacing displayed oddly in IE7 (doesn't effect IE6)
+ */
+
+button, input[type="button"], input[type="reset"], input[type="submit"] { cursor: pointer; -webkit-appearance: button; *overflow: visible; }
+
+/*
+ * Re-set default cursor for disabled elements
+ */
+
+button[disabled], input[disabled] { cursor: default; }
+
+/*
+ * Consistent box sizing and appearance
+ */
+
+input[type="checkbox"], input[type="radio"] { box-sizing: border-box; padding: 0; *width: 13px; *height: 13px; }
+input[type="search"] { -webkit-appearance: textfield; -moz-box-sizing: content-box; -webkit-box-sizing: content-box; box-sizing: content-box; }
+input[type="search"]::-webkit-search-decoration, input[type="search"]::-webkit-search-cancel-button { -webkit-appearance: none; }
+
+/*
+ * Remove inner padding and border in FF3/4: h5bp.com/l
+ */
+
+button::-moz-focus-inner, input::-moz-focus-inner { border: 0; padding: 0; }
+
+/*
+ * 1. Remove default vertical scrollbar in IE6/7/8/9
+ * 2. Allow only vertical resizing
+ */
+
+textarea { overflow: auto; vertical-align: top; resize: vertical; }
+
+/* Colors for form validity */
+input:valid, textarea:valid {  }
+input:invalid, textarea:invalid { background-color: #f0dddd; }
+
+
+/* =============================================================================
+   Tables
+   ========================================================================== */
+
+table { border-collapse: collapse; border-spacing: 0; }
+td { vertical-align: top; }
+
+
+/* =============================================================================
+   Chrome Frame Prompt
+   ========================================================================== */
+
+.chromeframe { margin: 0.2em 0; background: #ccc; color: black; padding: 0.2em 0; }
+
+
+/* ==|== primary styles =====================================================
+   Author: Beyond the Stage
+   ========================================================================== */
+
+div.center {
+  text-align: center;
+}
+   
+body {
+  background-color: #333;
+  background-image: url('/img/website_blacktexture_vera_tile.png');
+  position: relative;
+}
+
+img.flourish {
+}
+
+/*-------------------------------------------------------------------------*/
+/* Header Styles */
+header {
+  background-color:black;
+  border-bottom: solid 1px #333;
+}
+  
+  header #menu_left {
+    float: left;
+    margin-left: 8px;
+  }
+  header #menu_right {
+    float: right;
+    margin-right: 8px;
+  }
+  header ul {
+    list-style: none;
+    margin: 0; padding: 0; border: none;
+    margin-top: 2px;
+    margin-bottom: 1px;
+  }
+  header li {
+    display: inline;
+    margin-right: 8px;
+  }
+    header li a {
+      color: white;
+      font-family: "Tw Cen MT", sans-serif;
+      font-weight: normal;
+      font-size: 14pt;
+      text-decoration: none;
+    }
+    header li a:visited { color: white; }
+    header li a:hover { color: #eb0; }
+  header li#homeicon {
+    margin-right: 4px;
+  }
+    header li#homeicon img {
+      height: 22px;
+    }
+
+/*-------------------------------------------------------------------------*/
+/* Artifact view Content Styles */
+#main {
+}
+
+div.full_screen_image {
+  position: fixed;
+  z-index: -1;
+  top:0; bottom:0; left:0; right:0;
+  overflow: none;
+}
+  @media only screen and (orientation: landscape) {
+    div.full_screen_image img {
+    width: 100%;
+    min-height: 100%;
+    }
+  }
+  @media only screen and (orientation: portrait) {
+    div.full_screen_image img {
+    height: 100%;
+    min-width: 100%;
+    }
+  }
+
+div#content {
+  position: fixed;
+  float: left;
+}
+  div#content.with_sidebar { width: 65%; }
+  div#content.without_sidebar { width: 100%; }
+  div#content.static_page { position: relative; width: 100%; float: none; }
+  div.flags_left, div.flags_right {
+    position: absolute;
+    display: block;
+    top: 30%;
+  }
+  div.flags_left { left: 0; text-align: left; }
+  div.flags_right { right: 0; text-align: right; }
+  div.flags_left a, div.flags_right a {
+    display: block;
+    padding: 0.5em;
+    margin-bottom: 3px;
+    
+    color: white;
+    text-decoration: none;
+    font-family: "Tw Cen MT", sans-serif;
+    background-color: black;
+    border: double 6px white;
+  }
+  div.flags_left a { border-left: none; border-top-right-radius: 10px; border-bottom-right-radius: 10px; }
+  div.flags_right a { border-right: none; border-top-left-radius: 10px; border-bottom-left-radius: 10px; }
+    div.flags_left a#flag_prev {
+      background-image: url('/img/red_tickets/ticket_stub_dark_red.png');
+      background-repeat: no-repeat;
+      background-attachment: scroll;
+      background-position: right center;
+      
+      background-color: transparent;
+      border: none;
+      
+      padding-right: 40px;
+    }
+    
+	div.flags_left a#flag_add {
+      background-image: url('/img/add.png');
+      background-repeat: no-repeat;
+      background-attachment: scroll;
+      background-position: right center;
+      
+      background-color: transparent;
+      border: none;
+      
+      padding-right: 90px;
+	}
+	
+	div.flags_right a#flag_next {
+      background-image: url('/img/orange_tickets/ticket_stub_dark_orange.png');
+      background-repeat: no-repeat;
+      background-attachment: scroll;
+      background-position: left center;
+      
+      background-color: transparent;
+      border: none;
+      
+      padding-left: 40px;
+    }
+    div.flags_right a#flag_talk {
+      background-image: url('/img/blue_tickets/ticket_stub_dark_blue.png');
+      background-repeat: no-repeat;
+      background-attachment: scroll;
+      background-position: left center;
+      
+      background-color: transparent;
+      border: none;
+      
+      padding-left: 40px;
+    }
+    div.flags_right a#flag_edit {
+      background-image: url('/img/green_tickets/ticket_stub_dark_green.png');
+      background-repeat: no-repeat;
+      background-attachment: scroll;
+      background-position: left center;
+      
+      background-color: transparent;
+      border: none;
+      
+      padding-left: 40px;
+    }
+  div#content div.floatcenter {
+    position: relative;
+    float: right;
+    right: 50%;
+  }
+  div#content div.matwrap {
+    position: relative;
+    float: left;
+    left: 50%;
+    visibility: hidden;
+    margin-bottom: 50px;
+    
+    background-image: url('/img/website_yellowtexture_vera.png');
+    -moz-box-shadow: inset -1px -1px 3px 3px rgba(0,0,0,0.5);
+    -webkit-box-shadow: inset -1px -1px 3px 3px rgba(0,0,0,0.5);
+    box-shadow: inset -1px -1px 3px 3px rgba(0,0,0,0.5);
+  }
+  div#content img {
+    max-width: 90%;
+    max-height: 90%;
+    margin: 10px;
+  }
+    div#content img.artifact {
+      margin: 15px;
+      -moz-box-shadow: 0px 0px 5px 1px rgba(0,0,0,0.7);
+      -webkit-box-shadow: 0px 0px 5px 1px rgba(0,0,0,0.7);
+      box-shadow: 0px 0px 5px 1px rgba(0,0,0,0.7);
+    }
+    div#content img.flourish {
+      width: 150px;
+      margin: 30px;
+    }
+  div#content section {
+    text-align: left;
+    background-color: #ddd;
+    
+    max-width: 500px;
+    
+    margin: 15px;
+    padding: 1em;
+    padding-right: 1.5em;
+    
+    font-family: "Tw Cen MT", sans-serif;
+    overflow: auto;
+    
+    -moz-box-shadow: 0px 0px 5px 1px rgba(0,0,0,0.7);
+    -webkit-box-shadow: 0px 0px 5px 1px rgba(0,0,0,0.7);
+    box-shadow: 0px 0px 5px 1px rgba(0,0,0,0.7);
+  }
+    div#content section.static_page {
+      width: 600px;
+      max-width: 600px;
+      padding: 2em;
+    }
+      div#content section.static_page.wide_page {
+        width: 900px;
+        max-width: 900px;
+      }
+    div#content section hgroup {
+    }
+    div#content section hgroup.with_flourish {
+      padding-bottom: 60px;
+      margin-bottom: 30px;
+      background-image: url('/img/flourish_150_33.png');
+      background-repeat: no-repeat;
+      background-position: center bottom;
+    }
+    div#content section h1 {
+      text-align: left;
+      font-family: "Edwardian Script ITC", serif;
+      font-size: 48pt;
+      font-weight: normal;
+      color: #000;
+      text-shadow: #333 0 0.05em 0.3em;
+      margin-top: 0;
+      margin-bottom: 0;
+    }
+      div#content section h1.user_name {
+        text-align: right;
+        font-family: "Tw Cen MT", sans-serif;
+        margin-bottom: 0;
+      }
+    div#content section h2 {
+      text-align: left;
+      font-family: "Tw Cen MT", sans-serif;
+      font-size: 22pt;
+      font-weight: bold;
+      color: #6e321b;
+      text-shadow: #888 0 0.05em 0.3em;
+      margin: -22px 0px 0px 4em;
+      margin-bottom: 0;
+    }
+      div#content section h2.user_rank {
+        text-align: right;
+      }
+    div#content section h3 {
+      text-align: left;
+      font-family: "Tw Cen MT", sans-serif;
+      font-size: 18pt;
+      font-weight: bold;
+      color: #6e321b;
+      margin-bottom: 0;
+      border-bottom: groove 2px #fff;
+    }
+    div#content section ul {
+      list-style: none;
+      text-align: left;
+    }
+      div#content section ul.right {
+        text-align: right;
+        margin: 0;
+        padding: 0;
+      }
+    div#content section p {
+      text-align: left;
+    }
+    div#content section a {
+      color: black;
+      text-decoration: none;
+    }
+      div#content section a:link { color: black; }
+      div#content section a:visited { color: black; }
+      div#content section a:active { color: black; }
+      div#content section a:hover { color: black; text-decoration: underline; }
+    div#content section .flourish {
+      display: block;
+      background-image: url('/img/flourish_150_33.png');
+      background-repeat: no-repeat;
+      background-position: center bottom;
+      height: 33px;
+      margin-top: 30px;
+      margin-bottom: 30px;
+    }
+    
+  div#content section table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+    div#content section table tr {
+      border-bottom: solid 1px white;
+    }
+    div#content section table tr:first-child {
+      border-bottom: groove 2px white;
+    }
+    
+  div#content p img.dropcap {
+    float: left;
+    height: 1.8em;
+    margin: 3px 5px 0px 0px;
+  }
+  div#content p img.nail {
+    display: inline-block;
+    height: 0.8em;
+    vertical-align: text-bottom;
+    margin: 0px 0px 4px 0px;
+  }
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-button:start:decrement, ::-webkit-scrollbar-button:end:increment {
+      height: 0px;
+      display: block;
+      background-color: transparent;
+      }
+    ::-webkit-scrollbar-track-piece {
+      background-color: #ccc;
+    }
+    ::-webkit-scrollbar-thumb:vertical {
+      height: 50px;
+      background-color: #aaa;
+      border: 1px solid #eee;
+      -webkit-border-radius: 6px;
+    }
+    
+/* Sidebar / Description / Comment Styles */
+div.sidebar {
+  position: relative;
+  float: right;
+  width: 35%;
+  display: none;
+  text-align: center;
+  padding-bottom: 48px;
+  background-color: #555;
+  background-image: url('/img/comments_gray_texture.png');
+  -moz-box-shadow: inset -1px -1px 3px 3px rgba(0,0,0,0.5);
+  -webkit-box-shadow: inset -1px -1px 3px 3px rgba(0,0,0,0.5);
+  box-shadow: inset -1px -1px 3px 3px rgba(0,0,0,0.5);
+}
+  div.sidebar .footer_flourish {
+    position: absolute;
+    display: block;
+    bottom: 15px;
+    left: 0px;
+    min-height: 33px;
+    width: 100%;
+    background-image: url('/img/flourish_150_33.png');
+    background-position: center bottom;
+    background-repeat: no-repeat;
+    background-size: 150px 33px;
+  }
+  div.sidebar div.card {
+    background-color: #eee;
+    margin: 10px;
+    margin-bottom: 15px;
+    padding: 8px 14px 12px 14px;
+    text-align: left;
+    -moz-box-shadow: -1px 0px 5px 1px rgba(0,0,0,0.7);
+    -webkit-box-shadow: -1px 0px 5px 1px rgba(0,0,0,0.7);
+    box-shadow: -1px 0px 5px 1px rgba(0,0,0,0.7);
+  }
+  div.sidebar h1, div.sidebar h2, div.sidebar h3, div.sidebar p, div.sidebar article.comment {
+    font-family: "Tw Cen MT", "Verdana", sans-serif;
+    font-weight: normal;
+  }
+  div.sidebar h1, div.sidebar h2, div.sidebar h3 {
+    line-height: 100%;
+    margin: 0px;
+  }
+  div.sidebar .underlined {
+    border-bottom: 2px groove #fff;
+  }
+  div.sidebar p, div.sidebar article.comment {
+    font-size: 12pt;
+    line-height: 110%;
+  }
+  div.sidebar h1 {
+    font-size: 14pt;
+  }
+  div.sidebar h2 {
+    font-size: 18pt;
+  }
+  div.sidebar h3 {
+    font-size: 14pt;
+  }
+  div.sidebar p {
+  }
+  div.sidebar a {
+    color: #521;
+    text-decoration: none;
+  }
+    div.sidebar a:hover { color: #b80; }
+  div.sidebar section img {
+    float: right;
+    -moz-box-shadow: -1px 1px 5px 1px rgba(0,0,0,0.7);
+    -webkit-box-shadow: -1px 1px 5px 1px rgba(0,0,0,0.7);
+    box-shadow: -1px 1px 5px 1px rgba(0,0,0,0.7);
+  }
+  div.sidebar article.comment {
+    padding: 5px 0 5px 0;
+    border-top: 2px groove #fff;
+  }
+    /* Clearfix rolled in */
+    div.sidebar article.comment:before, div.sidebar article.comment:after { content: ""; display: table; }
+    div.sidebar article.comment:after { clear: both; }
+    div.sidebar article.comment { *zoom: 1; }
+    /* User icon */
+    div.sidebar article.comment img {
+      float: right;
+      margin-left: 8px;
+      -moz-box-shadow: -1px 1px 5px 1px rgba(0,0,0,0.7);
+      -webkit-box-shadow: -1px 1px 5px 1px rgba(0,0,0,0.7);
+      box-shadow: -1px 1px 5px 1px rgba(0,0,0,0.7);
+    }
+    div.sidebar article.comment a {
+      font-weight: bold;
+    }
+    div.sidebar article.comment p.comment_subline {
+      font-size: 10pt;
+      margin: 0;
+    }
+      div.sidebar article.comment .comment_age {
+        font-style: italic;
+        color: #999;
+      }
+      div.sidebar article.comment .comment_controls {
+        
+      }
+      div.sidebar article.comment .comment_controls a {
+        color: #000;
+        font-weight: normal;
+      }
+        div.sidebar article.comment .comment_controls a:hover {
+          text-decoration: underline;
+        }
+        div.sidebar article.comment a.comment_delete {
+        }
+          div.sidebar article.comment a.comment_delete:hover {
+            color: #d00;
+            text-decoration: underline;
+          }
+    div.sidebar p#comment-login, div.sidebar p#annotation-login {
+      padding: 10px 0 10px 0;
+      border-top: 2px groove #fff;
+      text-align: center;
+    }
+    div.sidebar div#comment-field, div.sidebar div#annotation-field {
+      text-align: right;
+    }
+  /* Sidebar Form Properties */
+  div.sidebar form h5 {
+    display: block;
+    margin-bottom: -3px;
+    margin-top: 0.2em;
+    font-family: "Tw Cen MT", sans-serif;
+    font-size: 12pt;
+    font-weight: normal;
+  }
+  div.sidebar form input.text, div.sidebar form textarea.textarea {
+    width: 100%;
+    font-family: "Tw Cen MT", sans-serif;
+  }
+    div.sidebar form input.text.artist {
+      font-size: 18pt;
+    }
+    div.sidebar form input.text.title {
+      font-size: 14pt;
+    }
+    div.sidebar form input.text.date {
+      font-size: 14pt;
+    }
+    div.sidebar form textarea.description {
+      font-size: 12pt;
+      min-height: 10em;
+    }
+ div.sidebar form input.button {
+   min-width: 100px;
+ }
+  div.sidebar form div.buttons {
+    text-align: center;
+    margin-top: 10px;
+  }
+  div.sidebar aside form {
+    padding: 5px 0 5px 0;
+    border-top: 2px groove #fff;
+  }
+    div.sidebar aside form textarea {
+      width: 100%;
+      height: 1.4em;
+    }
+
+/* Contribute Page Elements */
+.dotted_box {
+  margin: 2em;
+  padding: 2em;
+  text-align: center;
+  border: dashed 3px #555;
+  color: #555;
+}
+div.static_page input.file {
+  width: 80%;
+  border: solid 1px #ccc;
+}
+div.static_page input.text {
+  width: 80%;
+}
+    
+/* Default Text Classes */
+.default_text {}
+.default_text_active { color: #aaa; font-style: italic; text-align: center; }
+    
+    
+    
+/* OpenID Login Form */
+form#openid_form {
+  position: fixed;
+  left: 2em;
+  right: 2em;
+  top: 30px;
+  background-color: white;
+  border: groove 4px white;
+  padding: 2em;
+  text-align: center;
+}
+
+/* User Edit Page */
+#edit-user-profile form {
+  float: left;
+  margin-left: 50%;
+  margin-top: 30px;
+}
+  #edit-user-profile form table {
+    margin-left: -50%;
+    background-color: #ddd;
+    border: solid #aaa 4px;
+  }
+    #edit-user-profile form content table td {
+      padding: 0.6em;
+    }
+    #edit-user-profile form table tr td:first-child {
+      font-weight: bold;
+    }
+    #edit-user-profile form table textarea {
+      width: 90%;
+    }
+#edit-user-profile  p {
+  display: block;
+  margin: 3em;
+  padding: 1em;
+  background-color: #ddd;
+  border: solid #aaa 4px;
+}
+    
+/* Browse Page */
+div.browse_images {
+  text-align: center;
+  margin-top: 20px;
+}
+  div.browse_images img {
+    width: 200px;
+    height: 133px;
+  }
+  div.browse_images div.matwrap_thumb {
+    display: inline-block;
+    position: relative;
+    margin: 5px;
+    
+    background-image: url('/img/website_yellowtexture_vera.png');
+    -moz-box-shadow: inset -1px -1px 3px 3px rgba(0,0,0,0.5);
+    -webkit-box-shadow: inset -1px -1px 3px 3px rgba(0,0,0,0.5);
+    box-shadow: inset -1px -1px 3px 3px rgba(0,0,0,0.5);
+  }
+
+/* Autobiography Edit Form */
+form#notebook_new_form,
+form#autobiography_new_form {
+  text-align: left;
+}
+  form#notebook_new_form label,
+  form#autobiography_new_form label{
+    display: block;
+    font-size: 12pt;
+    margin-top: 12px;
+    margin-bottom: -2px;
+  }
+  form#notebook_new_form textarea,
+  form#autobiography_new_form textarea {
+    width: 100%;
+    height: 10em;
+  }
+  
+
+/* Special Cases */
+div#content img#profile_page_photos {
+  position: absolute;
+  left: -290px;
+  top: -30px;
+  width: 494px;
+  height: 960px;
+  max-width: 494px;
+  max-height: 960px;
+}
+div#content img#profile_page_user_avatar {
+  position: absolute;
+  left: -117px;
+  top: 35px;
+  width: 228px;
+  -ms-transform:rotate(14.5deg); /* IE 9 */
+  -moz-transform:rotate(14.5deg); /* Firefox */
+  -webkit-transform:rotate(14.5deg); /* Safari and Chrome */
+  -o-transform:rotate(14.5deg); /* Opera */
+  transform:rotate(14.5deg);
+}
+div#content div.profile_column {
+  margin-left: 150px;
+  text-align: left;
+  line-height: 1.1;
+}
+div#content p.user_description {
+  font-style: italic;
+  text-align: right;
+}
+div#content img#vera_fashion_shots {
+  position: absolute;
+  right: -190px;
+  top: 20px;
+  /*
+  width: 377px;
+  height: 768px;
+  max-width: auto;
+  max-height: auto;
+  */
+}
+div#content div.vera_column {
+  margin-left: 20px;
+  margin-right: 20px;
+  text-align: left;
+  line-height: 1.1;
+}
+  div#content div.vera_column.narrow {
+    margin-right: 150px;
+  }
+  div#content div.vera_column h2 {
+    font-family: "Myriad Pro", sans-serif;
+    font-size: 22px;
+    font-weight: normal;
+    color: #6e321b;
+    
+  }
+  div#content div.vera_column ul {
+    list-style: none;
+    text-align: left;
+  }
+div#content img#rediscovering_vera_stark {
+  margin-top: 20px;
+  margin-left: -20px;
+}
+div#content img#it_rained_on_my_parade {
+  margin-left: -5%;
+  width: 110%; max-width: 110%;
+}
+div#content img#protecting_the_legacy {
+  margin-left: -5%;
+  width: 110%; max-width: 110%;
+}
+
+}
+h2#vera_redisovering {
+  font-family: "Myriad Pro", "Tw Cen MT", sans-serif;
+  font-size: 22px;
+  font-weight: normal;
+  color: #6e321b;
+  margin: 0;
+}
+h1#vera_verastark {
+  font-family: "Edwardian Script ITC", serif;
+  font-size: 120px;
+  font-weight: normal;
+  color: black;
+  margin: 0;
+}
+
+div.splash_backstage {
+  position: fixed;
+  z-index: -1;
+  top:0; bottom: 100px; left:0; right:0;
+  overflow: none;
+  background: url('/img/vera_backstage.png') left no-repeat;
+}
+
+
+div.splash_image {
+  position: fixed;
+  z-index: -1;
+  top:0; bottom:350px; left:0; right:0;
+  overflow: none;
+  background: #333 url('/img/lace.png') center;
+}
+
+
+  div.splash_image div.curtain_left {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: url('/img/curtain_left.png') left no-repeat;
+    background-size: contain;
+  }
+  div.splash_image div.curtain_right {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: url('/img/curtain_right.png') right no-repeat;
+    background-size: contain;
+  }
+  div.splash_image div.three_veras {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: url('/img/three_veras.png') center bottom no-repeat;
+    background-size: auto 80%;
+  }
+  
+div.splash_blurb {
+	position: fixed;
+	z-index: 1;
+	height: 290px;
+	left: 100px;
+	right: 100px;
+	bottom: 3px;
+	background-color: rgba(0,0,0,0.8);
+	padding: 30px;
+	font-family:"Tw Cen MT", sans-serif;
+	font-size: 16px;
+	color:#A59B8D;
+	font-weight:lighter;
+	overflow:none;
+}
+
+/*-------------------------------------------------------------------------*/
+/* Lift Notification Style */
+div#lift__noticesContainer__ {
+  display: block;
+  background-color: #000;
+  color: #eb0;
+  font-family: "Tw Cen MT", sans-serif;
+  border-top: solid #000 1px;
+  border-bottom: solid #333 1px;
+}
+  div#lift__noticesContainer__ ul {
+    margin: 2px;
+    list-style: none;
+  }
+
+
+
+
+/* ==|== media queries ======================================================
+   EXAMPLE Media Query for Responsive Design.
+   This example overrides the primary ('mobile first') styles
+   Modify as content requires.
+   ========================================================================== */
+
+@media only screen and (min-width: 35em) {
+  /* Style adjustments for viewports that meet the condition */
+}
+
+
+
+/* ==|== non-semantic helper classes ========================================
+   Please define your styles before this section.
+   ========================================================================== */
+
+/* For image replacement */
+.ir { display: block; border: 0; text-indent: -999em; overflow: hidden; background-color: transparent; background-repeat: no-repeat; text-align: left; direction: ltr; *line-height: 0; }
+.ir br { display: none; }
+
+/* Hide from both screenreaders and browsers: h5bp.com/u */
+.hidden { display: none !important; visibility: hidden; }
+
+/* Hide only visually, but have it available for screenreaders: h5bp.com/v */
+.visuallyhidden { border: 0; clip: rect(0 0 0 0); height: 1px; margin: -1px; overflow: hidden; padding: 0; position: absolute; width: 1px; }
+
+/* Extends the .visuallyhidden class to allow the element to be focusable when navigated to via the keyboard: h5bp.com/p */
+.visuallyhidden.focusable:active, .visuallyhidden.focusable:focus { clip: auto; height: auto; margin: 0; overflow: visible; position: static; width: auto; }
+
+/* Hide visually and from screenreaders, but maintain layout */
+.invisible { visibility: hidden; }
+
+/* Contain floats: h5bp.com/q */
+.clearfix:before, .clearfix:after { content: ""; display: table; }
+.clearfix:after { clear: both; }
+.clearfix { *zoom: 1; }
+
+
+
+/* ==|== print styles =======================================================
+   Print styles.
+   Inlined to avoid required HTTP connection: h5bp.com/r
+   ========================================================================== */
+
+@media print {
+  * { background: transparent !important; color: black !important; box-shadow:none !important; text-shadow: none !important; filter:none !important; -ms-filter: none !important; } /* Black prints faster: h5bp.com/s */
+  a, a:visited { text-decoration: underline; }
+  a[href]:after { content: " (" attr(href) ")"; }
+  abbr[title]:after { content: " (" attr(title) ")"; }
+  .ir a:after, a[href^="javascript:"]:after, a[href^="#"]:after { content: ""; }  /* Don't show links for images, or javascript/internal links */
+  pre, blockquote { border: 1px solid #999; page-break-inside: avoid; }
+  thead { display: table-header-group; } /* h5bp.com/t */
+  tr, img { page-break-inside: avoid; }
+  img { max-width: 100% !important; }
+  @page { margin: 0.5cm; }
+  p, h2, h3 { orphans: 3; widows: 3; }
+  h2, h3 { page-break-after: avoid; }
+}
