@@ -958,10 +958,10 @@ div.splash_image {
 div.splash_blurb {
 	position: fixed;
 	z-index: 1;
-	height: 275px;
+	height: 290px;
 	left: 100px;
 	right: 100px;
-	bottom: 5px;
+	bottom: 3px;
 	background-color: rgba(0,0,0,0.8);
 	padding: 30px;
 	font-family:"Tw Cen MT", sans-serif;
