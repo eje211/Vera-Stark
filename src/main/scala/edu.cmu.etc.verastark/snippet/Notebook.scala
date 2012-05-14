@@ -50,10 +50,10 @@ object NotebookPageMenu {
     case _                     => "index"
   }
 
-  val menu = Menu.param[NotebookParam]("Notebook", "Notebook", parse _, encode _) / "notebook"
+  val menu = Menu.param[NotebookParam]("Scrapbook", "Scrapbook", parse _, encode _) / "scrapbook"
   lazy val loc = menu.toLoc
 
-  def render = "*" #> "Notebook" // loc.currentValue.map(_.pageName)
+  def render = "*" #> "Scrapbook" // loc.currentValue.map(_.pageName)
 }
 
 class NotebookContainer(ap: NotebookParam) {
