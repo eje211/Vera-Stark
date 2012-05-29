@@ -1,0 +1,256 @@
+###
+#
+#  Vera Stark Online
+#
+###
+
+================================================================================
+== System Requirements ==
+
+Server:
+* A Linux-based operating system. Ubuntu was used for development
+* MySQL database system
+* Java Runtime Environment
+* Scala (a programming language that runs on the Java Virtual Machine 
+  distributed as a Java package)
+* Jetty web server (fully Java-based)
+* Nginx web server (optional, but we used it)
+* Port 80 open
+
+Client:
+* Requires a web browser:
+*   Internet Explorer 7+
+*   Mozilla Firefox
+*   Google Chrome
+*   Safari
+* Screen resolution at least 800x600
+* iPad-friendly!
+
+================================================================================
+== Deploy ==
+
+The logic for the site is written entirely in Scala but will compiled to a Java 
+package, as Scala runs on top of Java.
+
+The whole site will be packaged as a single WAR (Web ARchive) file. The data for 
+the site is not in the WAR file. It is composed of the user-uploded images and 
+the content of the database.
+
+There are many systems that can be used to deploy a WAR site. Many work, none 
+is the "best."
+
+This is the deployment system we used at the ETC.
+
+The following are mandatory:
+* A MySQL database. At the time of writing, the settings are in the code. They 
+should be removed from it before handoff. (Yet to be done)
+* A Java runtime environment
+* Scala
+
+The following may be changed if you choose your own deployment nethod.
+* An internal Jetty web server (runs on Java).
+* As a frontend webserver, Nginx.
+The only thing that is really indispensable is a web server that can run a 
+WAR file.
+
+================================================================================
+1. The server computer
+
+We're assuming you'll be using a Linux server with MySQL.
+
+The site stores the upload images on /var/images/, in part to make it easier 
+to move and change them. So you need to have a writable /vate/images folder 
+and a writable /var/images/thumbs folder. Try something like:
+
+sudo mkdir /var/images
+sudo chmod 777 /var/images
+sudo mkdir /var/images/thumbs
+sudo chmod 777 /var/images/thumbs
+
+The current MySQL settings are:
+user:     verastark
+password: beyondthestage
+database: verastark
+host:     localhost
+
+================================================================================
+2. SBT and Lift
+
+Lift is compiled with SBT, the Simple Build Tool. It will recompile 
+your site to a TEST server as you change it without making a WAR file. 
+For actual deployment, this will not do. You'll need to package it to 
+a WAR file:
+
+Make sure the site is tested and as bug-free as you can make it. Then, 
+go to the root of the site. It is the folder with the "sbt" executable 
+in it. Stop SBT from running the test site, if necessary. Make SBT 
+package the site  with the command "./sbt package".
+
+The packaging process will create a WAR file in the folder 
+"target/scala_*/lift-sbt-*.war".
+
+================================================================================
+3. Jetty
+
+We used the configuration recommended by Lift writer David Pollack. 
+Jetty is used to create an internal website on the server itself. 
+It is not meant to be accessible from the outside directly.
+
+Install Jetty. From most Linux systems, it will installed by the 
+package manager. On a deb-based system, like Ubuntu, the command will 
+be something like "sudo apt-get install jetty". On a Red Hat-based 
+system, it will be something like "sudo yum install jetty".
+Add the following code to /etc/jetty/jetty.xml.
+
+    <Call name="addConnector">
+      <Arg>
+          <New class="org.mortbay.jetty.nio.SelectChannelConnector">
+            <Set name="host"><SystemProperty name="jetty.host" /></Set>
+            <Set name="port"><SystemProperty name="jetty.port" default="9922"/></Set>
+            <Set name="maxIdleTime">30000</Set>
+            <Set name="Acceptors">2</Set>
+            <Set name="statsOn">false</Set>
+            <Set name="confidentialPort">8443</Set>
+            <Set name="lowResourcesConnections">5000</Set>
+            <Set name="lowResourcesMaxIdleTime">5000</Set>
+          </New>
+      </Arg>
+    </Call>
+
+This will create a local website on port 9922. You can pick another 
+port number if you want. The reason why we're not creating a 
+website on the default web port, port 80, is because this is an 
+internal website.
+
+Copy the WAR file you got from step one to 
+  /usr/share/jetty/webapps
+with a command like
+  sudo cp ~/verastie/target/scala_2.9.0-1/lift-sbt-template_2.9.0-1-0.1.war /usr/share/jetty/webapps/root.war
+
+Delete the root site if there is one. By default, it should be 
+the folder /usr/share/jetty/webapps/root/ and its contents.
+
+Start Jetty with "sudo service jetty start".
+
+You should now have a local website, visible only from the webserver.
+
+================================================================================
+4. Nginx
+
+Nginx will be used as a bridge between the outside world and the 
+internal site. This can be useful for caching, optimization or security reasons.
+
+Install Nginx. From Ubuntu, it will be something like
+  sudo apt-get install nginx
+
+Edit or create a file in /etc/nginx/sites-enabled. Inside a server statement, 
+add the following lines (modified for your environment)
+
+        server_name verastark.etc.cmu.edu;
+
+        location / {
+                # First attempt to serve request as file, then
+                # as directory, then fall back to index.html
+                # try_files $uri $uri/ /index.html;
+                proxy_pass http://localhost:9922;
+                proxy_set_header  X-Real-IP  $remote_addr;
+                proxy_read_timeout 700;
+                proxy_set_header Host $http_host;
+                proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        }
+
+Make sure that port 80 is open.
+  sudo iptables -A INPUT -p tcp --dport 80 -j ACCEPT
+
+Run "sude iptables-save" to make sure port 80 stays open for good.
+
+Start Nginx: "sudo service nginx start"
+
+The site should be accessible.
+
+================================================================================
+5. Caveats
+
+Some features like the "next" and "previous" buttons will not work without at 
+least one piece of content. The site is built on the assumption that it will 
+have seed content to start with.
+
+================================================================================
+== Run ==
+
+To run the experience, simply direct a browser to the selected site URL.
+
+================================================================================
+== What remains to be done ==
+
+The site is not yet usable. There are a few features missing, particularly when 
+it comes to moderation.
+
+Most of the classes are pretty straightforward to find and use. For example, 
+the artifact template is artifact.html, the artifact model is 
+model/Artifact.scala and the artifact snippets are in snippet/Artifact.
+
+The outer template is in Lift's default location: 
+  webapp/templates-hidden/default.html
+
+The code that adds moderation buttons to "edit" tabs is in
+  snippets/general.scala
+
+The code for the flags is in 
+  snippets/general.scala
+
+In Misc.scala are:
+  * The definition for the published states
+  * The TimeAgoInWords method that displays time since a comment has been made.
+  * The code that displays the Gravatars
+  * The code that finds out where next and previous flags point to
+ 
+The code for The Collection is in 
+  snippets/Artifact.scala
+ 
+The code for the Scrapbook is in a file called 
+  Notebook.scala
+ 
+There is no user list.
+ 
+There is no way to mark an item as genuine (i.e. part of the 
+  "true story" of Vera Stark.)
+There is no way to show that an item is genuine.
+There is no timeline of genuine items.
+ 
+There is no way to process deleted items. Right now, they're just 
+marked as "deleted" in the database.
+ 
+There is real-time validation for the autobiography pages, but not for the 
+notebook.
+There no simple way to do it for the artifacts at this time, as the artifacts 
+are uploaded before they can be edited.
+
+The comment moderation system only tracks down how many times someone has 
+been flagged and how many times someone has flagged others, not who flagged whom.
+
+There is no pagination whatsoever.
+
+If one tries to reach an artifact that doesn't exist one is sent to the old 
+artifact list, not to the collection.
+
+There are whole chunks of obsolete code that remain, most notably the 
+"code" package, that remains from the Lift demo.
+
+The profiles all show a picture of Brad. It's not clear where the pictures 
+that should show up on the polaroids should come from.
+
+There are no slugs (pretty URLs).
+
+The default message bar displays all the messages. It's a problem for when 
+we need to display specific messages like for the real-time validation.
+
+================================================================================
+== Further considerations ==
+
+So far, we haven't used many of Lift's more specific albilites, like Actors 
+and Comet. They offer the ability give the appearance that the sever sends 
+information to the webpage without a prompt. It allows things like real-time 
+text chat, or live updated statuses. The upper-right corner of the current 
+Facebook window is an example of something like Comet. Our design did not 
+require us to do that, but it would be a nice way of leveraging Lift's abilities.
